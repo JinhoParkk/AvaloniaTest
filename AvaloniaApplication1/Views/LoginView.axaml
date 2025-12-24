@@ -1,0 +1,74 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:AvaloniaApplication1.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="AvaloniaApplication1.Views.LoginView"
+             x:DataType="vm:LoginViewModel">
+  <Design.DataContext>
+    <vm:LoginViewModel />
+  </Design.DataContext>
+
+  <Grid>
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="350">
+
+      <!-- 타이틀 -->
+      <TextBlock Text="패스오더 점주용"
+                 FontSize="28"
+                 FontWeight="Bold"
+                 HorizontalAlignment="Center"
+                 Margin="0,0,0,40"/>
+
+      <!-- 아이디 입력 -->
+      <TextBlock Text="아이디" Margin="0,0,0,8"/>
+      <TextBox Text="{Binding Username}"
+               Watermark="아이디를 입력하세요"
+               Margin="0,0,0,16"/>
+
+      <!-- 비밀번호 입력 -->
+      <TextBlock Text="비밀번호" Margin="0,0,0,8"/>
+      <TextBox Text="{Binding Password}"
+               PasswordChar="•"
+               Watermark="비밀번호를 입력하세요"
+               Margin="0,0,0,16"/>
+
+      <!-- 자동 로그인 -->
+      <CheckBox IsChecked="{Binding RememberMe}"
+                Content="자동 로그인"
+                Margin="0,0,0,8"/>
+
+      <!-- 에러 메시지 -->
+      <TextBlock Text="{Binding ErrorMessage}"
+                 Foreground="Red"
+                 FontSize="12"
+                 Margin="0,0,0,16"
+                 IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                 TextWrapping="Wrap"/>
+
+      <!-- 로그인 버튼 -->
+      <Button Content="로그인"
+              Command="{Binding LoginCommand}"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Center"
+              Height="40"
+              Margin="0,0,0,16"/>
+
+      <!-- 비밀번호 찾기 -->
+      <Button Content="비밀번호 찾기"
+              Command="{Binding FindPasswordCommand}"
+              HorizontalAlignment="Center"
+              Background="Transparent"
+              BorderThickness="0"
+              Foreground="{DynamicResource SystemAccentColor}"/>
+    </StackPanel>
+
+    <!-- 버전 정보 (하단 우측) -->
+    <TextBlock Text="{Binding AppVersion}"
+               FontSize="10"
+               Opacity="0.5"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               Margin="16"/>
+  </Grid>
+</UserControl>
