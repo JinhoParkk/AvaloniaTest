@@ -31,6 +31,9 @@
     <PackageVersion Include="Refit" Version="8.0.0" />
     <PackageVersion Include="Refit.HttpClientFactory" Version="8.0.0" />
 
+    <!-- Polyfills for modern C# syntax on older runtimes -->
+    <PackageVersion Include="PolySharp" Version="1.14.1" />
+
     <!-- Testing -->
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageVersion Include="xunit" Version="2.9.2" />

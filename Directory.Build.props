@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <!-- Use latest C# language features -->
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- PolySharp: Polyfills for modern C# syntax on older runtimes (Windows 7, etc.) -->
+    <!-- Provides: required, init, record, Index/Range, CallerArgumentExpression, etc. -->
+    <PackageReference Include="PolySharp" PrivateAssets="all" />
+  </ItemGroup>
+</Project>
