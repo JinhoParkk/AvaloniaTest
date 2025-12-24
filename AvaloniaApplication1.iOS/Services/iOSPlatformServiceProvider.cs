@@ -3,16 +3,16 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AvaloniaApplication1.iOS.Services;
 
-public static class iOSServiceExtensions
+/// <summary>
+/// iOS 플랫폼 서비스 제공자
+/// </summary>
+public class iOSPlatformServiceProvider : IPlatformServiceProvider
 {
-    public static IServiceCollection AddiOSServices(this IServiceCollection services)
+    public void ConfigureServices(IServiceCollection services)
     {
-        // Register platform-specific services
         services.AddSingleton<IDialogService, iOSDialogService>();
         services.AddSingleton<IToastService, iOSToastService>();
         services.AddSingleton<IFileService, iOSFileService>();
         services.AddSingleton<ILocationService, iOSLocationService>();
-
-        return services;
     }
 }

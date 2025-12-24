@@ -1,18 +1,20 @@
-﻿using System;
+using System;
 using Avalonia;
+using AvaloniaApplication1.Desktop.Services;
 
 namespace AvaloniaApplication1.Desktop;
 
 sealed class Program
 {
-    // Initialization code. Don't use any Avalonia, third-party APIs or any
-    // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
-    // yet and stuff might break.
     [STAThread]
-    public static void Main(string[] args) => BuildAvaloniaApp()
-        .StartWithClassicDesktopLifetime(args);
+    public static void Main(string[] args)
+    {
+        // Desktop 플랫폼 서비스 등록
+        App.PlatformServices = new DesktopPlatformServiceProvider();
 
-    // Avalonia configuration, don't remove; also used by visual designer.
+        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+    }
+
     public static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()

@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -9,6 +8,7 @@ using Avalonia.Markup.Xaml;
 using AvaloniaApplication1.ViewModels;
 using AvaloniaApplication1.Views;
 using AvaloniaApplication1.Services;
+using AvaloniaApplication1.Extensions;
 using AvaloniaApplication1.Infrastructure.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,6 +16,21 @@ namespace AvaloniaApplication1;
 
 public partial class App : Application
 {
+    /// <summary>
+    /// 전역 ServiceProvider (DI 컨테이너)
+    /// </summary>
+    public static IServiceProvider Services { get; private set; } = null!;
+
+    /// <summary>
+    /// 플랫폼별 서비스 제공자 (Desktop/iOS/Android에서 설정)
+    /// </summary>
+    public static IPlatformServiceProvider? PlatformServices { get; set; }
+
+    /// <summary>
+    /// Desktop 플랫폼용 MainWindow (파일 다이얼로그 등에 필요)
+    /// </summary>
+    public static Window? MainWindow { get; private set; }
+
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -25,148 +40,98 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            // Avoid duplicate validations from both Avalonia and the CommunityToolkit.
-            // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
 
-            // Create main window first
+            // MainWindow 생성
             desktop.MainWindow = new MainWindow();
+            MainWindow = desktop.MainWindow;
 
-            // Initialize services with DI
-            InitializeDesktopServices(desktop.MainWindow);
+            // DI 컨테이너 구성
+            ConfigureServices();
 
-            // DI에서 서비스 가져오기
-            var authService = ServiceLocator.GetService<IAuthenticationService>();
-            var preferencesService = ServiceLocator.GetService<PreferencesService>();
-            var navigationService = ServiceLocator.GetService<NavigationService>();
-
-            // 자동 로그인 확인
-            var savedUser = preferencesService.LoadAutoLogin();
-            ViewModelBase initialViewModel;
-
-            if (savedUser != null)
-            {
-                // 자동 로그인 정보가 있으면 바로 메인으로
-                authService.SetCurrentUser(savedUser);
-                initialViewModel = new MainViewModel();
-            }
-            else
-            {
-                // 로그인 정보가 없으면 로그인 화면으로
-                initialViewModel = new LoginViewModel(authService, preferencesService, navigationService);
-            }
-
-            desktop.MainWindow.DataContext = new MainWindowViewModel(navigationService, initialViewModel);
+            // 앱 시작
+            InitializeApp(vm => desktop.MainWindow.DataContext = vm);
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
-            // Initialize services for mobile platforms
-            InitializeMobileServices();
+            // DI 컨테이너 구성
+            ConfigureServices();
 
-            // DI에서 서비스 가져오기
-            var authService = ServiceLocator.GetService<IAuthenticationService>();
-            var preferencesService = ServiceLocator.GetService<PreferencesService>();
-            var navigationService = ServiceLocator.GetService<NavigationService>();
-
-            // 자동 로그인 확인
-            var savedUser = preferencesService.LoadAutoLogin();
-            ViewModelBase initialViewModel;
-
-            if (savedUser != null)
+            // 앱 시작
+            InitializeApp(vm =>
             {
-                authService.SetCurrentUser(savedUser);
-                initialViewModel = new MainViewModel();
-            }
-            else
-            {
-                initialViewModel = new LoginViewModel(authService, preferencesService, navigationService);
-            }
-
-            singleViewPlatform.MainView = new MainView
-            {
-                DataContext = new MainWindowViewModel(navigationService, initialViewModel)
-            };
+                singleViewPlatform.MainView = new MainView { DataContext = vm };
+            });
         }
 
         base.OnFrameworkInitializationCompleted();
     }
 
-    private void InitializeDesktopServices(Window mainWindow)
+    /// <summary>
+    /// DI 컨테이너 구성
+    /// </summary>
+    private void ConfigureServices()
     {
         var services = new ServiceCollection();
 
-        // Register existing services
-        services.AddSingleton<PreferencesService>();
-        services.AddSingleton<NavigationService>();
+        // 1. 핵심 서비스 등록
+        services.AddCoreServices();
 
-        // Register API client services
+        // 2. API 클라이언트 서비스 등록
         services.AddApiClientServices(options =>
         {
-            // TODO: 패스오더 API base URL 설정
             options.BaseUrl = "https://api.passorder.com";
             options.RefreshTokenEndpoint = "/auth/refresh";
         });
 
-        // Register platform services using reflection to avoid direct dependency
-        // This allows the shared project to remain platform-agnostic
-        var desktopServicesType = Type.GetType("AvaloniaApplication1.Desktop.Services.DesktopServiceExtensions, AvaloniaApplication1.Desktop");
-        if (desktopServicesType != null)
-        {
-            var method = desktopServicesType.GetMethod("AddDesktopServices");
-            method?.Invoke(null, new object[] { services, mainWindow });
-        }
+        // 3. ViewModel 등록
+        services.AddViewModels();
 
-        var serviceProvider = services.BuildServiceProvider();
-        ServiceLocator.Initialize(serviceProvider);
+        // 4. 플랫폼별 서비스 등록 (IPlatformServiceProvider 사용)
+        PlatformServices?.ConfigureServices(services);
+
+        // ServiceProvider 생성
+        Services = services.BuildServiceProvider();
+
+        // NavigationService 초기화
+        var navigationService = Services.GetRequiredService<NavigationService>();
+        navigationService.Initialize(Services);
     }
 
-    private void InitializeMobileServices()
+    /// <summary>
+    /// 앱 초기화 및 시작 ViewModel 결정
+    /// </summary>
+    private void InitializeApp(Action<MainWindowViewModel> setDataContext)
     {
-        var services = new ServiceCollection();
+        var authService = Services.GetRequiredService<IAuthenticationService>();
+        var preferencesService = Services.GetRequiredService<PreferencesService>();
 
-        // Register existing services
-        services.AddSingleton<PreferencesService>();
-        services.AddSingleton<NavigationService>();
+        // MainWindowViewModel 생성 (DI에서 resolve)
+        var mainWindowViewModel = Services.GetRequiredService<MainWindowViewModel>();
 
-        // Register API client services
-        services.AddApiClientServices(options =>
+        // 자동 로그인 확인 후 초기 ViewModel 설정
+        var savedUser = preferencesService.LoadAutoLogin();
+        ViewModelBase initialViewModel;
+
+        if (savedUser != null)
         {
-            // TODO: 패스오더 API base URL 설정
-            options.BaseUrl = "https://api.passorder.com";
-            options.RefreshTokenEndpoint = "/auth/refresh";
-        });
-
-        // Detect platform and register appropriate services
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Create("ANDROID")))
-        {
-            var androidServicesType = Type.GetType("AvaloniaApplication1.Android.Services.AndroidServiceExtensions, AvaloniaApplication1.Android");
-            if (androidServicesType != null)
-            {
-                var method = androidServicesType.GetMethod("AddAndroidServices");
-                method?.Invoke(null, new object[] { services });
-            }
+            authService.SetCurrentUser(savedUser);
+            initialViewModel = Services.GetRequiredService<MainViewModel>();
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Create("IOS")))
+        else
         {
-            var iosServicesType = Type.GetType("AvaloniaApplication1.iOS.Services.iOSServiceExtensions, AvaloniaApplication1.iOS");
-            if (iosServicesType != null)
-            {
-                var method = iosServicesType.GetMethod("AddiOSServices");
-                method?.Invoke(null, new object[] { services });
-            }
+            initialViewModel = Services.GetRequiredService<LoginViewModel>();
         }
 
-        var serviceProvider = services.BuildServiceProvider();
-        ServiceLocator.Initialize(serviceProvider);
+        mainWindowViewModel.SetInitialViewModel(initialViewModel);
+        setDataContext(mainWindowViewModel);
     }
 
     private void DisableAvaloniaDataAnnotationValidation()
     {
-        // Get an array of plugins to remove
         var dataValidationPluginsToRemove =
             BindingPlugins.DataValidators.OfType<DataAnnotationsValidationPlugin>().ToArray();
 
-        // remove each entry found
         foreach (var plugin in dataValidationPluginsToRemove)
         {
             BindingPlugins.DataValidators.Remove(plugin);
