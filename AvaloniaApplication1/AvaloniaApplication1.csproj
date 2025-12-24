@@ -7,23 +7,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**"/>
+        <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia"/>
+        <PackageReference Include="Avalonia" />
         <PackageReference Include="Avalonia.Fonts.Inter" />
-        <PackageReference Include="Avalonia.Themes.Fluent"/>
+        <PackageReference Include="Avalonia.Themes.Fluent" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Include="Avalonia.Diagnostics">
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="CommunityToolkit.Mvvm"/>
-        <PackageReference Include="DialogHost.Avalonia"/>
-        <PackageReference Include="DesktopNotifications.Avalonia"/>
-        <PackageReference Include="Microsoft.Maui.Essentials"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection"/>
+        <PackageReference Include="CommunityToolkit.Mvvm" />
+        <PackageReference Include="DialogHost.Avalonia" />
+        <PackageReference Include="DesktopNotifications.Avalonia" />
+        <PackageReference Include="FluentAvaloniaUI" />
+        <PackageReference Include="Microsoft.Maui.Essentials" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
         <PackageReference Include="Microsoft.Extensions.Http" />
     </ItemGroup>
 </Project>
