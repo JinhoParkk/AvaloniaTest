@@ -3,14 +3,233 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:AvaloniaApplication1.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="768"
              x:Class="AvaloniaApplication1.Views.MainView"
              x:DataType="vm:MainViewModel">
   <Design.DataContext>
-    <!-- This only sets the DataContext for the previewer in an IDE,
-         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
     <vm:MainViewModel />
   </Design.DataContext>
 
-  <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+  <UserControl.Styles>
+    <!-- 헤더 스타일 -->
+    <Style Selector="Border.header">
+      <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundAltHighBrush}"/>
+      <Setter Property="Padding" Value="16,12"/>
+      <Setter Property="BoxShadow" Value="0 2 8 0 #10000000"/>
+    </Style>
+
+    <!-- 탭 버튼 스타일 -->
+    <Style Selector="RadioButton.tab-btn">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}"/>
+      <Setter Property="Padding" Value="20,12"/>
+      <Setter Property="FontSize" Value="14"/>
+      <Setter Property="FontWeight" Value="Medium"/>
+      <Setter Property="CornerRadius" Value="0"/>
+      <Setter Property="BorderThickness" Value="0,0,0,2"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+      <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    <Style Selector="RadioButton.tab-btn:checked">
+      <Setter Property="Foreground" Value="#0078D4"/>
+      <Setter Property="BorderBrush" Value="#0078D4"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+    <Style Selector="RadioButton.tab-btn:pointerover">
+      <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListLowBrush}"/>
+    </Style>
+
+    <!-- 상태 뱃지 스타일 -->
+    <Style Selector="Border.status-badge">
+      <Setter Property="CornerRadius" Value="12"/>
+      <Setter Property="Padding" Value="12,6"/>
+    </Style>
+
+    <!-- 윈도우 컨트롤 버튼 -->
+    <Style Selector="Button.window-btn">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Width" Value="46"/>
+      <Setter Property="Height" Value="32"/>
+      <Setter Property="Padding" Value="0"/>
+      <Setter Property="CornerRadius" Value="0"/>
+    </Style>
+    <Style Selector="Button.window-btn:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListLowBrush}"/>
+    </Style>
+    <Style Selector="Button.window-btn-close:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#E81123"/>
+    </Style>
+
+    <!-- 푸터 스타일 -->
+    <Style Selector="Border.footer">
+      <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundAltHighBrush}"/>
+      <Setter Property="Padding" Value="16,10"/>
+      <Setter Property="BoxShadow" Value="0 -2 8 0 #10000000"/>
+    </Style>
+
+    <!-- 설정 버튼 -->
+    <Style Selector="Button.setting-btn">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Padding" Value="8"/>
+      <Setter Property="CornerRadius" Value="4"/>
+      <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    <Style Selector="Button.setting-btn:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListLowBrush}"/>
+    </Style>
+
+    <!-- 메인 컨텐츠 -->
+    <Style Selector="Border.content-area">
+      <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"/>
+    </Style>
+  </UserControl.Styles>
+
+  <Grid RowDefinitions="Auto,Auto,*,Auto">
+
+    <!-- 헤더 영역: 매장 정보 + 윈도우 컨트롤 -->
+    <Border Grid.Row="0" Classes="header">
+      <Grid ColumnDefinitions="*,Auto">
+
+        <!-- 매장 정보 -->
+        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
+
+          <!-- 매장명 -->
+          <TextBlock Text="{Binding StoreName}"
+                     FontSize="18"
+                     FontWeight="Bold"
+                     VerticalAlignment="Center"/>
+
+          <!-- 상태 뱃지 -->
+          <Border Classes="status-badge">
+            <Border.Background>
+              <SolidColorBrush Color="{Binding StatusColor}"/>
+            </Border.Background>
+            <TextBlock Text="{Binding StatusText}"
+                       Foreground="White"
+                       FontSize="12"
+                       FontWeight="SemiBold"/>
+          </Border>
+
+          <!-- 수령 시간 -->
+          <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+            <TextBlock Text="수령시간"
+                       FontSize="13"
+                       Opacity="0.6"
+                       VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding PickupTimeText}"
+                       FontSize="13"
+                       FontWeight="Medium"
+                       VerticalAlignment="Center"/>
+          </StackPanel>
+
+          <!-- 영업 토글 버튼 -->
+          <ToggleSwitch IsChecked="{Binding IsOpen}"
+                        OnContent="영업중"
+                        OffContent="영업종료"
+                        VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- 윈도우 컨트롤 버튼 (숨김, 최대화, 닫기) -->
+        <StackPanel Grid.Column="1" Orientation="Horizontal">
+          <Button Classes="window-btn" Command="{Binding MinimizeWindowCommand}" ToolTip.Tip="숨김">
+            <PathIcon Data="M4 12h16" Width="12" Height="12"/>
+          </Button>
+          <Button Classes="window-btn" Command="{Binding MaximizeWindowCommand}" ToolTip.Tip="최대화">
+            <PathIcon Data="M4 4h16v16H4V4zm2 2v12h12V6H6z" Width="12" Height="12"/>
+          </Button>
+          <Button Classes="window-btn window-btn-close" Command="{Binding CloseWindowCommand}" ToolTip.Tip="닫기">
+            <PathIcon Data="M6 6l12 12M6 18L18 6" Width="12" Height="12" Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+          </Button>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <!-- 탭 네비게이션 -->
+    <Border Grid.Row="1" Background="{DynamicResource SystemControlBackgroundAltHighBrush}">
+      <StackPanel Orientation="Horizontal">
+        <RadioButton Classes="tab-btn"
+                     Content="주문"
+                     GroupName="MainTabs"
+                     IsChecked="{Binding SelectedTabIndex, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=0}"/>
+        <RadioButton Classes="tab-btn"
+                     Content="주문내역"
+                     GroupName="MainTabs"
+                     IsChecked="{Binding SelectedTabIndex, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=1}"/>
+        <RadioButton Classes="tab-btn"
+                     Content="메뉴관리"
+                     GroupName="MainTabs"
+                     IsChecked="{Binding SelectedTabIndex, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=2}"/>
+      </StackPanel>
+    </Border>
+
+    <!-- 메인 컨텐츠 영역 -->
+    <Border Grid.Row="2" Classes="content-area">
+      <Panel>
+        <!-- 주문 탭 -->
+        <Border IsVisible="{Binding SelectedTabIndex, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=0}">
+          <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8">
+            <TextBlock Text="주문 목록"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+            <TextBlock Text="새로운 주문이 없습니다"
+                       FontSize="14"
+                       Opacity="0.6"
+                       HorizontalAlignment="Center"/>
+          </StackPanel>
+        </Border>
+
+        <!-- 주문내역 탭 -->
+        <Border IsVisible="{Binding SelectedTabIndex, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=1}">
+          <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8">
+            <TextBlock Text="주문 내역"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+            <TextBlock Text="주문 내역이 없습니다"
+                       FontSize="14"
+                       Opacity="0.6"
+                       HorizontalAlignment="Center"/>
+          </StackPanel>
+        </Border>
+
+        <!-- 메뉴관리 탭 -->
+        <Border IsVisible="{Binding SelectedTabIndex, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=2}">
+          <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8">
+            <TextBlock Text="메뉴 관리"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+            <TextBlock Text="메뉴 목록이 없습니다"
+                       FontSize="14"
+                       Opacity="0.6"
+                       HorizontalAlignment="Center"/>
+          </StackPanel>
+        </Border>
+      </Panel>
+    </Border>
+
+    <!-- 푸터: 설정 영역 -->
+    <Border Grid.Row="3" Classes="footer">
+      <Grid ColumnDefinitions="*,Auto">
+
+        <!-- 왼쪽: 상태 정보 -->
+        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
+          <TextBlock Text="v1.0.0" FontSize="12" Opacity="0.5"/>
+          <TextBlock Text="•" FontSize="12" Opacity="0.3"/>
+          <TextBlock Text="서버 연결됨" FontSize="12" Opacity="0.6" Foreground="#4CAF50"/>
+        </StackPanel>
+
+        <!-- 오른쪽: 설정 버튼 -->
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4">
+          <Button Classes="setting-btn" ToolTip.Tip="설정">
+            <PathIcon Data="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97 0-.33-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1 0 .33.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.66z"
+                    Width="16" Height="16"/>
+          </Button>
+        </StackPanel>
+      </Grid>
+    </Border>
+  </Grid>
 </UserControl>
