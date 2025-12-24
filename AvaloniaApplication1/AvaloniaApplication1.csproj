@@ -26,5 +26,7 @@
         <PackageReference Include="Microsoft.Maui.Essentials" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
         <PackageReference Include="Microsoft.Extensions.Http" />
+        <PackageReference Include="Refit" />
+        <PackageReference Include="Refit.HttpClientFactory" />
     </ItemGroup>
 </Project>

@@ -10,6 +10,7 @@ using AvaloniaApplication1.Views;
 using AvaloniaApplication1.Services;
 using AvaloniaApplication1.Extensions;
 using AvaloniaApplication1.Infrastructure.Http;
+using AvaloniaApplication1.Infrastructure.Http.Refit;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AvaloniaApplication1;
@@ -77,8 +78,8 @@ public partial class App : Application
         // 1. 핵심 서비스 등록
         services.AddCoreServices();
 
-        // 2. API 클라이언트 서비스 등록
-        services.AddApiClientServices(options =>
+        // 2. Refit API 클라이언트 서비스 등록 (Java Retrofit 스타일)
+        services.AddRefitApiServices(options =>
         {
             options.BaseUrl = "https://api.passorder.com";
             options.RefreshTokenEndpoint = "/auth/refresh";
