@@ -3,11 +3,11 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using AvaloniaApplication1.Domain.Auth;
 using AvaloniaApplication1.Domain.Common;
+using AvaloniaApplication1.Infrastructure.Json;
 
 namespace AvaloniaApplication1.Infrastructure.Http;
 
@@ -22,11 +22,8 @@ public class ApiClient : IApiClient
     private readonly ITokenRefreshService _tokenRefreshService;
     private readonly SemaphoreSlim _refreshLock = new(1, 1);
 
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        PropertyNameCaseInsensitive = true
-    };
+    private static readonly System.Text.Json.JsonSerializerOptions JsonOptions =
+        JsonSerializerOptionsExtensions.CreateApiOptions();
 
     public ApiClient(
         HttpClient httpClient,
