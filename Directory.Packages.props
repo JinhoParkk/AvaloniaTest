@@ -27,6 +27,9 @@
 
     <!-- HTTP Client -->
     <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.0" />
+    <!-- Refit (Java Retrofit 스타일 API 클라이언트) -->
+    <PackageVersion Include="Refit" Version="8.0.0" />
+    <PackageVersion Include="Refit.HttpClientFactory" Version="8.0.0" />
 
     <!-- Testing -->
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />

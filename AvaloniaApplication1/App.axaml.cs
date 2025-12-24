@@ -10,6 +10,7 @@ using AvaloniaApplication1.ViewModels;
 using AvaloniaApplication1.Views;
 using AvaloniaApplication1.Services;
 using AvaloniaApplication1.Infrastructure.Http;
+using AvaloniaApplication1.Infrastructure.Http.Refit;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AvaloniaApplication1;
@@ -99,8 +100,8 @@ public partial class App : Application
         services.AddSingleton<PreferencesService>();
         services.AddSingleton<NavigationService>();
 
-        // Register API client services
-        services.AddApiClientServices(options =>
+        // Register Refit API client services (Java Retrofit 스타일)
+        services.AddRefitApiServices(options =>
         {
             // TODO: 패스오더 API base URL 설정
             options.BaseUrl = "https://api.passorder.com";
@@ -128,8 +129,8 @@ public partial class App : Application
         services.AddSingleton<PreferencesService>();
         services.AddSingleton<NavigationService>();
 
-        // Register API client services
-        services.AddApiClientServices(options =>
+        // Register Refit API client services (Java Retrofit 스타일)
+        services.AddRefitApiServices(options =>
         {
             // TODO: 패스오더 API base URL 설정
             options.BaseUrl = "https://api.passorder.com";
