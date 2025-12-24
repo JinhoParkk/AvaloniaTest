@@ -1,7 +1,7 @@
 using System;
 using System.Net.Http;
-using System.Text.Json;
 using AvaloniaApplication1.Domain.Auth;
+using AvaloniaApplication1.Infrastructure.Json;
 using AvaloniaApplication1.Services;
 using AvaloniaApplication1.UseCases.Services.Auth;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,11 +16,8 @@ public static class RefitServiceExtensions
 {
     private static readonly RefitSettings DefaultRefitSettings = new()
     {
-        ContentSerializer = new SystemTextJsonContentSerializer(new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNameCaseInsensitive = true
-        })
+        ContentSerializer = new SystemTextJsonContentSerializer(
+            JsonSerializerOptionsExtensions.CreateApiOptions())
     };
 
     /// <summary>
