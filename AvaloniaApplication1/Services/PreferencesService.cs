@@ -86,9 +86,61 @@ public class PreferencesService
         }
     }
 
+    /// <summary>
+    /// RefreshToken 저장
+    /// </summary>
+    public void SaveRefreshToken(string refreshToken)
+    {
+        try
+        {
+            var data = LoadAutoLoginData() ?? new AutoLoginData();
+            data.RefreshToken = refreshToken;
+            SaveAutoLoginData(data);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save refresh token: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// RefreshToken 로드
+    /// </summary>
+    public string? LoadRefreshToken()
+    {
+        try
+        {
+            var data = LoadAutoLoginData();
+            return data?.RefreshToken;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load refresh token: {ex.Message}");
+            return null;
+        }
+    }
+
+    private AutoLoginData? LoadAutoLoginData()
+    {
+        if (!File.Exists(_preferencesPath))
+        {
+            return null;
+        }
+
+        var json = File.ReadAllText(_preferencesPath);
+        return JsonSerializer.Deserialize<AutoLoginData>(json);
+    }
+
+    private void SaveAutoLoginData(AutoLoginData data)
+    {
+        var json = JsonSerializer.Serialize(data);
+        File.WriteAllText(_preferencesPath, json);
+    }
+
     private class AutoLoginData
     {
         public string Username { get; set; } = string.Empty;
         public string? Token { get; set; }
+        public string? RefreshToken { get; set; }
     }
 }

@@ -24,5 +24,6 @@
         <PackageReference Include="DesktopNotifications.Avalonia"/>
         <PackageReference Include="Microsoft.Maui.Essentials"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection"/>
+        <PackageReference Include="Microsoft.Extensions.Http" />
     </ItemGroup>
 </Project>

@@ -9,6 +9,7 @@ using Avalonia.Markup.Xaml;
 using AvaloniaApplication1.ViewModels;
 using AvaloniaApplication1.Views;
 using AvaloniaApplication1.Services;
+using AvaloniaApplication1.Infrastructure.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AvaloniaApplication1;
@@ -34,10 +35,10 @@ public partial class App : Application
             // Initialize services with DI
             InitializeDesktopServices(desktop.MainWindow);
 
-            // 서비스 초기화
-            var authService = new AuthenticationService();
-            var preferencesService = new PreferencesService();
-            var navigationService = new NavigationService();
+            // DI에서 서비스 가져오기
+            var authService = ServiceLocator.GetService<IAuthenticationService>();
+            var preferencesService = ServiceLocator.GetService<PreferencesService>();
+            var navigationService = ServiceLocator.GetService<NavigationService>();
 
             // 자동 로그인 확인
             var savedUser = preferencesService.LoadAutoLogin();
@@ -62,10 +63,10 @@ public partial class App : Application
             // Initialize services for mobile platforms
             InitializeMobileServices();
 
-            // 서비스 초기화
-            var authService = new AuthenticationService();
-            var preferencesService = new PreferencesService();
-            var navigationService = new NavigationService();
+            // DI에서 서비스 가져오기
+            var authService = ServiceLocator.GetService<IAuthenticationService>();
+            var preferencesService = ServiceLocator.GetService<PreferencesService>();
+            var navigationService = ServiceLocator.GetService<NavigationService>();
 
             // 자동 로그인 확인
             var savedUser = preferencesService.LoadAutoLogin();
@@ -95,9 +96,16 @@ public partial class App : Application
         var services = new ServiceCollection();
 
         // Register existing services
-        services.AddSingleton<AuthenticationService>();
         services.AddSingleton<PreferencesService>();
         services.AddSingleton<NavigationService>();
+
+        // Register API client services
+        services.AddApiClientServices(options =>
+        {
+            // TODO: 패스오더 API base URL 설정
+            options.BaseUrl = "https://api.passorder.com";
+            options.RefreshTokenEndpoint = "/auth/refresh";
+        });
 
         // Register platform services using reflection to avoid direct dependency
         // This allows the shared project to remain platform-agnostic
@@ -117,9 +125,16 @@ public partial class App : Application
         var services = new ServiceCollection();
 
         // Register existing services
-        services.AddSingleton<AuthenticationService>();
         services.AddSingleton<PreferencesService>();
         services.AddSingleton<NavigationService>();
+
+        // Register API client services
+        services.AddApiClientServices(options =>
+        {
+            // TODO: 패스오더 API base URL 설정
+            options.BaseUrl = "https://api.passorder.com";
+            options.RefreshTokenEndpoint = "/auth/refresh";
+        });
 
         // Detect platform and register appropriate services
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Create("ANDROID")))

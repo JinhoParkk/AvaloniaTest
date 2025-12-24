@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using AvaloniaApplication1.Models;
@@ -8,7 +9,7 @@ namespace AvaloniaApplication1.ViewModels;
 
 public partial class LoginViewModel : ViewModelBase
 {
-    private readonly AuthenticationService _authService;
+    private readonly IAuthenticationService _authService;
     private readonly PreferencesService _preferencesService;
     private readonly NavigationService _navigationService;
 
@@ -24,10 +25,13 @@ public partial class LoginViewModel : ViewModelBase
     [ObservableProperty]
     private string _errorMessage = string.Empty;
 
+    [ObservableProperty]
+    private bool _isLoading;
+
     public string AppVersion { get; }
 
     public LoginViewModel(
-        AuthenticationService authService,
+        IAuthenticationService authService,
         PreferencesService preferencesService,
         NavigationService navigationService)
     {
@@ -40,7 +44,7 @@ public partial class LoginViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void Login()
+    private async Task LoginAsync()
     {
         ErrorMessage = string.Empty;
 
@@ -56,18 +60,33 @@ public partial class LoginViewModel : ViewModelBase
             return;
         }
 
-        if (_authService.Login(Username, Password))
-        {
-            if (RememberMe && _authService.CurrentUser != null)
-            {
-                _preferencesService.SaveAutoLogin(_authService.CurrentUser);
-            }
+        IsLoading = true;
 
-            _navigationService.NavigateTo(new MainViewModel());
-        }
-        else
+        try
         {
-            ErrorMessage = "아이디 또는 비밀번호가 올바르지 않습니다.";
+            var success = await _authService.LoginAsync(Username, Password);
+
+            if (success)
+            {
+                if (RememberMe && _authService.CurrentUser != null)
+                {
+                    _preferencesService.SaveAutoLogin(_authService.CurrentUser);
+                }
+
+                _navigationService.NavigateTo(new MainViewModel());
+            }
+            else
+            {
+                ErrorMessage = "아이디 또는 비밀번호가 올바르지 않습니다.";
+            }
+        }
+        catch
+        {
+            ErrorMessage = "로그인 중 오류가 발생했습니다. 다시 시도해주세요.";
+        }
+        finally
+        {
+            IsLoading = false;
         }
     }
 
