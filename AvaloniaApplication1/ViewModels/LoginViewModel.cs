@@ -73,7 +73,8 @@ public partial class LoginViewModel : ViewModelBase
                     _preferencesService.SaveAutoLogin(_authService.CurrentUser);
                 }
 
-                _navigationService.NavigateTo(new MainViewModel());
+                // 타입 기반 네비게이션 (DI에서 resolve)
+                _navigationService.NavigateTo<MainViewModel>();
             }
             else
             {
