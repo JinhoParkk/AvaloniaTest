@@ -1,15 +1,27 @@
 using System;
+using System.Collections.Generic;
 using AvaloniaApplication1.ViewModels;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AvaloniaApplication1.Services;
 
 /// <summary>
-/// 타입 기반 네비게이션 서비스 (DI 통합)
+/// 타입 기반 네비게이션 서비스 (DI 통합, 뒤로/앞으로 가기 지원)
 /// </summary>
-public class NavigationService
+public partial class NavigationService : ObservableObject
 {
     private IServiceProvider? _serviceProvider;
+    private readonly Stack<ViewModelBase> _backStack = new();
+    private readonly Stack<ViewModelBase> _forwardStack = new();
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanGoBack))]
+    [NotifyPropertyChangedFor(nameof(CanGoForward))]
+    private ViewModelBase? _currentViewModel;
+
+    public bool CanGoBack => _backStack.Count > 0;
+    public bool CanGoForward => _forwardStack.Count > 0;
 
     public event Action<ViewModelBase>? CurrentViewModelChanged;
 
@@ -30,7 +42,7 @@ public class NavigationService
             throw new InvalidOperationException("NavigationService has not been initialized.");
 
         var viewModel = _serviceProvider.GetRequiredService<TViewModel>();
-        CurrentViewModelChanged?.Invoke(viewModel);
+        NavigateToInternal(viewModel);
     }
 
     /// <summary>
@@ -38,6 +50,73 @@ public class NavigationService
     /// </summary>
     public void NavigateTo(ViewModelBase viewModel)
     {
+        NavigateToInternal(viewModel);
+    }
+
+    private void NavigateToInternal(ViewModelBase viewModel)
+    {
+        if (CurrentViewModel != null)
+        {
+            _backStack.Push(CurrentViewModel);
+            CurrentViewModel.OnDeactivated();
+        }
+
+        _forwardStack.Clear();
+
+        CurrentViewModel = viewModel;
+        viewModel.OnActivated();
+
         CurrentViewModelChanged?.Invoke(viewModel);
+    }
+
+    /// <summary>
+    /// 뒤로 가기
+    /// </summary>
+    public bool GoBack()
+    {
+        if (!CanGoBack) return false;
+
+        if (CurrentViewModel != null)
+        {
+            _forwardStack.Push(CurrentViewModel);
+            CurrentViewModel.OnDeactivated();
+        }
+
+        CurrentViewModel = _backStack.Pop();
+        CurrentViewModel.OnActivated();
+
+        CurrentViewModelChanged?.Invoke(CurrentViewModel);
+        return true;
+    }
+
+    /// <summary>
+    /// 앞으로 가기
+    /// </summary>
+    public bool GoForward()
+    {
+        if (!CanGoForward) return false;
+
+        if (CurrentViewModel != null)
+        {
+            _backStack.Push(CurrentViewModel);
+            CurrentViewModel.OnDeactivated();
+        }
+
+        CurrentViewModel = _forwardStack.Pop();
+        CurrentViewModel.OnActivated();
+
+        CurrentViewModelChanged?.Invoke(CurrentViewModel);
+        return true;
+    }
+
+    /// <summary>
+    /// 네비게이션 히스토리 초기화
+    /// </summary>
+    public void ClearHistory()
+    {
+        _backStack.Clear();
+        _forwardStack.Clear();
+        OnPropertyChanged(nameof(CanGoBack));
+        OnPropertyChanged(nameof(CanGoForward));
     }
 }
