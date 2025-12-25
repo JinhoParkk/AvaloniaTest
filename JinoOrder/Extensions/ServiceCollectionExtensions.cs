@@ -51,7 +51,6 @@ public static class ServiceCollectionExtensions
     {
         // Transient: 매번 새 인스턴스 생성
         services.AddTransient<LoginViewModel>();
-        services.AddTransient<MainViewModel>();
         services.AddTransient<MainWindowViewModel>();
 
         // 지노오더 ViewModels

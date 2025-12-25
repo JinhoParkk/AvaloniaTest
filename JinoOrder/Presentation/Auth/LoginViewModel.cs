@@ -1,5 +1,6 @@
 using JinoOrder.Presentation.Common;
 using JinoOrder.Presentation.Main;
+using JinoOrder.Presentation.Shell;
 using JinoOrder.Infrastructure.Storage;
 using JinoOrder.Application.Auth;
 using System.Reflection;
@@ -79,7 +80,7 @@ public partial class LoginViewModel : ViewModelBase
                 }
 
                 // 타입 기반 네비게이션 (DI에서 resolve)
-                _navigationService.NavigateTo<MainViewModel>();
+                _navigationService.NavigateTo<JinoOrderMainViewModel>();
             }
             else
             {
