@@ -23,60 +23,79 @@
     </Style>
   </UserControl.Styles>
 
-  <Grid RowDefinitions="Auto,*" Margin="24">
-    <TextBlock Grid.Row="0" Text="매출 통계" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
+  <ScrollViewer Padding="24">
+    <StackPanel Spacing="24">
+      <!-- 오늘 요약 섹션 -->
+      <TextBlock Text="오늘 요약" FontSize="24" FontWeight="Bold"/>
 
-    <Grid Grid.Row="1" ColumnDefinitions="*,360">
-      <StackPanel Grid.Column="0" Margin="0,0,24,0">
-        <!-- 오늘 매출 카드 -->
-        <Border Classes="stat-card" Margin="0,0,0,16">
-          <Grid ColumnDefinitions="*,*,*">
-            <StackPanel Grid.Column="0">
-              <TextBlock Text="오늘 매출" FontSize="14" Opacity="0.6" Margin="0,0,0,8"/>
-              <TextBlock Text="{Binding TodaySummary.FormattedTotalSales, FallbackValue=0원}"
-                        FontSize="32" FontWeight="Bold" Foreground="#0078D4"/>
-            </StackPanel>
-            <StackPanel Grid.Column="1">
-              <TextBlock Text="총 주문" FontSize="14" Opacity="0.6" Margin="0,0,0,8"/>
-              <TextBlock Text="{Binding TodaySummary.TotalOrders, FallbackValue=0, StringFormat={}{0}건}"
-                        FontSize="28" FontWeight="Bold"/>
-            </StackPanel>
-            <StackPanel Grid.Column="2">
-              <TextBlock Text="평균 금액" FontSize="14" Opacity="0.6" Margin="0,0,0,8"/>
-              <TextBlock Text="{Binding TodaySummary.FormattedAverageOrderAmount, FallbackValue=0원}"
-                        FontSize="28" FontWeight="Bold"/>
-            </StackPanel>
-          </Grid>
+      <!-- 요약 카드들 -->
+      <Grid ColumnDefinitions="*,*,*,*">
+        <Border Grid.Column="0" Classes="stat-card" Margin="0,0,8,0">
+          <StackPanel>
+            <TextBlock Text="총 매출" FontSize="13" Opacity="0.6"/>
+            <TextBlock Text="{Binding TodaySummary.FormattedTotalSales, FallbackValue=0원}"
+                      FontSize="24" FontWeight="Bold" Foreground="#0078D4"/>
+          </StackPanel>
         </Border>
-      </StackPanel>
+        <Border Grid.Column="1" Classes="stat-card" Margin="4,0">
+          <StackPanel>
+            <TextBlock Text="총 주문" FontSize="13" Opacity="0.6"/>
+            <TextBlock Text="{Binding TodaySummary.TotalOrders, FallbackValue=0, StringFormat={}{0}건}"
+                      FontSize="24" FontWeight="Bold"/>
+          </StackPanel>
+        </Border>
+        <Border Grid.Column="2" Classes="stat-card" Margin="4,0">
+          <StackPanel>
+            <TextBlock Text="완료" FontSize="13" Opacity="0.6"/>
+            <TextBlock Text="{Binding TodaySummary.CompletedOrders, FallbackValue=0}"
+                      FontSize="24" FontWeight="Bold" Foreground="#107C10"/>
+          </StackPanel>
+        </Border>
+        <Border Grid.Column="3" Classes="stat-card" Margin="8,0,0,0">
+          <StackPanel>
+            <TextBlock Text="취소" FontSize="13" Opacity="0.6"/>
+            <TextBlock Text="{Binding TodaySummary.CancelledOrders, FallbackValue=0}"
+                      FontSize="24" FontWeight="Bold" Foreground="#E81123"/>
+          </StackPanel>
+        </Border>
+      </Grid>
 
-      <!-- 인기 메뉴 -->
-      <StackPanel Grid.Column="1">
-        <TextBlock Text="인기 메뉴 TOP 5" FontSize="18" FontWeight="Bold" Margin="0,0,0,16"/>
+      <!-- 평균 주문금액 -->
+      <Border Classes="stat-card">
+        <Grid ColumnDefinitions="*,Auto">
+          <StackPanel Grid.Column="0">
+            <TextBlock Text="평균 주문금액" FontSize="14" Opacity="0.6"/>
+            <TextBlock Text="{Binding TodaySummary.FormattedAverageOrderAmount, FallbackValue=0원}"
+                      FontSize="28" FontWeight="SemiBold"/>
+          </StackPanel>
+        </Grid>
+      </Border>
 
-        <ItemsControl ItemsSource="{Binding PopularMenuItems}">
-          <ItemsControl.ItemTemplate>
-            <DataTemplate>
-              <Border Classes="menu-card" Margin="0,0,0,8">
-                <Grid ColumnDefinitions="Auto,*,Auto">
-                  <Border Grid.Column="0" Width="28" Height="28" CornerRadius="14"
-                         Background="#0078D4" Margin="0,0,12,0">
-                    <TextBlock Text="{Binding Rank}" Foreground="White"
-                              HorizontalAlignment="Center" VerticalAlignment="Center"
-                              FontWeight="Bold" FontSize="13"/>
-                  </Border>
-                  <StackPanel Grid.Column="1">
-                    <TextBlock Text="{Binding MenuName}" FontSize="15" FontWeight="Medium"/>
-                    <TextBlock Text="{Binding OrderCount, StringFormat={}{0}잔}" FontSize="12" Opacity="0.6"/>
-                  </StackPanel>
-                  <TextBlock Grid.Column="2" Text="{Binding FormattedTotalSales}"
-                            FontSize="14" FontWeight="Medium" VerticalAlignment="Center"/>
-                </Grid>
-              </Border>
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
-      </StackPanel>
-    </Grid>
-  </Grid>
+      <!-- 인기 메뉴 TOP 5 -->
+      <TextBlock Text="인기 메뉴 TOP 5" FontSize="20" FontWeight="Bold" Margin="0,8,0,0"/>
+
+      <ItemsControl ItemsSource="{Binding PopularMenuItems}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <Border Classes="menu-card" Margin="0,0,0,8">
+              <Grid ColumnDefinitions="Auto,*,Auto">
+                <Border Grid.Column="0" Width="32" Height="32" CornerRadius="16"
+                       Background="#0078D4" Margin="0,0,16,0">
+                  <TextBlock Text="{Binding Rank}" Foreground="White"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            FontWeight="Bold" FontSize="14"/>
+                </Border>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                  <TextBlock Text="{Binding MenuName}" FontSize="16" FontWeight="Medium"/>
+                  <TextBlock Text="{Binding OrderCount, StringFormat={}{0}잔}" FontSize="13" Opacity="0.6"/>
+                </StackPanel>
+                <TextBlock Grid.Column="2" Text="{Binding FormattedTotalSales}"
+                          FontSize="16" FontWeight="Medium" VerticalAlignment="Center"/>
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+  </ScrollViewer>
 </UserControl>
