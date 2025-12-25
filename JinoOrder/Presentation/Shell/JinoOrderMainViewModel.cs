@@ -15,7 +15,6 @@ using JinoOrder.Application.Orders;
 using JinoOrder.Application.Menu;
 using JinoOrder.Application.Customers;
 using JinoOrder.Application.Statistics;
-using FluentAvalonia.UI.Controls;
 
 namespace JinoOrder.Presentation.Shell;
 
@@ -38,11 +37,6 @@ public partial class JinoOrderMainViewModel : ViewModelBase
     // 네비게이션
     [ObservableProperty] private string _selectedMenu = "orders";
     [ObservableProperty] private bool _isSidebarCollapsed;
-    [ObservableProperty] private bool _isPaneOpen = true;
-
-    // NavigationView 디스플레이 모드 (플랫폼에 따라)
-    public NavigationViewPaneDisplayMode NavigationDisplayMode =>
-        IsMobile ? NavigationViewPaneDisplayMode.LeftMinimal : NavigationViewPaneDisplayMode.Left;
 
     // 주문 데이터
     [ObservableProperty] private ObservableCollection<Order> _pendingOrders = new();
