@@ -1,0 +1,166 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="using:FluentAvalonia.UI.Controls"
+             xmlns:vm="using:JinoOrder.Presentation.Shell"
+             xmlns:models="using:JinoOrder.Domain.Orders"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="JinoOrder.Presentation.Orders.OrdersPage"
+             x:DataType="vm:JinoOrderMainViewModel">
+
+  <ScrollViewer Padding="24">
+    <StackPanel Spacing="24">
+      <!-- 대기중인 주문 섹션 -->
+      <StackPanel Spacing="12">
+        <StackPanel Orientation="Horizontal" Spacing="12">
+          <TextBlock Text="대기중인 주문" FontSize="20" FontWeight="SemiBold"/>
+          <ui:InfoBadge Value="{Binding PendingOrderCount}"
+                        IsVisible="{Binding HasPendingOrders}"
+                        Classes="Attention"/>
+        </StackPanel>
+
+        <!-- 대기중 주문 없음 -->
+        <ui:InfoBar Title="새로운 주문이 없습니다"
+                    Message="주문이 들어오면 여기에 표시됩니다"
+                    IsOpen="{Binding !PendingOrders.Count}"
+                    IsClosable="False"
+                    Severity="Informational"/>
+
+        <!-- 주문 카드들 -->
+        <ItemsControl ItemsSource="{Binding PendingOrders}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                      BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                      BorderThickness="1"
+                      CornerRadius="8"
+                      Padding="20"
+                      Margin="0,0,0,12">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto">
+                  <!-- 주문 헤더 -->
+                  <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,16">
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12">
+                      <TextBlock Text="{Binding OrderNumber}" FontSize="20" FontWeight="Bold"/>
+                      <ui:InfoBadge Classes="Attention">
+                        <ui:InfoBadge.IconSource>
+                          <ui:SymbolIconSource Symbol="Clock"/>
+                        </ui:InfoBadge.IconSource>
+                      </ui:InfoBadge>
+                    </StackPanel>
+                    <TextBlock Grid.Column="1" Text="{Binding WaitingTimeText}" FontSize="13" Opacity="0.6"/>
+                  </Grid>
+
+                  <!-- 고객 정보 -->
+                  <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8" Margin="0,0,0,16">
+                    <PathIcon Data="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" Width="16" Height="16"/>
+                    <TextBlock Text="{Binding CustomerName}" FontSize="14"/>
+                  </StackPanel>
+
+                  <!-- 주문 아이템 -->
+                  <ItemsControl Grid.Row="2" ItemsSource="{Binding Items}" Margin="0,0,0,16">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate>
+                        <Grid ColumnDefinitions="*,Auto" Margin="0,4">
+                          <StackPanel Grid.Column="0">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                              <TextBlock Text="{Binding MenuName}" FontSize="15" FontWeight="Medium"/>
+                              <TextBlock Text="{Binding Quantity, StringFormat=x{0}}" FontSize="14" Opacity="0.7"/>
+                            </StackPanel>
+                            <TextBlock Text="{Binding OptionsSummary}" FontSize="12" Opacity="0.5"
+                                      IsVisible="{Binding OptionsSummary, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                          </StackPanel>
+                          <TextBlock Grid.Column="1" Text="{Binding FormattedTotalPrice}" FontSize="14"/>
+                        </Grid>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+
+                  <!-- 총 금액 및 버튼 -->
+                  <Grid Grid.Row="3" ColumnDefinitions="*,Auto">
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                      <TextBlock Text="총" FontSize="14" Opacity="0.7"/>
+                      <TextBlock Text="{Binding FormattedTotalAmount}" FontSize="20" FontWeight="Bold"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                      <Button Content="거절" Classes="accent"
+                              Command="{Binding $parent[ItemsControl].((vm:JinoOrderMainViewModel)DataContext).CancelOrderCommand}"
+                              CommandParameter="{Binding}"/>
+                      <Button Content="접수하기" Classes="accent"
+                              Command="{Binding $parent[ItemsControl].((vm:JinoOrderMainViewModel)DataContext).AcceptOrderCommand}"
+                              CommandParameter="{Binding}">
+                        <Button.Styles>
+                          <Style Selector="Button">
+                            <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}"/>
+                            <Setter Property="Foreground" Value="White"/>
+                          </Style>
+                        </Button.Styles>
+                      </Button>
+                    </StackPanel>
+                  </Grid>
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+
+      <!-- 진행중인 주문 -->
+      <StackPanel Spacing="12">
+        <TextBlock Text="진행중인 주문" FontSize="20" FontWeight="SemiBold"/>
+
+        <ItemsControl ItemsSource="{Binding ActiveOrders}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel Orientation="Horizontal"/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                      BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                      BorderThickness="1"
+                      CornerRadius="8"
+                      Padding="16"
+                      MinWidth="200" MaxWidth="320" Margin="0,0,12,12">
+                <Grid RowDefinitions="Auto,Auto,Auto">
+                  <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+                    <TextBlock Grid.Column="0" Text="{Binding OrderNumber}" FontSize="18" FontWeight="Bold"/>
+                    <ui:InfoBadge Grid.Column="1" Classes="Success" Value="{Binding StatusText}"/>
+                  </Grid>
+
+                  <TextBlock Grid.Row="1" Text="{Binding CustomerName}" FontSize="13" Opacity="0.7" Margin="0,0,0,12"/>
+
+                  <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8">
+                    <Button Content="완료" HorizontalAlignment="Stretch"
+                            Command="{Binding $parent[ItemsControl].((vm:JinoOrderMainViewModel)DataContext).CompleteOrderCommand}"
+                            CommandParameter="{Binding}"
+                            IsVisible="{Binding Status, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static models:OrderStatus.Preparing}}">
+                      <Button.Styles>
+                        <Style Selector="Button">
+                          <Setter Property="Background" Value="#107C10"/>
+                          <Setter Property="Foreground" Value="White"/>
+                        </Style>
+                      </Button.Styles>
+                    </Button>
+                    <Button Content="픽업완료" HorizontalAlignment="Stretch"
+                            Command="{Binding $parent[ItemsControl].((vm:JinoOrderMainViewModel)DataContext).MarkAsPickedUpCommand}"
+                            CommandParameter="{Binding}"
+                            IsVisible="{Binding Status, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static models:OrderStatus.Ready}}">
+                      <Button.Styles>
+                        <Style Selector="Button">
+                          <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}"/>
+                          <Setter Property="Foreground" Value="White"/>
+                        </Style>
+                      </Button.Styles>
+                    </Button>
+                  </StackPanel>
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>
