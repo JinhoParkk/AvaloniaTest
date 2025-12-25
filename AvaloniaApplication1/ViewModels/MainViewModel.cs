@@ -2,11 +2,15 @@ using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using AvaloniaApplication1.Models;
+using AvaloniaApplication1.Services;
 
 namespace AvaloniaApplication1.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
+    // 플랫폼 정보
+    private readonly IPlatformInfo? _platformInfo;
+
     // 매장 정보
     [ObservableProperty] private string _storeName = "패스오더 강남점";
     [ObservableProperty] private bool _isOpen = true;
@@ -23,13 +27,22 @@ public partial class MainViewModel : ViewModelBase
     public string PickupTimeText => GetPickupTimeText();
     public string StatusColor => GetStatusColor();
 
+    // 플랫폼별 UI 표시 여부
+    public bool ShowWindowControls => _platformInfo?.SupportsWindowControls ?? true;
+    public bool IsMobilePlatform => _platformInfo?.IsMobile ?? false;
+
     // 윈도우 컨트롤 이벤트
     public event Action? MinimizeRequested;
     public event Action? MaximizeRequested;
     public event Action? CloseRequested;
 
-    public MainViewModel()
+    public MainViewModel() : this(null)
     {
+    }
+
+    public MainViewModel(IPlatformInfo? platformInfo)
+    {
+        _platformInfo = platformInfo;
         // 임시 데이터 (나중에 API에서 가져옴)
         LoadStoreData();
     }
