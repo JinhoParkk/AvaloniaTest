@@ -17,10 +17,7 @@ namespace JinoOrder;
 
 public partial class App : Avalonia.Application
 {
-    /// <summary>
-    /// 전역 ServiceProvider (DI 컨테이너)
-    /// </summary>
-    public static IServiceProvider Services { get; private set; } = null!;
+    private IServiceProvider _services = null!;
 
     /// <summary>
     /// 플랫폼별 서비스 제공자 (Desktop/iOS/Android에서 설정)
@@ -95,11 +92,7 @@ public partial class App : Avalonia.Application
         PlatformServices?.ConfigureServices(services);
 
         // ServiceProvider 생성
-        Services = services.BuildServiceProvider();
-
-        // NavigationService 초기화
-        var navigationService = Services.GetRequiredService<NavigationService>();
-        navigationService.Initialize(Services);
+        _services = services.BuildServiceProvider();
     }
 
     /// <summary>
@@ -108,10 +101,10 @@ public partial class App : Avalonia.Application
     private void InitializeApp(Action<MainWindowViewModel> setDataContext)
     {
         // MainWindowViewModel 생성 (DI에서 resolve)
-        var mainWindowViewModel = Services.GetRequiredService<MainWindowViewModel>();
+        var mainWindowViewModel = _services.GetRequiredService<MainWindowViewModel>();
 
         // 지노오더를 기본 시작 화면으로 설정
-        var initialViewModel = Services.GetRequiredService<JinoOrderMainViewModel>();
+        var initialViewModel = _services.GetRequiredService<JinoOrderMainViewModel>();
 
         mainWindowViewModel.SetInitialViewModel(initialViewModel);
         setDataContext(mainWindowViewModel);

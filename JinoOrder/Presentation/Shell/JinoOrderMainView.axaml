@@ -14,9 +14,6 @@
     d:DesignWidth="1280"
     x:DataType="vm:JinoOrderMainViewModel"
     mc:Ignorable="d">
-    <Design.DataContext>
-        <vm:JinoOrderMainViewModel />
-    </Design.DataContext>
 
     <UserControl.Styles>
         <!--  사이드바 스타일  -->
@@ -306,16 +303,24 @@
             <Border Grid.Row="1" Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}">
                 <Panel>
                     <!--  주문접수 화면  -->
-                    <orders:OrdersView DataContext="{Binding}" IsVisible="{Binding IsOrdersSelected}" />
+                    <orders:OrdersView
+                        DataContext="{Binding Orders}"
+                        IsVisible="{Binding $parent[UserControl].((vm:JinoOrderMainViewModel)DataContext).IsOrdersSelected}" />
 
                     <!--  메뉴관리 화면  -->
-                    <menu:MenuManagementView DataContext="{Binding}" IsVisible="{Binding IsMenuSelected}" />
+                    <menu:MenuManagementView
+                        DataContext="{Binding Menu}"
+                        IsVisible="{Binding $parent[UserControl].((vm:JinoOrderMainViewModel)DataContext).IsMenuSelected}" />
 
                     <!--  고객관리 화면  -->
-                    <customers:CustomersView DataContext="{Binding}" IsVisible="{Binding IsCustomersSelected}" />
+                    <customers:CustomersView
+                        DataContext="{Binding Customers}"
+                        IsVisible="{Binding $parent[UserControl].((vm:JinoOrderMainViewModel)DataContext).IsCustomersSelected}" />
 
                     <!--  매출통계 화면  -->
-                    <stats:StatsView DataContext="{Binding}" IsVisible="{Binding IsStatsSelected}" />
+                    <stats:StatsView
+                        DataContext="{Binding Statistics}"
+                        IsVisible="{Binding $parent[UserControl].((vm:JinoOrderMainViewModel)DataContext).IsStatsSelected}" />
 
                     <!--  주문내역 화면  -->
                     <StackPanel Margin="24" IsVisible="{Binding IsHistorySelected}">
@@ -329,7 +334,7 @@
 
                     <!--  설정 화면  -->
                     <settings:SettingsView
-                        DataContext="{Binding SettingsViewModel}"
+                        DataContext="{Binding Settings}"
                         IsVisible="{Binding $parent[UserControl].((vm:JinoOrderMainViewModel)DataContext).IsSettingsSelected}" />
                 </Panel>
             </Border>

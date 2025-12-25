@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
+using JinoOrder.Application.Common;
 using JinoOrder.Presentation.Common;
-using JinoOrder.Presentation.Main;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace JinoOrder.Infrastructure.Services;
 
@@ -12,7 +11,7 @@ namespace JinoOrder.Infrastructure.Services;
 /// </summary>
 public partial class NavigationService : ObservableObject
 {
-    private IServiceProvider? _serviceProvider;
+    private readonly IViewModelFactory _viewModelFactory;
     private readonly Stack<ViewModelBase> _backStack = new();
     private readonly Stack<ViewModelBase> _forwardStack = new();
 
@@ -26,12 +25,9 @@ public partial class NavigationService : ObservableObject
 
     public event Action<ViewModelBase>? CurrentViewModelChanged;
 
-    /// <summary>
-    /// ServiceProvider 초기화 (App 시작 시 호출)
-    /// </summary>
-    public void Initialize(IServiceProvider serviceProvider)
+    public NavigationService(IViewModelFactory viewModelFactory)
     {
-        _serviceProvider = serviceProvider;
+        _viewModelFactory = viewModelFactory;
     }
 
     /// <summary>
@@ -39,10 +35,7 @@ public partial class NavigationService : ObservableObject
     /// </summary>
     public void NavigateTo<TViewModel>() where TViewModel : ViewModelBase
     {
-        if (_serviceProvider is null)
-            throw new InvalidOperationException("NavigationService has not been initialized.");
-
-        var viewModel = _serviceProvider.GetRequiredService<TViewModel>();
+        var viewModel = _viewModelFactory.Create<TViewModel>();
         NavigateToInternal(viewModel);
     }
 
