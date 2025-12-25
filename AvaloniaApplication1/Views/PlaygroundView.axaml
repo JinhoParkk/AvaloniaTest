@@ -1,0 +1,980 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:AvaloniaApplication1.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="800"
+             x:Class="AvaloniaApplication1.Views.PlaygroundView"
+             x:DataType="vm:PlaygroundViewModel">
+
+  <UserControl.Styles>
+    <!-- Sidebar Styles -->
+    <Style Selector="Border.sidebar">
+      <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundAltHighBrush}"/>
+      <Setter Property="Width" Value="240"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundBaseLowBrush}"/>
+      <Setter Property="BorderThickness" Value="0,0,1,0"/>
+    </Style>
+
+    <Style Selector="Button.nav-item">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="HorizontalContentAlignment" Value="Left"/>
+      <Setter Property="Padding" Value="16,12"/>
+      <Setter Property="CornerRadius" Value="8"/>
+      <Setter Property="Margin" Value="8,2"/>
+      <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    <Style Selector="Button.nav-item:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListLowBrush}"/>
+    </Style>
+    <Style Selector="Button.nav-item.selected /template/ ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight2}"/>
+    </Style>
+
+    <!-- Content Area -->
+    <Style Selector="Border.content-area">
+      <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"/>
+      <Setter Property="Padding" Value="32"/>
+    </Style>
+
+    <!-- Section Title -->
+    <Style Selector="TextBlock.section-title">
+      <Setter Property="FontSize" Value="28"/>
+      <Setter Property="FontWeight" Value="Bold"/>
+      <Setter Property="Margin" Value="0,0,0,8"/>
+    </Style>
+
+    <Style Selector="TextBlock.section-subtitle">
+      <Setter Property="FontSize" Value="14"/>
+      <Setter Property="Opacity" Value="0.6"/>
+      <Setter Property="Margin" Value="0,0,0,24"/>
+    </Style>
+
+    <!-- Demo Card -->
+    <Style Selector="Border.demo-card">
+      <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundAltHighBrush}"/>
+      <Setter Property="CornerRadius" Value="12"/>
+      <Setter Property="Padding" Value="24"/>
+      <Setter Property="Margin" Value="0,0,0,16"/>
+      <Setter Property="BoxShadow" Value="0 2 8 0 #20000000"/>
+    </Style>
+
+    <Style Selector="TextBlock.card-title">
+      <Setter Property="FontSize" Value="16"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="Margin" Value="0,0,0,16"/>
+    </Style>
+
+    <!-- Button Styles -->
+    <Style Selector="Button.btn-primary">
+      <Setter Property="Background" Value="#0078D4"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="Padding" Value="16,10"/>
+      <Setter Property="CornerRadius" Value="6"/>
+      <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+    <Style Selector="Button.btn-primary:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#1084D8"/>
+    </Style>
+    <Style Selector="Button.btn-primary:pressed /template/ ContentPresenter">
+      <Setter Property="Background" Value="#006CBD"/>
+    </Style>
+
+    <Style Selector="Button.btn-secondary">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="#0078D4"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="Foreground" Value="#0078D4"/>
+      <Setter Property="Padding" Value="16,10"/>
+      <Setter Property="CornerRadius" Value="6"/>
+      <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+    <Style Selector="Button.btn-secondary:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#100078D4"/>
+    </Style>
+
+    <Style Selector="Button.btn-danger">
+      <Setter Property="Background" Value="#E81123"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="Padding" Value="16,10"/>
+      <Setter Property="CornerRadius" Value="6"/>
+      <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+    <Style Selector="Button.btn-danger:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#F2282A"/>
+    </Style>
+
+    <Style Selector="Button.btn-success">
+      <Setter Property="Background" Value="#107C10"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="Padding" Value="16,10"/>
+      <Setter Property="CornerRadius" Value="6"/>
+      <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+    <Style Selector="Button.btn-success:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#128C12"/>
+    </Style>
+
+    <Style Selector="Button.btn-warning">
+      <Setter Property="Background" Value="#FF8C00"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="Padding" Value="16,10"/>
+      <Setter Property="CornerRadius" Value="6"/>
+      <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+    <Style Selector="Button.btn-warning:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#FFA500"/>
+    </Style>
+
+    <Style Selector="Button.btn-ghost">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}"/>
+      <Setter Property="Padding" Value="16,10"/>
+      <Setter Property="CornerRadius" Value="6"/>
+    </Style>
+    <Style Selector="Button.btn-ghost:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListLowBrush}"/>
+    </Style>
+
+    <!-- Icon button -->
+    <Style Selector="Button.btn-icon">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="Padding" Value="10"/>
+      <Setter Property="CornerRadius" Value="6"/>
+      <Setter Property="Width" Value="40"/>
+      <Setter Property="Height" Value="40"/>
+    </Style>
+    <Style Selector="Button.btn-icon:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListLowBrush}"/>
+    </Style>
+
+    <!-- Input styles -->
+    <Style Selector="TextBox.input">
+      <Setter Property="Padding" Value="12,10"/>
+      <Setter Property="CornerRadius" Value="6"/>
+      <Setter Property="MinWidth" Value="200"/>
+    </Style>
+
+    <!-- Color swatch -->
+    <Style Selector="Button.color-swatch">
+      <Setter Property="Width" Value="40"/>
+      <Setter Property="Height" Value="40"/>
+      <Setter Property="CornerRadius" Value="20"/>
+      <Setter Property="Padding" Value="0"/>
+      <Setter Property="BorderThickness" Value="2"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+    <Style Selector="Button.color-swatch:pointerover">
+      <Setter Property="BorderBrush" Value="White"/>
+    </Style>
+
+    <!-- Animation box -->
+    <Style Selector="Border.animation-box">
+      <Setter Property="Width" Value="100"/>
+      <Setter Property="Height" Value="100"/>
+      <Setter Property="CornerRadius" Value="12"/>
+      <Setter Property="Background" Value="{DynamicResource SystemAccentColor}"/>
+    </Style>
+  </UserControl.Styles>
+
+  <Grid ColumnDefinitions="Auto,*">
+    <!-- Sidebar -->
+    <Border Grid.Column="0" Classes="sidebar">
+      <DockPanel>
+        <!-- Header -->
+        <StackPanel DockPanel.Dock="Top" Margin="16,20,16,24">
+          <TextBlock Text="UI Playground"
+                     FontSize="22"
+                     FontWeight="Bold"/>
+          <TextBlock Text="Explore components"
+                     FontSize="13"
+                     Opacity="0.6"
+                     Margin="0,4,0,0"/>
+        </StackPanel>
+
+        <!-- Navigation Items -->
+        <ScrollViewer>
+          <ItemsControl ItemsSource="{Binding Sections}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:PlaygroundSection">
+                <Button Classes="nav-item"
+                        Command="{Binding $parent[UserControl].((vm:PlaygroundViewModel)DataContext).SelectSectionCommand}"
+                        CommandParameter="{Binding Name}">
+                  <StackPanel Orientation="Horizontal" Spacing="12">
+                    <PathIcon Data="{Binding IconPath}"
+                              Width="20" Height="20"
+                              Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                    <TextBlock Text="{Binding Name}"
+                               FontSize="14"
+                               VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Button>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </DockPanel>
+    </Border>
+
+    <!-- Main Content -->
+    <Border Grid.Column="1" Classes="content-area">
+      <ScrollViewer>
+        <Panel>
+          <!-- Buttons Section -->
+          <StackPanel IsVisible="{Binding SelectedSection, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=Buttons}">
+            <TextBlock Classes="section-title" Text="Buttons"/>
+            <TextBlock Classes="section-subtitle" Text="Various button styles and states for different use cases"/>
+
+            <!-- Primary Buttons -->
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Button Variants"/>
+                <WrapPanel Orientation="Horizontal">
+                  <Button Classes="btn-primary" Content="Primary" Margin="0,0,12,12"
+                          Command="{Binding PrimaryButtonClickCommand}"/>
+                  <Button Classes="btn-secondary" Content="Secondary" Margin="0,0,12,12"
+                          Command="{Binding SecondaryButtonClickCommand}"/>
+                  <Button Classes="btn-success" Content="Success" Margin="0,0,12,12"/>
+                  <Button Classes="btn-warning" Content="Warning" Margin="0,0,12,12"/>
+                  <Button Classes="btn-danger" Content="Danger" Margin="0,0,12,12"
+                          Command="{Binding DangerButtonClickCommand}"/>
+                  <Button Classes="btn-ghost" Content="Ghost" Margin="0,0,12,12"/>
+                </WrapPanel>
+              </StackPanel>
+            </Border>
+
+            <!-- Button States -->
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Button States"/>
+                <WrapPanel Orientation="Horizontal">
+                  <Button Classes="btn-primary" Content="Normal" Margin="0,0,12,12"/>
+                  <Button Classes="btn-primary" Content="Disabled" IsEnabled="False" Margin="0,0,12,12"/>
+                  <Button Classes="btn-primary" Margin="0,0,12,12"
+                          IsEnabled="{Binding !IsButtonLoading}"
+                          Command="{Binding LoadingButtonClickCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                      <ProgressBar IsIndeterminate="True"
+                                   IsVisible="{Binding IsButtonLoading}"
+                                   Width="16" Height="16"
+                                   Foreground="White"/>
+                      <TextBlock Text="Loading..."/>
+                    </StackPanel>
+                  </Button>
+                </WrapPanel>
+                <CheckBox Content="Enable buttons" IsChecked="{Binding IsButtonEnabled}" Margin="0,16,0,0"/>
+              </StackPanel>
+            </Border>
+
+            <!-- Button Sizes -->
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Button Sizes"/>
+                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                  <Button Classes="btn-primary" Content="Small" Padding="10,6" FontSize="12" Margin="0,0,12,12"/>
+                  <Button Classes="btn-primary" Content="Medium" Padding="16,10" FontSize="14" Margin="0,0,12,12"/>
+                  <Button Classes="btn-primary" Content="Large" Padding="24,14" FontSize="16" Margin="0,0,12,12"/>
+                </WrapPanel>
+              </StackPanel>
+            </Border>
+
+            <!-- Icon Buttons -->
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Icon Buttons"/>
+                <WrapPanel Orientation="Horizontal">
+                  <Button Classes="btn-icon" Margin="0,0,8,0" ToolTip.Tip="Home">
+                    <PathIcon Data="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" Width="20" Height="20"/>
+                  </Button>
+                  <Button Classes="btn-icon" Margin="0,0,8,0" ToolTip.Tip="Settings">
+                    <PathIcon Data="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" Width="20" Height="20"/>
+                  </Button>
+                  <Button Classes="btn-icon" Margin="0,0,8,0" ToolTip.Tip="Notifications">
+                    <PathIcon Data="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" Width="20" Height="20"/>
+                  </Button>
+                  <Button Classes="btn-icon" Margin="0,0,8,0" ToolTip.Tip="Search">
+                    <PathIcon Data="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" Width="20" Height="20"/>
+                  </Button>
+                  <Button Classes="btn-icon" Margin="0,0,8,0" ToolTip.Tip="Add">
+                    <PathIcon Data="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" Width="20" Height="20"/>
+                  </Button>
+                </WrapPanel>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+
+          <!-- Dialogs Section -->
+          <StackPanel IsVisible="{Binding SelectedSection, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=Dialogs}">
+            <TextBlock Classes="section-title" Text="Dialogs"/>
+            <TextBlock Classes="section-subtitle" Text="Modal dialogs for user interactions and confirmations"/>
+
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Dialog Types"/>
+                <WrapPanel Orientation="Horizontal">
+                  <Button Classes="btn-primary" Content="Confirm Dialog" Margin="0,0,12,12"
+                          Command="{Binding ShowConfirmDialogCommand}"/>
+                  <Button Classes="btn-secondary" Content="Info Dialog" Margin="0,0,12,12"
+                          Command="{Binding ShowInfoDialogCommand}"/>
+                  <Button Classes="btn-danger" Content="Error Dialog" Margin="0,0,12,12"
+                          Command="{Binding ShowErrorDialogCommand}"/>
+                  <Button Classes="btn-success" Content="Input Dialog" Margin="0,0,12,12"
+                          Command="{Binding ShowInputDialogCommand}"/>
+                </WrapPanel>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+
+          <!-- Toasts Section -->
+          <StackPanel IsVisible="{Binding SelectedSection, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=Toasts}">
+            <TextBlock Classes="section-title" Text="Toasts &amp; Notifications"/>
+            <TextBlock Classes="section-subtitle" Text="Non-blocking notifications for feedback and alerts"/>
+
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Toast Types"/>
+                <WrapPanel Orientation="Horizontal">
+                  <Button Classes="btn-primary" Content="Info Toast" Margin="0,0,12,12"
+                          Command="{Binding ShowInfoToastCommand}"/>
+                  <Button Classes="btn-success" Content="Success Toast" Margin="0,0,12,12"
+                          Command="{Binding ShowSuccessToastCommand}"/>
+                  <Button Classes="btn-warning" Content="Warning Toast" Margin="0,0,12,12"
+                          Command="{Binding ShowWarningToastCommand}"/>
+                  <Button Classes="btn-danger" Content="Error Toast" Margin="0,0,12,12"
+                          Command="{Binding ShowErrorToastCommand}"/>
+                </WrapPanel>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+
+          <!-- Forms Section -->
+          <StackPanel IsVisible="{Binding SelectedSection, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=Forms}">
+            <TextBlock Classes="section-title" Text="Forms &amp; Inputs"/>
+            <TextBlock Classes="section-subtitle" Text="Form controls and input components"/>
+
+            <!-- Text Inputs -->
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Text Inputs"/>
+                <StackPanel Spacing="16">
+                  <StackPanel Spacing="4">
+                    <TextBlock Text="Standard Input" FontSize="13" Opacity="0.8"/>
+                    <TextBox Classes="input" Watermark="Enter text..." Text="{Binding TextInput}"/>
+                  </StackPanel>
+                  <StackPanel Spacing="4">
+                    <TextBlock Text="Password Input" FontSize="13" Opacity="0.8"/>
+                    <TextBox Classes="input" Watermark="Enter password..." PasswordChar="*" Text="{Binding PasswordInput}"/>
+                  </StackPanel>
+                  <StackPanel Spacing="4">
+                    <TextBlock Text="Disabled Input" FontSize="13" Opacity="0.8"/>
+                    <TextBox Classes="input" Text="Disabled" IsEnabled="False"/>
+                  </StackPanel>
+                  <StackPanel Spacing="4">
+                    <TextBlock Text="Multi-line Input" FontSize="13" Opacity="0.8"/>
+                    <TextBox Classes="input" Watermark="Enter multiple lines..." AcceptsReturn="True" Height="80"/>
+                  </StackPanel>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+
+            <!-- Checkboxes and Switches -->
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Checkboxes &amp; Switches"/>
+                <StackPanel Spacing="12">
+                  <CheckBox Content="Standard Checkbox" IsChecked="{Binding CheckboxValue}"/>
+                  <CheckBox Content="Disabled Checkbox" IsEnabled="False"/>
+                  <CheckBox Content="Checked Disabled" IsChecked="True" IsEnabled="False"/>
+                  <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,8,0,0">
+                    <ToggleSwitch OnContent="On" OffContent="Off" IsChecked="{Binding SwitchValue}"/>
+                    <ToggleSwitch OnContent="Enabled" OffContent="Disabled" IsEnabled="False"/>
+                  </StackPanel>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+
+            <!-- Slider and Range -->
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Sliders"/>
+                <StackPanel Spacing="16">
+                  <StackPanel Spacing="4">
+                    <TextBlock FontSize="13" Opacity="0.8">
+                      <Run Text="Value: "/>
+                      <Run Text="{Binding SliderValue, StringFormat={}{0:F0}}"/>
+                    </TextBlock>
+                    <Slider Minimum="0" Maximum="100" Value="{Binding SliderValue}" Width="300"/>
+                  </StackPanel>
+                  <StackPanel Spacing="4">
+                    <TextBlock Text="With Ticks" FontSize="13" Opacity="0.8"/>
+                    <Slider Minimum="0" Maximum="100" TickFrequency="10" IsSnapToTickEnabled="True" Width="300"/>
+                  </StackPanel>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+
+            <!-- ComboBox and Selection -->
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Selection Controls"/>
+                <StackPanel Spacing="16">
+                  <StackPanel Spacing="4">
+                    <TextBlock Text="ComboBox" FontSize="13" Opacity="0.8"/>
+                    <ComboBox SelectedIndex="{Binding SelectedComboIndex}" Width="200">
+                      <ComboBoxItem Content="Option 1"/>
+                      <ComboBoxItem Content="Option 2"/>
+                      <ComboBoxItem Content="Option 3"/>
+                      <ComboBoxItem Content="Option 4"/>
+                    </ComboBox>
+                  </StackPanel>
+                  <StackPanel Spacing="4">
+                    <TextBlock Text="Radio Buttons" FontSize="13" Opacity="0.8"/>
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                      <RadioButton Content="Option A" GroupName="demo"/>
+                      <RadioButton Content="Option B" GroupName="demo" IsChecked="True"/>
+                      <RadioButton Content="Option C" GroupName="demo"/>
+                    </StackPanel>
+                  </StackPanel>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+
+            <!-- Date/Time Pickers -->
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Date &amp; Time"/>
+                <StackPanel Spacing="16" Orientation="Horizontal">
+                  <StackPanel Spacing="4">
+                    <TextBlock Text="Date Picker" FontSize="13" Opacity="0.8"/>
+                    <DatePicker SelectedDate="{Binding SelectedDate}"/>
+                  </StackPanel>
+                  <StackPanel Spacing="4">
+                    <TextBlock Text="Time Picker" FontSize="13" Opacity="0.8"/>
+                    <TimePicker/>
+                  </StackPanel>
+                  <StackPanel Spacing="4">
+                    <TextBlock Text="Calendar" FontSize="13" Opacity="0.8"/>
+                    <Calendar/>
+                  </StackPanel>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+
+          <!-- Navigation Section -->
+          <StackPanel IsVisible="{Binding SelectedSection, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=Navigation}">
+            <TextBlock Classes="section-title" Text="Navigation"/>
+            <TextBlock Classes="section-subtitle" Text="Navigation patterns and components"/>
+
+            <!-- Tabs -->
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Tabs"/>
+                <TabControl>
+                  <TabItem Header="Tab 1">
+                    <Border Padding="16">
+                      <TextBlock Text="Content for Tab 1"/>
+                    </Border>
+                  </TabItem>
+                  <TabItem Header="Tab 2">
+                    <Border Padding="16">
+                      <TextBlock Text="Content for Tab 2"/>
+                    </Border>
+                  </TabItem>
+                  <TabItem Header="Tab 3">
+                    <Border Padding="16">
+                      <TextBlock Text="Content for Tab 3"/>
+                    </Border>
+                  </TabItem>
+                </TabControl>
+              </StackPanel>
+            </Border>
+
+            <!-- Breadcrumbs -->
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Breadcrumbs"/>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <Button Classes="btn-ghost" Content="Home" Padding="8,4"/>
+                  <TextBlock Text="/" VerticalAlignment="Center" Opacity="0.4"/>
+                  <Button Classes="btn-ghost" Content="Products" Padding="8,4"/>
+                  <TextBlock Text="/" VerticalAlignment="Center" Opacity="0.4"/>
+                  <Button Classes="btn-ghost" Content="Category" Padding="8,4"/>
+                  <TextBlock Text="/" VerticalAlignment="Center" Opacity="0.4"/>
+                  <TextBlock Text="Current Page" VerticalAlignment="Center" FontWeight="Medium"/>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+
+            <!-- Menu -->
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Menu"/>
+                <Menu>
+                  <MenuItem Header="File">
+                    <MenuItem Header="New"/>
+                    <MenuItem Header="Open"/>
+                    <Separator/>
+                    <MenuItem Header="Save"/>
+                    <MenuItem Header="Save As"/>
+                    <Separator/>
+                    <MenuItem Header="Exit"/>
+                  </MenuItem>
+                  <MenuItem Header="Edit">
+                    <MenuItem Header="Undo"/>
+                    <MenuItem Header="Redo"/>
+                    <Separator/>
+                    <MenuItem Header="Cut"/>
+                    <MenuItem Header="Copy"/>
+                    <MenuItem Header="Paste"/>
+                  </MenuItem>
+                  <MenuItem Header="View">
+                    <MenuItem Header="Zoom In"/>
+                    <MenuItem Header="Zoom Out"/>
+                    <MenuItem Header="Reset Zoom"/>
+                  </MenuItem>
+                </Menu>
+              </StackPanel>
+            </Border>
+
+            <!-- Expander -->
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Expanders"/>
+                <StackPanel Spacing="8">
+                  <Expander Header="Section 1">
+                    <Border Padding="16">
+                      <TextBlock Text="This is the content of section 1. It can contain any elements."/>
+                    </Border>
+                  </Expander>
+                  <Expander Header="Section 2">
+                    <Border Padding="16">
+                      <TextBlock Text="This is the content of section 2. It expands when clicked."/>
+                    </Border>
+                  </Expander>
+                  <Expander Header="Section 3" IsExpanded="True">
+                    <Border Padding="16">
+                      <TextBlock Text="This section is expanded by default."/>
+                    </Border>
+                  </Expander>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+
+          <!-- Cards Section -->
+          <StackPanel IsVisible="{Binding SelectedSection, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=Cards}">
+            <TextBlock Classes="section-title" Text="Cards &amp; Layout"/>
+            <TextBlock Classes="section-subtitle" Text="Card components and layout patterns"/>
+
+            <!-- Basic Cards -->
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Card Variants"/>
+                <WrapPanel Orientation="Horizontal">
+                  <Border Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}"
+                          CornerRadius="12" Padding="20" Margin="0,0,16,16" Width="200">
+                    <StackPanel>
+                      <TextBlock Text="Basic Card" FontWeight="SemiBold" FontSize="15"/>
+                      <TextBlock Text="Simple card with content" Opacity="0.7" FontSize="13" Margin="0,8,0,0"/>
+                    </StackPanel>
+                  </Border>
+                  <Border Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}"
+                          CornerRadius="12" Padding="20" Margin="0,0,16,16" Width="200"
+                          BoxShadow="0 4 16 0 #30000000">
+                    <StackPanel>
+                      <TextBlock Text="Elevated Card" FontWeight="SemiBold" FontSize="15"/>
+                      <TextBlock Text="Card with shadow" Opacity="0.7" FontSize="13" Margin="0,8,0,0"/>
+                    </StackPanel>
+                  </Border>
+                  <Border Background="Transparent"
+                          BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                          BorderThickness="1"
+                          CornerRadius="12" Padding="20" Margin="0,0,16,16" Width="200">
+                    <StackPanel>
+                      <TextBlock Text="Outlined Card" FontWeight="SemiBold" FontSize="15"/>
+                      <TextBlock Text="Card with border" Opacity="0.7" FontSize="13" Margin="0,8,0,0"/>
+                    </StackPanel>
+                  </Border>
+                </WrapPanel>
+              </StackPanel>
+            </Border>
+
+            <!-- Grid Layout -->
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Grid Layout"/>
+                <UniformGrid Columns="3" Rows="2">
+                  <Border Background="#0078D4" CornerRadius="8" Height="80" Margin="4">
+                    <TextBlock Text="1" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                  </Border>
+                  <Border Background="#107C10" CornerRadius="8" Height="80" Margin="4">
+                    <TextBlock Text="2" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                  </Border>
+                  <Border Background="#FF8C00" CornerRadius="8" Height="80" Margin="4">
+                    <TextBlock Text="3" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                  </Border>
+                  <Border Background="#E81123" CornerRadius="8" Height="80" Margin="4">
+                    <TextBlock Text="4" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                  </Border>
+                  <Border Background="#881798" CornerRadius="8" Height="80" Margin="4">
+                    <TextBlock Text="5" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                  </Border>
+                  <Border Background="#00B7C3" CornerRadius="8" Height="80" Margin="4">
+                    <TextBlock Text="6" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                  </Border>
+                </UniformGrid>
+              </StackPanel>
+            </Border>
+
+            <!-- Split View -->
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Split Panel"/>
+                <Grid ColumnDefinitions="*,8,*" Height="150">
+                  <Border Grid.Column="0" Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}"
+                          CornerRadius="8" Padding="16">
+                    <TextBlock Text="Left Panel" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                  </Border>
+                  <GridSplitter Grid.Column="1" Background="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                                ResizeDirection="Columns"/>
+                  <Border Grid.Column="2" Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}"
+                          CornerRadius="8" Padding="16">
+                    <TextBlock Text="Right Panel" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                  </Border>
+                </Grid>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+
+          <!-- Animations Section -->
+          <StackPanel IsVisible="{Binding SelectedSection, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=Animations}">
+            <TextBlock Classes="section-title" Text="Animations"/>
+            <TextBlock Classes="section-subtitle" Text="Motion and animation demonstrations"/>
+
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Transform Animations"/>
+                <StackPanel Orientation="Horizontal" Spacing="32">
+                  <StackPanel Spacing="16" HorizontalAlignment="Center">
+                    <Border Classes="animation-box"
+                            RenderTransformOrigin="0.5,0.5">
+                      <Border.RenderTransform>
+                        <TransformGroup>
+                          <ScaleTransform ScaleX="{Binding AnimationScale}" ScaleY="{Binding AnimationScale}"/>
+                          <RotateTransform Angle="{Binding AnimationRotation}"/>
+                        </TransformGroup>
+                      </Border.RenderTransform>
+                      <Border.Opacity>
+                        <Binding Path="AnimationOpacity"/>
+                      </Border.Opacity>
+                    </Border>
+                    <TextBlock Text="Animated Box" HorizontalAlignment="Center" FontSize="13"/>
+                  </StackPanel>
+                  <StackPanel Spacing="12" VerticalAlignment="Center">
+                    <Button Classes="btn-primary" Content="Start Animation"
+                            Command="{Binding StartAnimationCommand}"
+                            IsEnabled="{Binding !IsAnimating}"/>
+                    <Button Classes="btn-secondary" Content="Reset"
+                            Command="{Binding ResetAnimationCommand}"/>
+                    <StackPanel Spacing="4" Margin="0,16,0,0">
+                      <TextBlock FontSize="12" Opacity="0.7">
+                        <Run Text="Scale: "/>
+                        <Run Text="{Binding AnimationScale, StringFormat={}{0:F2}}"/>
+                      </TextBlock>
+                      <TextBlock FontSize="12" Opacity="0.7">
+                        <Run Text="Rotation: "/>
+                        <Run Text="{Binding AnimationRotation, StringFormat={}{0:F0}}"/>
+                        <Run Text="deg"/>
+                      </TextBlock>
+                      <TextBlock FontSize="12" Opacity="0.7">
+                        <Run Text="Opacity: "/>
+                        <Run Text="{Binding AnimationOpacity, StringFormat={}{0:F2}}"/>
+                      </TextBlock>
+                    </StackPanel>
+                  </StackPanel>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+
+            <!-- CSS-like Transitions -->
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Hover Transitions"/>
+                <WrapPanel Orientation="Horizontal">
+                  <Border Background="#0078D4" CornerRadius="8" Padding="20" Margin="0,0,16,16"
+                          Cursor="Hand">
+                    <Border.Transitions>
+                      <Transitions>
+                        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+                      </Transitions>
+                    </Border.Transitions>
+                    <Border.Styles>
+                      <Style Selector="Border:pointerover">
+                        <Setter Property="RenderTransform" Value="scale(1.05)"/>
+                      </Style>
+                    </Border.Styles>
+                    <TextBlock Text="Scale on Hover" Foreground="White" FontWeight="Medium"/>
+                  </Border>
+                  <Border Background="#107C10" CornerRadius="8" Padding="20" Margin="0,0,16,16"
+                          Cursor="Hand" Opacity="0.8">
+                    <Border.Transitions>
+                      <Transitions>
+                        <DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
+                      </Transitions>
+                    </Border.Transitions>
+                    <Border.Styles>
+                      <Style Selector="Border:pointerover">
+                        <Setter Property="Opacity" Value="1"/>
+                      </Style>
+                    </Border.Styles>
+                    <TextBlock Text="Fade on Hover" Foreground="White" FontWeight="Medium"/>
+                  </Border>
+                  <Border Background="#E81123" CornerRadius="8" Padding="20" Margin="0,0,16,16"
+                          Cursor="Hand" BoxShadow="0 2 8 0 #40000000">
+                    <Border.Transitions>
+                      <Transitions>
+                        <BoxShadowsTransition Property="BoxShadow" Duration="0:0:0.2"/>
+                      </Transitions>
+                    </Border.Transitions>
+                    <Border.Styles>
+                      <Style Selector="Border:pointerover">
+                        <Setter Property="BoxShadow" Value="0 8 24 0 #60000000"/>
+                      </Style>
+                    </Border.Styles>
+                    <TextBlock Text="Shadow on Hover" Foreground="White" FontWeight="Medium"/>
+                  </Border>
+                </WrapPanel>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+
+          <!-- Progress Section -->
+          <StackPanel IsVisible="{Binding SelectedSection, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=Progress}">
+            <TextBlock Classes="section-title" Text="Progress Indicators"/>
+            <TextBlock Classes="section-subtitle" Text="Loading and progress feedback components"/>
+
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Progress Bars"/>
+                <StackPanel Spacing="20">
+                  <StackPanel Spacing="8">
+                    <TextBlock FontSize="13" Opacity="0.8">
+                      <Run Text="Determinate: "/>
+                      <Run Text="{Binding ProgressValue, StringFormat={}{0:F0}}"/>
+                      <Run Text="%"/>
+                    </TextBlock>
+                    <ProgressBar Value="{Binding ProgressValue}" Maximum="100" Height="8"/>
+                  </StackPanel>
+                  <StackPanel Spacing="8">
+                    <TextBlock Text="Indeterminate" FontSize="13" Opacity="0.8"/>
+                    <ProgressBar IsIndeterminate="{Binding IsIndeterminate}" Height="8"/>
+                  </StackPanel>
+                  <StackPanel Orientation="Horizontal" Spacing="12">
+                    <Button Classes="btn-primary" Content="Start Progress"
+                            Command="{Binding StartProgressCommand}"/>
+                    <Button Classes="btn-secondary" Content="Toggle Indeterminate"
+                            Command="{Binding ToggleIndeterminateCommand}"/>
+                  </StackPanel>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Loading Spinners"/>
+                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                  <StackPanel Margin="0,0,32,0" HorizontalAlignment="Center">
+                    <ProgressBar IsIndeterminate="True" Width="32" Height="32"/>
+                    <TextBlock Text="Default" FontSize="12" Opacity="0.7" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                  </StackPanel>
+                  <StackPanel Margin="0,0,32,0" HorizontalAlignment="Center">
+                    <ProgressBar IsIndeterminate="True" Width="48" Height="48"/>
+                    <TextBlock Text="Large" FontSize="12" Opacity="0.7" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                  </StackPanel>
+                  <StackPanel Margin="0,0,32,0" HorizontalAlignment="Center">
+                    <ProgressBar IsIndeterminate="True" Width="20" Height="20"/>
+                    <TextBlock Text="Small" FontSize="12" Opacity="0.7" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                  </StackPanel>
+                </WrapPanel>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+
+          <!-- Lists Section -->
+          <StackPanel IsVisible="{Binding SelectedSection, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=Lists}">
+            <TextBlock Classes="section-title" Text="Lists &amp; Data"/>
+            <TextBlock Classes="section-subtitle" Text="List views and data display components"/>
+
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="List Box"/>
+                <ListBox Height="200">
+                  <ListBoxItem>
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                      <Border Background="#0078D4" CornerRadius="20" Width="40" Height="40">
+                        <TextBlock Text="JD" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium"/>
+                      </Border>
+                      <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="John Doe" FontWeight="Medium"/>
+                        <TextBlock Text="john.doe@example.com" FontSize="12" Opacity="0.6"/>
+                      </StackPanel>
+                    </StackPanel>
+                  </ListBoxItem>
+                  <ListBoxItem>
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                      <Border Background="#107C10" CornerRadius="20" Width="40" Height="40">
+                        <TextBlock Text="AS" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium"/>
+                      </Border>
+                      <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Alice Smith" FontWeight="Medium"/>
+                        <TextBlock Text="alice.smith@example.com" FontSize="12" Opacity="0.6"/>
+                      </StackPanel>
+                    </StackPanel>
+                  </ListBoxItem>
+                  <ListBoxItem>
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                      <Border Background="#E81123" CornerRadius="20" Width="40" Height="40">
+                        <TextBlock Text="BJ" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium"/>
+                      </Border>
+                      <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Bob Johnson" FontWeight="Medium"/>
+                        <TextBlock Text="bob.johnson@example.com" FontSize="12" Opacity="0.6"/>
+                      </StackPanel>
+                    </StackPanel>
+                  </ListBoxItem>
+                </ListBox>
+              </StackPanel>
+            </Border>
+
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Data Grid"/>
+                <DataGrid Height="200" AutoGenerateColumns="False" IsReadOnly="True">
+                  <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Width="60"/>
+                    <DataGridTextColumn Header="Name" Width="*"/>
+                    <DataGridTextColumn Header="Status" Width="100"/>
+                    <DataGridTextColumn Header="Date" Width="120"/>
+                  </DataGrid.Columns>
+                </DataGrid>
+              </StackPanel>
+            </Border>
+
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Tree View"/>
+                <TreeView Height="200">
+                  <TreeViewItem Header="Documents" IsExpanded="True">
+                    <TreeViewItem Header="Work">
+                      <TreeViewItem Header="Report.docx"/>
+                      <TreeViewItem Header="Presentation.pptx"/>
+                    </TreeViewItem>
+                    <TreeViewItem Header="Personal">
+                      <TreeViewItem Header="Resume.pdf"/>
+                      <TreeViewItem Header="Notes.txt"/>
+                    </TreeViewItem>
+                  </TreeViewItem>
+                  <TreeViewItem Header="Pictures">
+                    <TreeViewItem Header="Vacation"/>
+                    <TreeViewItem Header="Family"/>
+                  </TreeViewItem>
+                  <TreeViewItem Header="Downloads"/>
+                </TreeView>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+
+          <!-- Theme Section -->
+          <StackPanel IsVisible="{Binding SelectedSection, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=Theme}">
+            <TextBlock Classes="section-title" Text="Theme &amp; Colors"/>
+            <TextBlock Classes="section-subtitle" Text="Theme customization and color palette"/>
+
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Theme Mode"/>
+                <StackPanel Orientation="Horizontal" Spacing="16">
+                  <ToggleSwitch OnContent="Dark Mode" OffContent="Light Mode"
+                                IsChecked="{Binding IsDarkMode}"
+                                Command="{Binding ToggleDarkModeCommand}"/>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Accent Colors"/>
+                <WrapPanel Orientation="Horizontal">
+                  <Button Classes="color-swatch" Background="#0078D4" Margin="0,0,8,8"
+                          Command="{Binding SetAccentColorCommand}" CommandParameter="#0078D4"/>
+                  <Button Classes="color-swatch" Background="#107C10" Margin="0,0,8,8"
+                          Command="{Binding SetAccentColorCommand}" CommandParameter="#107C10"/>
+                  <Button Classes="color-swatch" Background="#E81123" Margin="0,0,8,8"
+                          Command="{Binding SetAccentColorCommand}" CommandParameter="#E81123"/>
+                  <Button Classes="color-swatch" Background="#FF8C00" Margin="0,0,8,8"
+                          Command="{Binding SetAccentColorCommand}" CommandParameter="#FF8C00"/>
+                  <Button Classes="color-swatch" Background="#881798" Margin="0,0,8,8"
+                          Command="{Binding SetAccentColorCommand}" CommandParameter="#881798"/>
+                  <Button Classes="color-swatch" Background="#00B7C3" Margin="0,0,8,8"
+                          Command="{Binding SetAccentColorCommand}" CommandParameter="#00B7C3"/>
+                  <Button Classes="color-swatch" Background="#FF69B4" Margin="0,0,8,8"
+                          Command="{Binding SetAccentColorCommand}" CommandParameter="#FF69B4"/>
+                  <Button Classes="color-swatch" Background="#FFD700" Margin="0,0,8,8"
+                          Command="{Binding SetAccentColorCommand}" CommandParameter="#FFD700"/>
+                </WrapPanel>
+              </StackPanel>
+            </Border>
+
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Color Palette"/>
+                <StackPanel Spacing="8">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Border Background="#0078D4" Width="60" Height="40" CornerRadius="4"/>
+                    <Border Background="#1084D8" Width="60" Height="40" CornerRadius="4"/>
+                    <Border Background="#2196F3" Width="60" Height="40" CornerRadius="4"/>
+                    <Border Background="#64B5F6" Width="60" Height="40" CornerRadius="4"/>
+                    <Border Background="#BBDEFB" Width="60" Height="40" CornerRadius="4"/>
+                    <TextBlock Text="Blue" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                  </StackPanel>
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Border Background="#107C10" Width="60" Height="40" CornerRadius="4"/>
+                    <Border Background="#1B8C1B" Width="60" Height="40" CornerRadius="4"/>
+                    <Border Background="#4CAF50" Width="60" Height="40" CornerRadius="4"/>
+                    <Border Background="#81C784" Width="60" Height="40" CornerRadius="4"/>
+                    <Border Background="#C8E6C9" Width="60" Height="40" CornerRadius="4"/>
+                    <TextBlock Text="Green" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                  </StackPanel>
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Border Background="#E81123" Width="60" Height="40" CornerRadius="4"/>
+                    <Border Background="#F2282A" Width="60" Height="40" CornerRadius="4"/>
+                    <Border Background="#F44336" Width="60" Height="40" CornerRadius="4"/>
+                    <Border Background="#E57373" Width="60" Height="40" CornerRadius="4"/>
+                    <Border Background="#FFCDD2" Width="60" Height="40" CornerRadius="4"/>
+                    <TextBlock Text="Red" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                  </StackPanel>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+
+            <Border Classes="demo-card">
+              <StackPanel>
+                <TextBlock Classes="card-title" Text="Typography"/>
+                <StackPanel Spacing="8">
+                  <TextBlock Text="Heading 1" FontSize="32" FontWeight="Bold"/>
+                  <TextBlock Text="Heading 2" FontSize="24" FontWeight="SemiBold"/>
+                  <TextBlock Text="Heading 3" FontSize="20" FontWeight="Medium"/>
+                  <TextBlock Text="Body Text - Lorem ipsum dolor sit amet, consectetur adipiscing elit." FontSize="14"/>
+                  <TextBlock Text="Caption text with smaller size" FontSize="12" Opacity="0.7"/>
+                  <TextBlock Text="Overline Text" FontSize="10" FontWeight="Medium" Opacity="0.5"/>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </Panel>
+      </ScrollViewer>
+    </Border>
+  </Grid>
+</UserControl>

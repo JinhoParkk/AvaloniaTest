@@ -9,7 +9,6 @@ using AvaloniaApplication1.ViewModels;
 using AvaloniaApplication1.Views;
 using AvaloniaApplication1.Services;
 using AvaloniaApplication1.Extensions;
-using AvaloniaApplication1.Infrastructure.Http;
 using AvaloniaApplication1.Infrastructure.Http.Refit;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -104,25 +103,11 @@ public partial class App : Application
     /// </summary>
     private void InitializeApp(Action<MainWindowViewModel> setDataContext)
     {
-        var authService = Services.GetRequiredService<IAuthenticationService>();
-        var preferencesService = Services.GetRequiredService<PreferencesService>();
-
         // MainWindowViewModel 생성 (DI에서 resolve)
         var mainWindowViewModel = Services.GetRequiredService<MainWindowViewModel>();
 
-        // 자동 로그인 확인 후 초기 ViewModel 설정
-        var savedUser = preferencesService.LoadAutoLogin();
-        ViewModelBase initialViewModel;
-
-        if (savedUser != null)
-        {
-            authService.SetCurrentUser(savedUser);
-            initialViewModel = Services.GetRequiredService<MainViewModel>();
-        }
-        else
-        {
-            initialViewModel = Services.GetRequiredService<LoginViewModel>();
-        }
+        // Playground를 기본 시작 화면으로 설정
+        var initialViewModel = Services.GetRequiredService<PlaygroundViewModel>();
 
         mainWindowViewModel.SetInitialViewModel(initialViewModel);
         setDataContext(mainWindowViewModel);
