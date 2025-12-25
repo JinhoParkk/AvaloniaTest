@@ -26,7 +26,8 @@
       <Setter Property="Background" Value="Transparent"/>
       <Setter Property="Foreground" Value="#FFFFFFB3"/>
       <Setter Property="BorderThickness" Value="0"/>
-      <Setter Property="Padding" Value="16,14"/>
+      <Setter Property="MinHeight" Value="44"/>
+      <Setter Property="Padding" Value="16,12"/>
       <Setter Property="HorizontalContentAlignment" Value="Left"/>
       <Setter Property="CornerRadius" Value="8"/>
       <Setter Property="Margin" Value="8,2"/>
@@ -39,7 +40,8 @@
       <Setter Property="Background" Value="#0078D4"/>
       <Setter Property="Foreground" Value="White"/>
       <Setter Property="BorderThickness" Value="0"/>
-      <Setter Property="Padding" Value="16,14"/>
+      <Setter Property="MinHeight" Value="44"/>
+      <Setter Property="Padding" Value="16,12"/>
       <Setter Property="HorizontalContentAlignment" Value="Left"/>
       <Setter Property="CornerRadius" Value="8"/>
       <Setter Property="Margin" Value="8,2"/>
@@ -81,8 +83,9 @@
     <!-- 하단 네비게이션 버튼 (모바일) -->
     <Style Selector="Button.bottom-nav-btn">
       <Setter Property="Background" Value="Transparent"/>
-      <Setter Property="Foreground" Value="#FFFFFF80"/>
+      <Setter Property="Foreground" Value="#FFFFFF60"/>
       <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="MinHeight" Value="64"/>
       <Setter Property="Padding" Value="0,8"/>
       <Setter Property="HorizontalAlignment" Value="Stretch"/>
       <Setter Property="VerticalAlignment" Value="Stretch"/>
@@ -90,6 +93,20 @@
       <Setter Property="VerticalContentAlignment" Value="Center"/>
     </Style>
     <Style Selector="Button.bottom-nav-btn:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#FFFFFF15"/>
+    </Style>
+    <Style Selector="Button.bottom-nav-btn-active">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="Foreground" Value="#FFFFFF"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="MinHeight" Value="64"/>
+      <Setter Property="Padding" Value="0,8"/>
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="VerticalAlignment" Value="Stretch"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+    <Style Selector="Button.bottom-nav-btn-active:pointerover /template/ ContentPresenter">
       <Setter Property="Background" Value="#FFFFFF15"/>
     </Style>
   </UserControl.Styles>
@@ -266,68 +283,98 @@
 
     <!-- 하단 네비게이션 (모바일 전용) -->
     <Border Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"
-            Background="#1A1A2E" Height="64" IsVisible="{Binding ShowBottomNav}">
+            Background="#1A1A2E" IsVisible="{Binding ShowBottomNav}">
       <Grid ColumnDefinitions="*,*,*,*,*">
         <!-- 주문접수 -->
-        <Button Grid.Column="0" Classes="bottom-nav-btn"
+        <Button Grid.Column="0"
+                Classes.bottom-nav-btn="{Binding !IsOrdersSelected}"
+                Classes.bottom-nav-btn-active="{Binding IsOrdersSelected}"
                 Command="{Binding SelectMenuCommand}"
                 CommandParameter="orders">
-          <StackPanel HorizontalAlignment="Center" Spacing="4">
-            <Panel>
-              <PathIcon Data="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"
-                       Width="24" Height="24"/>
-              <Border Background="#E81123" CornerRadius="8" Padding="5,1" Margin="14,-8,0,0"
-                      HorizontalAlignment="Right" VerticalAlignment="Top"
-                      IsVisible="{Binding HasPendingOrders}">
-                <TextBlock Text="{Binding PendingOrderCount}" FontSize="10" Foreground="White" FontWeight="Bold"/>
-              </Border>
-            </Panel>
-            <TextBlock Text="주문" FontSize="10" HorizontalAlignment="Center"/>
-          </StackPanel>
+          <Grid RowDefinitions="3,*">
+            <Border Grid.Row="0" Background="#0078D4" CornerRadius="0,0,2,2"
+                    IsVisible="{Binding IsOrdersSelected}"/>
+            <StackPanel Grid.Row="1" HorizontalAlignment="Center" Spacing="4" VerticalAlignment="Center">
+              <Panel>
+                <PathIcon Data="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"
+                         Width="24" Height="24"/>
+                <Border Background="#E81123" CornerRadius="8" Padding="5,1" Margin="14,-8,0,0"
+                        HorizontalAlignment="Right" VerticalAlignment="Top"
+                        IsVisible="{Binding HasPendingOrders}">
+                  <TextBlock Text="{Binding PendingOrderCount}" FontSize="10" Foreground="White" FontWeight="Bold"/>
+                </Border>
+              </Panel>
+              <TextBlock Text="주문" FontSize="11" HorizontalAlignment="Center"/>
+            </StackPanel>
+          </Grid>
         </Button>
 
         <!-- 주문내역 -->
-        <Button Grid.Column="1" Classes="bottom-nav-btn"
+        <Button Grid.Column="1"
+                Classes.bottom-nav-btn="{Binding !IsHistorySelected}"
+                Classes.bottom-nav-btn-active="{Binding IsHistorySelected}"
                 Command="{Binding SelectMenuCommand}"
                 CommandParameter="history">
-          <StackPanel HorizontalAlignment="Center" Spacing="4">
-            <PathIcon Data="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
-                     Width="24" Height="24"/>
-            <TextBlock Text="내역" FontSize="10" HorizontalAlignment="Center"/>
-          </StackPanel>
+          <Grid RowDefinitions="3,*">
+            <Border Grid.Row="0" Background="#0078D4" CornerRadius="0,0,2,2"
+                    IsVisible="{Binding IsHistorySelected}"/>
+            <StackPanel Grid.Row="1" HorizontalAlignment="Center" Spacing="4" VerticalAlignment="Center">
+              <PathIcon Data="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
+                       Width="24" Height="24"/>
+              <TextBlock Text="내역" FontSize="11" HorizontalAlignment="Center"/>
+            </StackPanel>
+          </Grid>
         </Button>
 
         <!-- 메뉴관리 -->
-        <Button Grid.Column="2" Classes="bottom-nav-btn"
+        <Button Grid.Column="2"
+                Classes.bottom-nav-btn="{Binding !IsMenuSelected}"
+                Classes.bottom-nav-btn-active="{Binding IsMenuSelected}"
                 Command="{Binding SelectMenuCommand}"
                 CommandParameter="menu">
-          <StackPanel HorizontalAlignment="Center" Spacing="4">
-            <PathIcon Data="M8.1 13.34l2.83-2.83L3.91 3.5c-1.56 1.56-1.56 4.09 0 5.66l4.19 4.18zm6.78-1.81c1.53.71 3.68.21 5.27-1.38 1.91-1.91 2.28-4.65.81-6.12-1.46-1.46-4.2-1.1-6.12.81-1.59 1.59-2.09 3.74-1.38 5.27L3.7 19.87l1.41 1.41L12 14.41l6.88 6.88 1.41-1.41L13.41 13l1.47-1.47z"
-                     Width="24" Height="24"/>
-            <TextBlock Text="메뉴" FontSize="10" HorizontalAlignment="Center"/>
-          </StackPanel>
+          <Grid RowDefinitions="3,*">
+            <Border Grid.Row="0" Background="#0078D4" CornerRadius="0,0,2,2"
+                    IsVisible="{Binding IsMenuSelected}"/>
+            <StackPanel Grid.Row="1" HorizontalAlignment="Center" Spacing="4" VerticalAlignment="Center">
+              <PathIcon Data="M8.1 13.34l2.83-2.83L3.91 3.5c-1.56 1.56-1.56 4.09 0 5.66l4.19 4.18zm6.78-1.81c1.53.71 3.68.21 5.27-1.38 1.91-1.91 2.28-4.65.81-6.12-1.46-1.46-4.2-1.1-6.12.81-1.59 1.59-2.09 3.74-1.38 5.27L3.7 19.87l1.41 1.41L12 14.41l6.88 6.88 1.41-1.41L13.41 13l1.47-1.47z"
+                       Width="24" Height="24"/>
+              <TextBlock Text="메뉴" FontSize="11" HorizontalAlignment="Center"/>
+            </StackPanel>
+          </Grid>
         </Button>
 
         <!-- 고객관리 -->
-        <Button Grid.Column="3" Classes="bottom-nav-btn"
+        <Button Grid.Column="3"
+                Classes.bottom-nav-btn="{Binding !IsCustomersSelected}"
+                Classes.bottom-nav-btn-active="{Binding IsCustomersSelected}"
                 Command="{Binding SelectMenuCommand}"
                 CommandParameter="customers">
-          <StackPanel HorizontalAlignment="Center" Spacing="4">
-            <PathIcon Data="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"
-                     Width="24" Height="24"/>
-            <TextBlock Text="고객" FontSize="10" HorizontalAlignment="Center"/>
-          </StackPanel>
+          <Grid RowDefinitions="3,*">
+            <Border Grid.Row="0" Background="#0078D4" CornerRadius="0,0,2,2"
+                    IsVisible="{Binding IsCustomersSelected}"/>
+            <StackPanel Grid.Row="1" HorizontalAlignment="Center" Spacing="4" VerticalAlignment="Center">
+              <PathIcon Data="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"
+                       Width="24" Height="24"/>
+              <TextBlock Text="고객" FontSize="11" HorizontalAlignment="Center"/>
+            </StackPanel>
+          </Grid>
         </Button>
 
         <!-- 통계 -->
-        <Button Grid.Column="4" Classes="bottom-nav-btn"
+        <Button Grid.Column="4"
+                Classes.bottom-nav-btn="{Binding !IsStatsSelected}"
+                Classes.bottom-nav-btn-active="{Binding IsStatsSelected}"
                 Command="{Binding SelectMenuCommand}"
                 CommandParameter="stats">
-          <StackPanel HorizontalAlignment="Center" Spacing="4">
-            <PathIcon Data="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"
-                     Width="24" Height="24"/>
-            <TextBlock Text="통계" FontSize="10" HorizontalAlignment="Center"/>
-          </StackPanel>
+          <Grid RowDefinitions="3,*">
+            <Border Grid.Row="0" Background="#0078D4" CornerRadius="0,0,2,2"
+                    IsVisible="{Binding IsStatsSelected}"/>
+            <StackPanel Grid.Row="1" HorizontalAlignment="Center" Spacing="4" VerticalAlignment="Center">
+              <PathIcon Data="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"
+                       Width="24" Height="24"/>
+              <TextBlock Text="통계" FontSize="11" HorizontalAlignment="Center"/>
+            </StackPanel>
+          </Grid>
         </Button>
       </Grid>
     </Border>
