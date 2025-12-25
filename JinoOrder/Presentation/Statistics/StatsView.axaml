@@ -29,42 +29,42 @@
       <TextBlock Text="오늘 요약" FontSize="24" FontWeight="Bold"/>
 
       <!-- 요약 카드들 -->
-      <Grid ColumnDefinitions="*,*,*,*">
-        <Border Grid.Column="0" Classes="stat-card" Margin="0,0,8,0">
+      <WrapPanel Orientation="Horizontal">
+        <Border Classes="stat-card" Margin="0,0,8,8" MinWidth="180">
           <StackPanel>
-            <TextBlock Text="총 매출" FontSize="13" Opacity="0.6"/>
+            <TextBlock Text="총 매출" FontSize="13" Foreground="{DynamicResource JinoTextSecondaryBrush}"/>
             <TextBlock Text="{Binding TodaySummary.FormattedTotalSales, FallbackValue=0원}"
-                      FontSize="24" FontWeight="Bold" Foreground="#0078D4"/>
+                      FontSize="24" FontWeight="Bold" Foreground="{DynamicResource JinoPrimaryBrush}"/>
           </StackPanel>
         </Border>
-        <Border Grid.Column="1" Classes="stat-card" Margin="4,0">
+        <Border Classes="stat-card" Margin="0,0,8,8" MinWidth="180">
           <StackPanel>
-            <TextBlock Text="총 주문" FontSize="13" Opacity="0.6"/>
+            <TextBlock Text="총 주문" FontSize="13" Foreground="{DynamicResource JinoTextSecondaryBrush}"/>
             <TextBlock Text="{Binding TodaySummary.TotalOrders, FallbackValue=0, StringFormat={}{0}건}"
                       FontSize="24" FontWeight="Bold"/>
           </StackPanel>
         </Border>
-        <Border Grid.Column="2" Classes="stat-card" Margin="4,0">
+        <Border Classes="stat-card" Margin="0,0,8,8" MinWidth="180">
           <StackPanel>
-            <TextBlock Text="완료" FontSize="13" Opacity="0.6"/>
+            <TextBlock Text="완료" FontSize="13" Foreground="{DynamicResource JinoTextSecondaryBrush}"/>
             <TextBlock Text="{Binding TodaySummary.CompletedOrders, FallbackValue=0}"
-                      FontSize="24" FontWeight="Bold" Foreground="#107C10"/>
+                      FontSize="24" FontWeight="Bold" Foreground="{DynamicResource JinoSuccessBrush}"/>
           </StackPanel>
         </Border>
-        <Border Grid.Column="3" Classes="stat-card" Margin="8,0,0,0">
+        <Border Classes="stat-card" Margin="0,0,8,8" MinWidth="180">
           <StackPanel>
-            <TextBlock Text="취소" FontSize="13" Opacity="0.6"/>
+            <TextBlock Text="취소" FontSize="13" Foreground="{DynamicResource JinoTextSecondaryBrush}"/>
             <TextBlock Text="{Binding TodaySummary.CancelledOrders, FallbackValue=0}"
-                      FontSize="24" FontWeight="Bold" Foreground="#E81123"/>
+                      FontSize="24" FontWeight="Bold" Foreground="{DynamicResource JinoErrorBrush}"/>
           </StackPanel>
         </Border>
-      </Grid>
+      </WrapPanel>
 
       <!-- 평균 주문금액 -->
       <Border Classes="stat-card">
         <Grid ColumnDefinitions="*,Auto">
           <StackPanel Grid.Column="0">
-            <TextBlock Text="평균 주문금액" FontSize="14" Opacity="0.6"/>
+            <TextBlock Text="평균 주문금액" FontSize="14" Foreground="{DynamicResource JinoTextSecondaryBrush}"/>
             <TextBlock Text="{Binding TodaySummary.FormattedAverageOrderAmount, FallbackValue=0원}"
                       FontSize="28" FontWeight="SemiBold"/>
           </StackPanel>
@@ -80,14 +80,14 @@
             <Border Classes="menu-card" Margin="0,0,0,8">
               <Grid ColumnDefinitions="Auto,*,Auto">
                 <Border Grid.Column="0" Width="32" Height="32" CornerRadius="16"
-                       Background="#0078D4" Margin="0,0,16,0">
-                  <TextBlock Text="{Binding Rank}" Foreground="White"
+                       Background="{DynamicResource JinoPrimaryBrush}" Margin="0,0,16,0">
+                  <TextBlock Text="{Binding Rank}" Foreground="{DynamicResource JinoTextOnPrimaryBrush}"
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             FontWeight="Bold" FontSize="14"/>
                 </Border>
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                   <TextBlock Text="{Binding MenuName}" FontSize="16" FontWeight="Medium"/>
-                  <TextBlock Text="{Binding OrderCount, StringFormat={}{0}잔}" FontSize="13" Opacity="0.6"/>
+                  <TextBlock Text="{Binding OrderCount, StringFormat={}{0}잔}" FontSize="13" Foreground="{DynamicResource JinoTextSecondaryBrush}"/>
                 </StackPanel>
                 <TextBlock Grid.Column="2" Text="{Binding FormattedTotalSales}"
                           FontSize="16" FontWeight="Medium" VerticalAlignment="Center"/>

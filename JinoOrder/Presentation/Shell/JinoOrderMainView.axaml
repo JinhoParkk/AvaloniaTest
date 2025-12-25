@@ -21,14 +21,14 @@
     <UserControl.Styles>
         <!--  사이드바 스타일  -->
         <Style Selector="Border.sidebar">
-            <Setter Property="Background" Value="#1A1A2E" />
+            <Setter Property="Background" Value="{DynamicResource JinoSidebarBackgroundBrush}" />
             <Setter Property="Width" Value="240" />
         </Style>
 
         <!--  사이드바 메뉴 버튼  -->
         <Style Selector="Button.sidebar-menu">
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="#FFFFFFB3" />
+            <Setter Property="Foreground" Value="{DynamicResource JinoSidebarTextBrush}" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="MinHeight" Value="44" />
             <Setter Property="Padding" Value="16,12" />
@@ -38,11 +38,11 @@
             <Setter Property="Cursor" Value="Hand" />
         </Style>
         <Style Selector="Button.sidebar-menu:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="#FFFFFF15" />
+            <Setter Property="Background" Value="{DynamicResource JinoSidebarHoverBrush}" />
         </Style>
         <Style Selector="Button.sidebar-menu-active">
-            <Setter Property="Background" Value="#0078D4" />
-            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="{DynamicResource JinoSidebarActiveBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource JinoSidebarTextActiveBrush}" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="MinHeight" Value="44" />
             <Setter Property="Padding" Value="16,12" />
@@ -52,7 +52,7 @@
             <Setter Property="Cursor" Value="Hand" />
         </Style>
         <Style Selector="Button.sidebar-menu-active:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="#1084D8" />
+            <Setter Property="Background" Value="{DynamicResource JinoSidebarActiveHoverBrush}" />
         </Style>
 
         <!--  헤더 스타일  -->
@@ -81,37 +81,37 @@
             <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListLowBrush}" />
         </Style>
         <Style Selector="Button.window-btn-close:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="#E81123" />
+            <Setter Property="Background" Value="{DynamicResource JinoErrorBrush}" />
         </Style>
 
         <!--  하단 네비게이션 버튼 (모바일)  -->
         <Style Selector="Button.bottom-nav-btn">
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="#FFFFFF60" />
+            <Setter Property="Foreground" Value="{DynamicResource JinoTextTertiaryBrush}" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="MinHeight" Value="64" />
-            <Setter Property="Padding" Value="0,8" />
+            <Setter Property="Padding" Value="0,8,0,16" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="VerticalAlignment" Value="Stretch" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
         <Style Selector="Button.bottom-nav-btn:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="#FFFFFF15" />
+            <Setter Property="Background" Value="{DynamicResource JinoSidebarHoverBrush}" />
         </Style>
         <Style Selector="Button.bottom-nav-btn-active">
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="Foreground" Value="{DynamicResource JinoTextOnDarkBrush}" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="MinHeight" Value="64" />
-            <Setter Property="Padding" Value="0,8" />
+            <Setter Property="Padding" Value="0,8,0,16" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="VerticalAlignment" Value="Stretch" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
         <Style Selector="Button.bottom-nav-btn-active:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="#FFFFFF15" />
+            <Setter Property="Background" Value="{DynamicResource JinoSidebarHoverBrush}" />
         </Style>
     </UserControl.Styles>
 
@@ -129,13 +129,13 @@
                         <TextBlock
                             FontSize="28"
                             FontWeight="Bold"
-                            Foreground="White"
+                            Foreground="{DynamicResource JinoTextOnDarkBrush}"
                             Text="JINO" />
                         <TextBlock
                             Margin="2,0,0,0"
                             FontSize="16"
                             FontWeight="Light"
-                            Foreground="#FFFFFF80"
+                            Foreground="{DynamicResource JinoTextOnDarkSecondaryBrush}"
                             Text="ORDER" />
                     </StackPanel>
                 </Border>
@@ -158,13 +158,13 @@
                                 <Border
                                     Margin="8,0,0,0"
                                     Padding="8,2"
-                                    Background="#E81123"
+                                    Background="{DynamicResource JinoErrorBrush}"
                                     CornerRadius="10"
                                     IsVisible="{Binding HasPendingOrders}">
                                     <TextBlock
                                         FontSize="11"
                                         FontWeight="Bold"
-                                        Foreground="White"
+                                        Foreground="{DynamicResource JinoTextOnPrimaryBrush}"
                                         Text="{Binding PendingOrderCount}" />
                                 </Border>
                             </StackPanel>
@@ -203,7 +203,7 @@
                         <Border
                             Height="1"
                             Margin="16,16"
-                            Background="#FFFFFF20" />
+                            Background="{DynamicResource JinoSidebarDividerBrush}" />
 
                         <!--  고객관리  -->
                         <Button
@@ -279,7 +279,7 @@
                             <TextBlock
                                 FontSize="13"
                                 FontWeight="SemiBold"
-                                Foreground="White"
+                                Foreground="{DynamicResource JinoTextOnPrimaryBrush}"
                                 Text="{Binding StatusText}" />
                         </Border>
 
@@ -340,7 +340,7 @@
             Grid.Row="1"
             Grid.Column="0"
             Grid.ColumnSpan="2"
-            Background="#1A1A2E"
+            Background="{DynamicResource JinoSidebarBackgroundBrush}"
             IsVisible="{Binding ShowBottomNav}">
             <Grid ColumnDefinitions="*,*,*,*,*">
                 <!--  주문접수  -->
@@ -353,7 +353,7 @@
                     <Grid RowDefinitions="3,*">
                         <Border
                             Grid.Row="0"
-                            Background="#0078D4"
+                            Background="{DynamicResource JinoPrimaryBrush}"
                             CornerRadius="0,0,2,2"
                             IsVisible="{Binding IsOrdersSelected}" />
                         <StackPanel
@@ -371,13 +371,13 @@
                                     Padding="5,1"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
-                                    Background="#E81123"
+                                    Background="{DynamicResource JinoErrorBrush}"
                                     CornerRadius="8"
                                     IsVisible="{Binding HasPendingOrders}">
                                     <TextBlock
                                         FontSize="10"
                                         FontWeight="Bold"
-                                        Foreground="White"
+                                        Foreground="{DynamicResource JinoTextOnPrimaryBrush}"
                                         Text="{Binding PendingOrderCount}" />
                                 </Border>
                             </Panel>
@@ -399,7 +399,7 @@
                     <Grid RowDefinitions="3,*">
                         <Border
                             Grid.Row="0"
-                            Background="#0078D4"
+                            Background="{DynamicResource JinoPrimaryBrush}"
                             CornerRadius="0,0,2,2"
                             IsVisible="{Binding IsHistorySelected}" />
                         <StackPanel
@@ -429,7 +429,7 @@
                     <Grid RowDefinitions="3,*">
                         <Border
                             Grid.Row="0"
-                            Background="#0078D4"
+                            Background="{DynamicResource JinoPrimaryBrush}"
                             CornerRadius="0,0,2,2"
                             IsVisible="{Binding IsMenuSelected}" />
                         <StackPanel
@@ -459,7 +459,7 @@
                     <Grid RowDefinitions="3,*">
                         <Border
                             Grid.Row="0"
-                            Background="#0078D4"
+                            Background="{DynamicResource JinoPrimaryBrush}"
                             CornerRadius="0,0,2,2"
                             IsVisible="{Binding IsCustomersSelected}" />
                         <StackPanel
@@ -489,7 +489,7 @@
                     <Grid RowDefinitions="3,*">
                         <Border
                             Grid.Row="0"
-                            Background="#0078D4"
+                            Background="{DynamicResource JinoPrimaryBrush}"
                             CornerRadius="0,0,2,2"
                             IsVisible="{Binding IsStatsSelected}" />
                         <StackPanel

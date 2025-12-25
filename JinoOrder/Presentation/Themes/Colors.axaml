@@ -1,0 +1,144 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Theme Dictionaries for Light/Dark mode support -->
+    <ResourceDictionary.ThemeDictionaries>
+        <!-- Light Theme -->
+        <ResourceDictionary x:Key="Light">
+            <!-- Primary Colors -->
+            <Color x:Key="JinoPrimaryColor">#0078D4</Color>
+            <Color x:Key="JinoPrimaryHoverColor">#1084D8</Color>
+            <Color x:Key="JinoPrimaryPressedColor">#006CBD</Color>
+
+            <!-- Success Colors -->
+            <Color x:Key="JinoSuccessColor">#107C10</Color>
+            <Color x:Key="JinoSuccessHoverColor">#128812</Color>
+
+            <!-- Error Colors -->
+            <Color x:Key="JinoErrorColor">#E81123</Color>
+            <Color x:Key="JinoErrorHoverColor">#F1707A</Color>
+
+            <!-- Warning Colors -->
+            <Color x:Key="JinoWarningColor">#FF8C00</Color>
+            <Color x:Key="JinoWarningLightColor">#FFF4E5</Color>
+
+            <!-- Sidebar/Navigation Colors -->
+            <Color x:Key="JinoSidebarBackground">#1A1A2E</Color>
+            <Color x:Key="JinoSidebarHover">#FFFFFF15</Color>
+            <Color x:Key="JinoSidebarActive">#0078D4</Color>
+            <Color x:Key="JinoSidebarActiveHover">#1084D8</Color>
+            <Color x:Key="JinoSidebarText">#FFFFFFB3</Color>
+            <Color x:Key="JinoSidebarTextActive">#FFFFFF</Color>
+            <Color x:Key="JinoSidebarDivider">#FFFFFF20</Color>
+
+            <!-- Text Colors -->
+            <Color x:Key="JinoTextPrimary">#000000</Color>
+            <Color x:Key="JinoTextSecondary">#00000099</Color>
+            <Color x:Key="JinoTextTertiary">#00000066</Color>
+            <Color x:Key="JinoTextOnPrimary">#FFFFFF</Color>
+            <Color x:Key="JinoTextOnDark">#FFFFFF</Color>
+            <Color x:Key="JinoTextOnDarkSecondary">#FFFFFF80</Color>
+
+            <!-- Background Colors -->
+            <Color x:Key="JinoCardBackground">#FFFFFF</Color>
+            <Color x:Key="JinoSurfaceBackground">#F5F5F5</Color>
+
+            <!-- Badge Colors -->
+            <Color x:Key="JinoBadgeSoldOut">#FF6B6B</Color>
+            <Color x:Key="JinoBadgeNew">#4ECDC4</Color>
+            <Color x:Key="JinoBadgePopular">#FFE66D</Color>
+
+            <!-- Status Colors for Store -->
+            <Color x:Key="JinoStoreOpen">#4CAF50</Color>
+            <Color x:Key="JinoStorePaused">#FF9800</Color>
+            <Color x:Key="JinoStoreClosed">#F44336</Color>
+        </ResourceDictionary>
+
+        <!-- Dark Theme -->
+        <ResourceDictionary x:Key="Dark">
+            <!-- Primary Colors -->
+            <Color x:Key="JinoPrimaryColor">#0078D4</Color>
+            <Color x:Key="JinoPrimaryHoverColor">#1084D8</Color>
+            <Color x:Key="JinoPrimaryPressedColor">#006CBD</Color>
+
+            <!-- Success Colors -->
+            <Color x:Key="JinoSuccessColor">#107C10</Color>
+            <Color x:Key="JinoSuccessHoverColor">#128812</Color>
+
+            <!-- Error Colors -->
+            <Color x:Key="JinoErrorColor">#E81123</Color>
+            <Color x:Key="JinoErrorHoverColor">#F1707A</Color>
+
+            <!-- Warning Colors -->
+            <Color x:Key="JinoWarningColor">#FF8C00</Color>
+            <Color x:Key="JinoWarningLightColor">#3D2E1A</Color>
+
+            <!-- Sidebar/Navigation Colors -->
+            <Color x:Key="JinoSidebarBackground">#1A1A2E</Color>
+            <Color x:Key="JinoSidebarHover">#FFFFFF15</Color>
+            <Color x:Key="JinoSidebarActive">#0078D4</Color>
+            <Color x:Key="JinoSidebarActiveHover">#1084D8</Color>
+            <Color x:Key="JinoSidebarText">#FFFFFFB3</Color>
+            <Color x:Key="JinoSidebarTextActive">#FFFFFF</Color>
+            <Color x:Key="JinoSidebarDivider">#FFFFFF20</Color>
+
+            <!-- Text Colors -->
+            <Color x:Key="JinoTextPrimary">#FFFFFF</Color>
+            <Color x:Key="JinoTextSecondary">#FFFFFF99</Color>
+            <Color x:Key="JinoTextTertiary">#FFFFFF66</Color>
+            <Color x:Key="JinoTextOnPrimary">#FFFFFF</Color>
+            <Color x:Key="JinoTextOnDark">#FFFFFF</Color>
+            <Color x:Key="JinoTextOnDarkSecondary">#FFFFFF80</Color>
+
+            <!-- Background Colors -->
+            <Color x:Key="JinoCardBackground">#2D2D2D</Color>
+            <Color x:Key="JinoSurfaceBackground">#1E1E1E</Color>
+
+            <!-- Badge Colors -->
+            <Color x:Key="JinoBadgeSoldOut">#FF6B6B</Color>
+            <Color x:Key="JinoBadgeNew">#4ECDC4</Color>
+            <Color x:Key="JinoBadgePopular">#FFE66D</Color>
+
+            <!-- Status Colors for Store -->
+            <Color x:Key="JinoStoreOpen">#4CAF50</Color>
+            <Color x:Key="JinoStorePaused">#FF9800</Color>
+            <Color x:Key="JinoStoreClosed">#F44336</Color>
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+
+    <!-- SolidColorBrush resources that reference the theme colors -->
+    <SolidColorBrush x:Key="JinoPrimaryBrush" Color="{DynamicResource JinoPrimaryColor}" />
+    <SolidColorBrush x:Key="JinoPrimaryHoverBrush" Color="{DynamicResource JinoPrimaryHoverColor}" />
+    <SolidColorBrush x:Key="JinoSuccessBrush" Color="{DynamicResource JinoSuccessColor}" />
+    <SolidColorBrush x:Key="JinoSuccessHoverBrush" Color="{DynamicResource JinoSuccessHoverColor}" />
+    <SolidColorBrush x:Key="JinoErrorBrush" Color="{DynamicResource JinoErrorColor}" />
+    <SolidColorBrush x:Key="JinoWarningBrush" Color="{DynamicResource JinoWarningColor}" />
+    <SolidColorBrush x:Key="JinoWarningLightBrush" Color="{DynamicResource JinoWarningLightColor}" />
+
+    <SolidColorBrush x:Key="JinoSidebarBackgroundBrush" Color="{DynamicResource JinoSidebarBackground}" />
+    <SolidColorBrush x:Key="JinoSidebarHoverBrush" Color="{DynamicResource JinoSidebarHover}" />
+    <SolidColorBrush x:Key="JinoSidebarActiveBrush" Color="{DynamicResource JinoSidebarActive}" />
+    <SolidColorBrush x:Key="JinoSidebarActiveHoverBrush" Color="{DynamicResource JinoSidebarActiveHover}" />
+    <SolidColorBrush x:Key="JinoSidebarTextBrush" Color="{DynamicResource JinoSidebarText}" />
+    <SolidColorBrush x:Key="JinoSidebarTextActiveBrush" Color="{DynamicResource JinoSidebarTextActive}" />
+    <SolidColorBrush x:Key="JinoSidebarDividerBrush" Color="{DynamicResource JinoSidebarDivider}" />
+
+    <SolidColorBrush x:Key="JinoTextPrimaryBrush" Color="{DynamicResource JinoTextPrimary}" />
+    <SolidColorBrush x:Key="JinoTextSecondaryBrush" Color="{DynamicResource JinoTextSecondary}" />
+    <SolidColorBrush x:Key="JinoTextTertiaryBrush" Color="{DynamicResource JinoTextTertiary}" />
+    <SolidColorBrush x:Key="JinoTextOnPrimaryBrush" Color="{DynamicResource JinoTextOnPrimary}" />
+    <SolidColorBrush x:Key="JinoTextOnDarkBrush" Color="{DynamicResource JinoTextOnDark}" />
+    <SolidColorBrush x:Key="JinoTextOnDarkSecondaryBrush" Color="{DynamicResource JinoTextOnDarkSecondary}" />
+
+    <SolidColorBrush x:Key="JinoCardBackgroundBrush" Color="{DynamicResource JinoCardBackground}" />
+    <SolidColorBrush x:Key="JinoSurfaceBackgroundBrush" Color="{DynamicResource JinoSurfaceBackground}" />
+
+    <SolidColorBrush x:Key="JinoBadgeSoldOutBrush" Color="{DynamicResource JinoBadgeSoldOut}" />
+    <SolidColorBrush x:Key="JinoBadgeNewBrush" Color="{DynamicResource JinoBadgeNew}" />
+    <SolidColorBrush x:Key="JinoBadgePopularBrush" Color="{DynamicResource JinoBadgePopular}" />
+
+    <SolidColorBrush x:Key="JinoStoreOpenBrush" Color="{DynamicResource JinoStoreOpen}" />
+    <SolidColorBrush x:Key="JinoStorePausedBrush" Color="{DynamicResource JinoStorePaused}" />
+    <SolidColorBrush x:Key="JinoStoreClosedBrush" Color="{DynamicResource JinoStoreClosed}" />
+
+</ResourceDictionary>

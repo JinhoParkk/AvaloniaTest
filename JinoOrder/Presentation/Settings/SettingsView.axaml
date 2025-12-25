@@ -31,7 +31,7 @@
         </Style>
         <Style Selector="TextBlock.settings-desc">
             <Setter Property="FontSize" Value="12" />
-            <Setter Property="Opacity" Value="0.6" />
+            <Setter Property="Foreground" Value="{DynamicResource JinoTextSecondaryBrush}" />
             <Setter Property="Margin" Value="0,4,0,0" />
         </Style>
     </UserControl.Styles>
@@ -50,7 +50,7 @@
                 <StackPanel>
                     <TextBlock Classes="settings-title" Text="매장 정보" />
 
-                    <Grid ColumnDefinitions="*,200" RowDefinitions="Auto,16,Auto,16,Auto">
+                    <Grid ColumnDefinitions="2*,*" RowDefinitions="Auto,16,Auto,16,Auto">
                         <!-- 매장명 -->
                         <StackPanel Grid.Row="0" Grid.Column="0">
                             <TextBlock Classes="settings-label" Text="매장명" />
@@ -59,6 +59,9 @@
                         <TextBox
                             Grid.Row="0"
                             Grid.Column="1"
+                            MinWidth="120"
+                            MaxWidth="200"
+                            HorizontalAlignment="Right"
                             Text="{Binding StoreName}" />
 
                         <!-- 최소 수령 시간 -->
@@ -69,6 +72,9 @@
                         <NumericUpDown
                             Grid.Row="2"
                             Grid.Column="1"
+                            MinWidth="100"
+                            MaxWidth="150"
+                            HorizontalAlignment="Right"
                             FormatString="0"
                             Minimum="1"
                             Maximum="120"
@@ -82,6 +88,9 @@
                         <NumericUpDown
                             Grid.Row="4"
                             Grid.Column="1"
+                            MinWidth="100"
+                            MaxWidth="150"
+                            HorizontalAlignment="Right"
                             FormatString="0"
                             Minimum="0"
                             Maximum="120"
@@ -95,7 +104,7 @@
                 <StackPanel>
                     <TextBlock Classes="settings-title" Text="영업 시간" />
 
-                    <Grid ColumnDefinitions="*,200" RowDefinitions="Auto,16,Auto,16,Auto">
+                    <Grid ColumnDefinitions="2*,*" RowDefinitions="Auto,16,Auto,16,Auto">
                         <!-- 영업 시작 -->
                         <StackPanel Grid.Row="0" Grid.Column="0">
                             <TextBlock Classes="settings-label" Text="영업 시작 시간" />
@@ -103,6 +112,9 @@
                         <TimePicker
                             Grid.Row="0"
                             Grid.Column="1"
+                            MinWidth="100"
+                            MaxWidth="150"
+                            HorizontalAlignment="Right"
                             ClockIdentifier="24HourClock"
                             SelectedTime="{Binding OpenTime}" />
 
@@ -113,6 +125,9 @@
                         <TimePicker
                             Grid.Row="2"
                             Grid.Column="1"
+                            MinWidth="100"
+                            MaxWidth="150"
+                            HorizontalAlignment="Right"
                             ClockIdentifier="24HourClock"
                             SelectedTime="{Binding CloseTime}" />
 
@@ -164,7 +179,7 @@
                 <StackPanel>
                     <TextBlock Classes="settings-title" Text="자동화" />
 
-                    <Grid ColumnDefinitions="*,200" RowDefinitions="Auto,16,Auto">
+                    <Grid ColumnDefinitions="2*,*" RowDefinitions="Auto,16,Auto">
                         <!-- 자동 주문 접수 -->
                         <StackPanel Grid.Row="0" Grid.Column="0">
                             <TextBlock Classes="settings-label" Text="자동 주문 접수" />
@@ -184,6 +199,9 @@
                         <NumericUpDown
                             Grid.Row="2"
                             Grid.Column="1"
+                            MinWidth="100"
+                            MaxWidth="150"
+                            HorizontalAlignment="Right"
                             FormatString="0"
                             IsEnabled="{Binding EnableAutoAccept}"
                             Minimum="1"
@@ -205,17 +223,17 @@
                     Content="초기화" />
                 <Button
                     Padding="24,10"
-                    Background="#0078D4"
+                    Background="{DynamicResource JinoPrimaryBrush}"
                     Command="{Binding SaveCommand}"
                     Content="저장"
-                    Foreground="White" />
+                    Foreground="{DynamicResource JinoTextOnPrimaryBrush}" />
             </StackPanel>
 
             <!-- 저장 상태 메시지 -->
             <TextBlock
                 Margin="0,12,0,0"
                 HorizontalAlignment="Right"
-                Foreground="#4CAF50"
+                Foreground="{DynamicResource JinoSuccessBrush}"
                 IsVisible="{Binding ShowSaveMessage}"
                 Text="설정이 저장되었습니다." />
         </StackPanel>
