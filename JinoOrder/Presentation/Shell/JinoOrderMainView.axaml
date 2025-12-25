@@ -346,7 +346,7 @@
             Grid.ColumnSpan="2"
             Background="#1A1A2E"
             IsVisible="{Binding ShowBottomNav}">
-            <Grid ColumnDefinitions="*,*,*,*,*">
+            <Grid ColumnDefinitions="*,*,*,*">
                 <!--  주문접수  -->
                 <Button
                     Grid.Column="0"
@@ -453,19 +453,18 @@
                     </Grid>
                 </Button>
 
-                <!--  고객관리  -->
+                <!--  더보기  -->
                 <Button
                     Grid.Column="3"
-                    Classes.bottom-nav-btn="{Binding !IsCustomersSelected}"
-                    Classes.bottom-nav-btn-active="{Binding IsCustomersSelected}"
-                    Command="{Binding SelectMenuCommand}"
-                    CommandParameter="customers">
+                    Classes.bottom-nav-btn="{Binding !IsMoreSelected}"
+                    Classes.bottom-nav-btn-active="{Binding IsMoreSelected}"
+                    Command="{Binding ToggleMoreMenuCommand}">
                     <Grid RowDefinitions="3,*">
                         <Border
                             Grid.Row="0"
                             Background="#0078D4"
                             CornerRadius="0,0,2,2"
-                            IsVisible="{Binding IsCustomersSelected}" />
+                            IsVisible="{Binding IsMoreSelected}" />
                         <StackPanel
                             Grid.Row="1"
                             HorizontalAlignment="Center"
@@ -474,45 +473,120 @@
                             <PathIcon
                                 Width="24"
                                 Height="24"
-                                Data="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+                                Data="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
                             <TextBlock
                                 HorizontalAlignment="Center"
                                 FontSize="11"
-                                Text="고객" />
-                        </StackPanel>
-                    </Grid>
-                </Button>
-
-                <!--  통계  -->
-                <Button
-                    Grid.Column="4"
-                    Classes.bottom-nav-btn="{Binding !IsStatsSelected}"
-                    Classes.bottom-nav-btn-active="{Binding IsStatsSelected}"
-                    Command="{Binding SelectMenuCommand}"
-                    CommandParameter="stats">
-                    <Grid RowDefinitions="3,*">
-                        <Border
-                            Grid.Row="0"
-                            Background="#0078D4"
-                            CornerRadius="0,0,2,2"
-                            IsVisible="{Binding IsStatsSelected}" />
-                        <StackPanel
-                            Grid.Row="1"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Spacing="4">
-                            <PathIcon
-                                Width="24"
-                                Height="24"
-                                Data="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" />
-                            <TextBlock
-                                HorizontalAlignment="Center"
-                                FontSize="11"
-                                Text="통계" />
+                                Text="더보기" />
                         </StackPanel>
                     </Grid>
                 </Button>
             </Grid>
+        </Border>
+
+        <!--  더보기 메뉴 오버레이 (모바일 전용)  -->
+        <Button
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Background="#80000000"
+            BorderThickness="0"
+            Command="{Binding CloseMoreMenuCommand}"
+            CornerRadius="0"
+            IsVisible="{Binding IsMoreMenuOpen}" />
+
+        <!--  더보기 메뉴 시트 (모바일 전용)  -->
+        <Border
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Margin="0,0,0,72"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            Background="#1A1A2E"
+            CornerRadius="16,16,0,0"
+            IsVisible="{Binding IsMoreMenuOpen}">
+            <StackPanel Margin="0,8,0,16">
+                <!--  시트 핸들  -->
+                <Border
+                    Width="40"
+                    Height="4"
+                    Margin="0,8,0,16"
+                    HorizontalAlignment="Center"
+                    Background="#FFFFFF40"
+                    CornerRadius="2" />
+
+                <!--  고객관리  -->
+                <Button
+                    Padding="20,16"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Left"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Command="{Binding SelectMoreMenuItemCommand}"
+                    CommandParameter="customers">
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <PathIcon
+                            Width="24"
+                            Height="24"
+                            Data="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"
+                            Foreground="#FFFFFFB3" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="16"
+                            Foreground="#FFFFFFB3"
+                            Text="고객관리" />
+                    </StackPanel>
+                </Button>
+
+                <!--  매출통계  -->
+                <Button
+                    Padding="20,16"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Left"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Command="{Binding SelectMoreMenuItemCommand}"
+                    CommandParameter="stats">
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <PathIcon
+                            Width="24"
+                            Height="24"
+                            Data="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"
+                            Foreground="#FFFFFFB3" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="16"
+                            Foreground="#FFFFFFB3"
+                            Text="매출통계" />
+                    </StackPanel>
+                </Button>
+
+                <!--  설정  -->
+                <Button
+                    Padding="20,16"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Left"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Command="{Binding SelectMoreMenuItemCommand}"
+                    CommandParameter="settings">
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <PathIcon
+                            Width="24"
+                            Height="24"
+                            Data="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"
+                            Foreground="#FFFFFFB3" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="16"
+                            Foreground="#FFFFFFB3"
+                            Text="설정" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
         </Border>
     </Grid>
 </UserControl>

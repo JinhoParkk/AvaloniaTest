@@ -37,6 +37,7 @@ public partial class JinoOrderMainViewModel : ViewModelBase
     // 네비게이션
     [ObservableProperty] private string _selectedMenu = "orders";
     [ObservableProperty] private bool _isSidebarCollapsed;
+    [ObservableProperty] private bool _isMoreMenuOpen;
 
     // 주문 데이터
     [ObservableProperty] private ObservableCollection<Order> _pendingOrders = new();
@@ -76,6 +77,9 @@ public partial class JinoOrderMainViewModel : ViewModelBase
     public bool IsStatsSelected => SelectedMenu == "stats";
     public bool IsSettingsSelected => SelectedMenu == "settings";
     public bool HasPendingOrders => PendingOrderCount > 0;
+
+    // 모바일 더보기 메뉴 선택 상태 (고객, 통계, 설정 중 하나라도 선택되면 true)
+    public bool IsMoreSelected => IsCustomersSelected || IsStatsSelected || IsSettingsSelected;
 
     // 상태 텍스트
     public string StatusText => GetStatusText();
@@ -240,12 +244,32 @@ public partial class JinoOrderMainViewModel : ViewModelBase
         OnPropertyChanged(nameof(IsCustomersSelected));
         OnPropertyChanged(nameof(IsStatsSelected));
         OnPropertyChanged(nameof(IsSettingsSelected));
+        OnPropertyChanged(nameof(IsMoreSelected));
     }
 
     [RelayCommand]
     private void ToggleSidebar()
     {
         IsSidebarCollapsed = !IsSidebarCollapsed;
+    }
+
+    [RelayCommand]
+    private void ToggleMoreMenu()
+    {
+        IsMoreMenuOpen = !IsMoreMenuOpen;
+    }
+
+    [RelayCommand]
+    private void CloseMoreMenu()
+    {
+        IsMoreMenuOpen = false;
+    }
+
+    [RelayCommand]
+    private void SelectMoreMenuItem(string menu)
+    {
+        IsMoreMenuOpen = false;
+        SelectMenu(menu);
     }
 
     #endregion
