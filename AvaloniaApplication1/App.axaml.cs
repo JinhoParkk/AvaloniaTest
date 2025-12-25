@@ -6,6 +6,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using AvaloniaApplication1.ViewModels;
+using AvaloniaApplication1.ViewModels.JinoOrder;
 using AvaloniaApplication1.Views;
 using AvaloniaApplication1.Services;
 using AvaloniaApplication1.Extensions;
@@ -77,17 +78,20 @@ public partial class App : Application
         // 1. 핵심 서비스 등록
         services.AddCoreServices();
 
-        // 2. Refit API 클라이언트 서비스 등록 (Java Retrofit 스타일)
+        // 2. 지노오더 서비스 등록
+        services.AddJinoOrderServices();
+
+        // 3. Refit API 클라이언트 서비스 등록 (Java Retrofit 스타일)
         services.AddRefitApiServices(options =>
         {
             options.BaseUrl = "https://api.passorder.com";
             options.RefreshTokenEndpoint = "/auth/refresh";
         });
 
-        // 3. ViewModel 등록
+        // 4. ViewModel 등록
         services.AddViewModels();
 
-        // 4. 플랫폼별 서비스 등록 (IPlatformServiceProvider 사용)
+        // 5. 플랫폼별 서비스 등록 (IPlatformServiceProvider 사용)
         PlatformServices?.ConfigureServices(services);
 
         // ServiceProvider 생성
@@ -106,8 +110,8 @@ public partial class App : Application
         // MainWindowViewModel 생성 (DI에서 resolve)
         var mainWindowViewModel = Services.GetRequiredService<MainWindowViewModel>();
 
-        // Playground를 기본 시작 화면으로 설정
-        var initialViewModel = Services.GetRequiredService<PlaygroundViewModel>();
+        // 지노오더를 기본 시작 화면으로 설정
+        var initialViewModel = Services.GetRequiredService<JinoOrderMainViewModel>();
 
         mainWindowViewModel.SetInitialViewModel(initialViewModel);
         setDataContext(mainWindowViewModel);
