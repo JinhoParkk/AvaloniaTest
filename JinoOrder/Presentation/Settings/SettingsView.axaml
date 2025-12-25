@@ -1,0 +1,223 @@
+<UserControl
+    x:Class="JinoOrder.Presentation.Settings.SettingsView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:JinoOrder.Presentation.Settings"
+    d:DesignHeight="800"
+    d:DesignWidth="600"
+    x:DataType="vm:SettingsViewModel"
+    mc:Ignorable="d">
+    <Design.DataContext>
+        <vm:SettingsViewModel />
+    </Design.DataContext>
+
+    <UserControl.Styles>
+        <Style Selector="Border.settings-card">
+            <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundAltHighBrush}" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="20" />
+            <Setter Property="Margin" Value="0,0,0,16" />
+        </Style>
+        <Style Selector="TextBlock.settings-title">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,0,0,16" />
+        </Style>
+        <Style Selector="TextBlock.settings-label">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="TextBlock.settings-desc">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Opacity" Value="0.6" />
+            <Setter Property="Margin" Value="0,4,0,0" />
+        </Style>
+    </UserControl.Styles>
+
+    <ScrollViewer Padding="24">
+        <StackPanel MaxWidth="600" Spacing="0">
+            <!-- 헤더 -->
+            <TextBlock
+                Margin="0,0,0,24"
+                FontSize="24"
+                FontWeight="Bold"
+                Text="설정" />
+
+            <!-- 매장 정보 -->
+            <Border Classes="settings-card">
+                <StackPanel>
+                    <TextBlock Classes="settings-title" Text="매장 정보" />
+
+                    <Grid ColumnDefinitions="*,200" RowDefinitions="Auto,16,Auto,16,Auto">
+                        <!-- 매장명 -->
+                        <StackPanel Grid.Row="0" Grid.Column="0">
+                            <TextBlock Classes="settings-label" Text="매장명" />
+                            <TextBlock Classes="settings-desc" Text="주문 화면에 표시되는 매장 이름" />
+                        </StackPanel>
+                        <TextBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Text="{Binding StoreName}" />
+
+                        <!-- 최소 수령 시간 -->
+                        <StackPanel Grid.Row="2" Grid.Column="0">
+                            <TextBlock Classes="settings-label" Text="최소 수령 시간" />
+                            <TextBlock Classes="settings-desc" Text="주문 후 최소 준비 시간 (분)" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            FormatString="0"
+                            Minimum="1"
+                            Maximum="120"
+                            Value="{Binding MinPickupTime}" />
+
+                        <!-- 최대 수령 시간 -->
+                        <StackPanel Grid.Row="4" Grid.Column="0">
+                            <TextBlock Classes="settings-label" Text="최대 수령 시간" />
+                            <TextBlock Classes="settings-desc" Text="주문 후 최대 준비 시간 (분, 선택사항)" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Row="4"
+                            Grid.Column="1"
+                            FormatString="0"
+                            Minimum="0"
+                            Maximum="120"
+                            Value="{Binding MaxPickupTime}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 영업 시간 -->
+            <Border Classes="settings-card">
+                <StackPanel>
+                    <TextBlock Classes="settings-title" Text="영업 시간" />
+
+                    <Grid ColumnDefinitions="*,200" RowDefinitions="Auto,16,Auto,16,Auto">
+                        <!-- 영업 시작 -->
+                        <StackPanel Grid.Row="0" Grid.Column="0">
+                            <TextBlock Classes="settings-label" Text="영업 시작 시간" />
+                        </StackPanel>
+                        <TimePicker
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            ClockIdentifier="24HourClock"
+                            SelectedTime="{Binding OpenTime}" />
+
+                        <!-- 영업 종료 -->
+                        <StackPanel Grid.Row="2" Grid.Column="0">
+                            <TextBlock Classes="settings-label" Text="영업 종료 시간" />
+                        </StackPanel>
+                        <TimePicker
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            ClockIdentifier="24HourClock"
+                            SelectedTime="{Binding CloseTime}" />
+
+                        <!-- 자동 영업 -->
+                        <StackPanel Grid.Row="4" Grid.Column="0">
+                            <TextBlock Classes="settings-label" Text="자동 영업 시작/종료" />
+                            <TextBlock Classes="settings-desc" Text="설정된 시간에 자동으로 영업 상태 변경" />
+                        </StackPanel>
+                        <ToggleSwitch
+                            Grid.Row="4"
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            IsChecked="{Binding EnableAutoOpenClose}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 알림 설정 -->
+            <Border Classes="settings-card">
+                <StackPanel>
+                    <TextBlock Classes="settings-title" Text="알림" />
+
+                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,16,Auto">
+                        <!-- 알림 사운드 -->
+                        <StackPanel Grid.Row="0" Grid.Column="0">
+                            <TextBlock Classes="settings-label" Text="새 주문 알림 사운드" />
+                            <TextBlock Classes="settings-desc" Text="새 주문이 들어오면 알림 사운드 재생" />
+                        </StackPanel>
+                        <ToggleSwitch
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            IsChecked="{Binding EnableOrderSound}" />
+
+                        <!-- 알림 -->
+                        <StackPanel Grid.Row="2" Grid.Column="0">
+                            <TextBlock Classes="settings-label" Text="새 주문 알림" />
+                            <TextBlock Classes="settings-desc" Text="새 주문이 들어오면 알림 표시" />
+                        </StackPanel>
+                        <ToggleSwitch
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            IsChecked="{Binding EnableOrderNotification}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 자동화 설정 -->
+            <Border Classes="settings-card">
+                <StackPanel>
+                    <TextBlock Classes="settings-title" Text="자동화" />
+
+                    <Grid ColumnDefinitions="*,200" RowDefinitions="Auto,16,Auto">
+                        <!-- 자동 주문 접수 -->
+                        <StackPanel Grid.Row="0" Grid.Column="0">
+                            <TextBlock Classes="settings-label" Text="자동 주문 접수" />
+                            <TextBlock Classes="settings-desc" Text="새 주문을 자동으로 접수 처리" />
+                        </StackPanel>
+                        <ToggleSwitch
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            IsChecked="{Binding EnableAutoAccept}" />
+
+                        <!-- 자동 접수 준비 시간 -->
+                        <StackPanel Grid.Row="2" Grid.Column="0" IsEnabled="{Binding EnableAutoAccept}">
+                            <TextBlock Classes="settings-label" Text="자동 접수 시 기본 준비 시간" />
+                            <TextBlock Classes="settings-desc" Text="자동 접수 시 적용되는 준비 시간 (분)" />
+                        </StackPanel>
+                        <NumericUpDown
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            FormatString="0"
+                            IsEnabled="{Binding EnableAutoAccept}"
+                            Minimum="1"
+                            Maximum="60"
+                            Value="{Binding AutoAcceptPrepTime}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 저장 버튼 -->
+            <StackPanel
+                Margin="0,8,0,0"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal"
+                Spacing="12">
+                <Button
+                    Padding="24,10"
+                    Command="{Binding ResetCommand}"
+                    Content="초기화" />
+                <Button
+                    Padding="24,10"
+                    Background="#0078D4"
+                    Command="{Binding SaveCommand}"
+                    Content="저장"
+                    Foreground="White" />
+            </StackPanel>
+
+            <!-- 저장 상태 메시지 -->
+            <TextBlock
+                Margin="0,12,0,0"
+                HorizontalAlignment="Right"
+                Foreground="#4CAF50"
+                IsVisible="{Binding ShowSaveMessage}"
+                Text="설정이 저장되었습니다." />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

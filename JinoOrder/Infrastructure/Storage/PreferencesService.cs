@@ -2,25 +2,30 @@ using System;
 using System.IO;
 using System.Text.Json;
 using JinoOrder.Domain.Common;
+using JinoOrder.Domain.Settings;
 
 namespace JinoOrder.Infrastructure.Storage;
 
 public class PreferencesService
 {
+    private readonly string _appFolder;
     private readonly string _preferencesPath;
+    private readonly string _settingsPath;
     private const string FileName = "preferences.json";
+    private const string SettingsFileName = "settings.json";
 
     public PreferencesService()
     {
         var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        var appFolder = Path.Combine(appDataPath, "JinoOrder");
+        _appFolder = Path.Combine(appDataPath, "JinoOrder");
 
-        if (!Directory.Exists(appFolder))
+        if (!Directory.Exists(_appFolder))
         {
-            Directory.CreateDirectory(appFolder);
+            Directory.CreateDirectory(_appFolder);
         }
 
-        _preferencesPath = Path.Combine(appFolder, FileName);
+        _preferencesPath = Path.Combine(_appFolder, FileName);
+        _settingsPath = Path.Combine(_appFolder, SettingsFileName);
     }
 
     public void SaveAutoLogin(User user)
@@ -143,4 +148,74 @@ public class PreferencesService
         public string? Token { get; set; }
         public string? RefreshToken { get; set; }
     }
+
+    #region App Settings
+
+    /// <summary>
+    /// 앱 설정 저장
+    /// </summary>
+    public void SaveSettings(AppSettings settings)
+    {
+        try
+        {
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            var json = JsonSerializer.Serialize(settings, options);
+            File.WriteAllText(_settingsPath, json);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save settings: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 앱 설정 로드
+    /// </summary>
+    public AppSettings LoadSettings()
+    {
+        try
+        {
+            if (!File.Exists(_settingsPath))
+            {
+                return new AppSettings();
+            }
+
+            var json = File.ReadAllText(_settingsPath);
+            var settings = JsonSerializer.Deserialize<AppSettings>(json);
+            return settings ?? new AppSettings();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load settings: {ex.Message}");
+            return new AppSettings();
+        }
+    }
+
+    /// <summary>
+    /// 설정 파일 존재 여부
+    /// </summary>
+    public bool HasSettings()
+    {
+        return File.Exists(_settingsPath);
+    }
+
+    /// <summary>
+    /// 설정 초기화
+    /// </summary>
+    public void ResetSettings()
+    {
+        try
+        {
+            if (File.Exists(_settingsPath))
+            {
+                File.Delete(_settingsPath);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to reset settings: {ex.Message}");
+        }
+    }
+
+    #endregion
 }

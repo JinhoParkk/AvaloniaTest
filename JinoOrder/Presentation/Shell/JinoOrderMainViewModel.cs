@@ -9,12 +9,14 @@ using JinoOrder.Domain.Orders;
 using JinoOrder.Domain.Menu;
 using JinoOrder.Domain.Customers;
 using JinoOrder.Domain.Statistics;
+using JinoOrder.Domain.Settings;
 using JinoOrder.Application.Common;
 using JinoOrder.Infrastructure.Services;
 using JinoOrder.Application.Orders;
 using JinoOrder.Application.Menu;
 using JinoOrder.Application.Customers;
 using JinoOrder.Application.Statistics;
+using JinoOrder.Presentation.Settings;
 
 namespace JinoOrder.Presentation.Shell;
 
@@ -25,6 +27,7 @@ public partial class JinoOrderMainViewModel : ViewModelBase
     private readonly ICustomerService _customerService;
     private readonly IStatisticsService _statisticsService;
     private readonly IPlatformInfo? _platformInfo;
+    private readonly PreferencesService _preferencesService;
 
     // 매장 정보
     [ObservableProperty] private string _storeName = "지노커피 강남점";
@@ -62,6 +65,9 @@ public partial class JinoOrderMainViewModel : ViewModelBase
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private string? _errorMessage;
 
+    // 설정 ViewModel
+    public SettingsViewModel SettingsViewModel { get; private set; } = null!;
+
     // 플랫폼 정보
     public bool IsMobile => _platformInfo?.IsMobile ?? false;
     public bool IsDesktop => !IsMobile;
@@ -92,6 +98,10 @@ public partial class JinoOrderMainViewModel : ViewModelBase
         _customerService = mockService;
         _statisticsService = mockService;
         _platformInfo = null;
+        _preferencesService = new PreferencesService();
+
+        // 설정 로드 및 ViewModel 생성
+        InitializeSettings();
 
         // 이벤트 구독
         _orderService.NewOrderReceived += OnNewOrderReceived;
@@ -106,13 +116,18 @@ public partial class JinoOrderMainViewModel : ViewModelBase
         IMenuService menuService,
         ICustomerService customerService,
         IStatisticsService statisticsService,
-        IPlatformInfo? platformInfo)
+        IPlatformInfo? platformInfo,
+        PreferencesService? preferencesService = null)
     {
         _orderService = orderService;
         _menuService = menuService;
         _customerService = customerService;
         _statisticsService = statisticsService;
         _platformInfo = platformInfo;
+        _preferencesService = preferencesService ?? new PreferencesService();
+
+        // 설정 로드 및 ViewModel 생성
+        InitializeSettings();
 
         // 이벤트 구독
         _orderService.NewOrderReceived += OnNewOrderReceived;
@@ -120,6 +135,29 @@ public partial class JinoOrderMainViewModel : ViewModelBase
 
         // 초기 데이터 로드
         _ = LoadInitialDataAsync();
+    }
+
+    private void InitializeSettings()
+    {
+        // 저장된 설정 불러오기
+        var settings = _preferencesService.LoadSettings();
+        ApplySettings(settings);
+
+        // SettingsViewModel 생성 (설정 저장 시 콜백)
+        SettingsViewModel = new SettingsViewModel(_preferencesService, OnSettingsSaved);
+    }
+
+    private void ApplySettings(AppSettings settings)
+    {
+        StoreName = settings.StoreName;
+        MinPickupTime = settings.MinPickupTime;
+        MaxPickupTime = settings.MaxPickupTime;
+        OnPropertyChanged(nameof(PickupTimeText));
+    }
+
+    private void OnSettingsSaved(AppSettings settings)
+    {
+        ApplySettings(settings);
     }
 
     private async Task LoadInitialDataAsync()
