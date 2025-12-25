@@ -40,20 +40,20 @@
               <Grid ColumnDefinitions="*,Auto">
                 <StackPanel Grid.Column="0">
                   <StackPanel Orientation="Horizontal" Spacing="12" Margin="0,0,0,8">
-                    <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="SemiBold"/>
-                    <TextBlock Text="{Binding MaskedPhone}" FontSize="14" Opacity="0.6" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Text="{Binding MaskedPhone}" FontSize="14" Foreground="{DynamicResource JinoTextSecondaryBrush}" VerticalAlignment="Center"/>
                   </StackPanel>
                   <StackPanel Orientation="Horizontal" Spacing="16">
                     <StackPanel Orientation="Horizontal" Spacing="4">
-                      <TextBlock Text="포인트" FontSize="13" Opacity="0.6"/>
-                      <TextBlock Text="{Binding FormattedPoints}" FontSize="13" FontWeight="Medium" Foreground="#0078D4"/>
+                      <TextBlock Text="포인트" FontSize="13" Foreground="{DynamicResource JinoTextSecondaryBrush}"/>
+                      <TextBlock Text="{Binding FormattedPoints}" FontSize="13" FontWeight="Medium" Foreground="{DynamicResource JinoPrimaryBrush}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Spacing="4">
-                      <TextBlock Text="총 주문" FontSize="13" Opacity="0.6"/>
+                      <TextBlock Text="총 주문" FontSize="13" Foreground="{DynamicResource JinoTextSecondaryBrush}"/>
                       <TextBlock Text="{Binding TotalOrders, StringFormat={}{0}회}" FontSize="13"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Spacing="4">
-                      <TextBlock Text="총 금액" FontSize="13" Opacity="0.6"/>
+                      <TextBlock Text="총 금액" FontSize="13" Foreground="{DynamicResource JinoTextSecondaryBrush}"/>
                       <TextBlock Text="{Binding FormattedTotalSpent}" FontSize="13"/>
                     </StackPanel>
                   </StackPanel>

@@ -6,6 +6,8 @@ public class DesktopPlatformInfo : IPlatformInfo
 {
     public bool IsMobile => false;
 
+    public bool IsTablet => false;
+
     public PlatformType Platform => PlatformType.Desktop;
 
     public OSType OperatingSystem

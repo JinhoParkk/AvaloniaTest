@@ -18,6 +18,8 @@ public class SimulatedPlatformInfo : IPlatformInfo
 
     public bool IsMobile => Platform == PlatformType.Mobile;
 
+    public bool IsTablet => _realPlatformInfo.IsTablet;
+
     public PlatformType Platform => _options.SimulatedPlatform ?? _realPlatformInfo.Platform;
 
     public OSType OperatingSystem => _options.SimulatedOS ?? _realPlatformInfo.OperatingSystem;

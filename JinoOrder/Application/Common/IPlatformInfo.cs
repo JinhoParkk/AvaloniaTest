@@ -6,9 +6,14 @@ namespace JinoOrder.Application.Common;
 public interface IPlatformInfo
 {
     /// <summary>
-    /// 모바일 플랫폼 여부 (iOS, Android)
+    /// 모바일 플랫폼 여부 (iPhone, Android Phone)
     /// </summary>
     bool IsMobile { get; }
+
+    /// <summary>
+    /// 태블릿 여부 (iPad 등)
+    /// </summary>
+    bool IsTablet { get; }
 
     /// <summary>
     /// 플랫폼 유형: Desktop, Mobile, Web

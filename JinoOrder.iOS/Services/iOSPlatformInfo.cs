@@ -5,7 +5,10 @@ namespace JinoOrder.iOS.Services;
 
 public class iOSPlatformInfo : IPlatformInfo
 {
-    public bool IsMobile => true;
+    // iPhone은 모바일, iPad는 태블릿으로 취급
+    public bool IsMobile => UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone;
+
+    public bool IsTablet => UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad;
 
     public PlatformType Platform => PlatformType.Mobile;
 
