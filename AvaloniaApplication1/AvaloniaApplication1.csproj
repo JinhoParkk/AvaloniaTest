@@ -21,7 +21,6 @@
         </PackageReference>
         <PackageReference Include="CommunityToolkit.Mvvm" />
         <PackageReference Include="DialogHost.Avalonia" />
-        <PackageReference Include="DesktopNotifications.Avalonia" />
         <PackageReference Include="FluentAvaloniaUI" />
         <PackageReference Include="Microsoft.Maui.Essentials" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />

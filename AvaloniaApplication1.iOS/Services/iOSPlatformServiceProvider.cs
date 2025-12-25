@@ -10,6 +10,7 @@ public class iOSPlatformServiceProvider : IPlatformServiceProvider
 {
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddSingleton<IPlatformInfo, iOSPlatformInfo>();
         services.AddSingleton<IDialogService, iOSDialogService>();
         services.AddSingleton<IToastService, iOSToastService>();
         services.AddSingleton<IFileService, iOSFileService>();

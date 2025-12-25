@@ -131,8 +131,8 @@
                         VerticalAlignment="Center"/>
         </StackPanel>
 
-        <!-- 윈도우 컨트롤 버튼 (숨김, 최대화, 닫기) -->
-        <StackPanel Grid.Column="1" Orientation="Horizontal">
+        <!-- 윈도우 컨트롤 버튼 (숨김, 최대화, 닫기) - Desktop only -->
+        <StackPanel Grid.Column="1" Orientation="Horizontal" IsVisible="{Binding ShowWindowControls}">
           <Button Classes="window-btn" Command="{Binding MinimizeWindowCommand}" ToolTip.Tip="숨김">
             <PathIcon Data="M4 12h16" Width="12" Height="12"/>
           </Button>

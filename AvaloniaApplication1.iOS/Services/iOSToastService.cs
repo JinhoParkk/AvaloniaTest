@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using AvaloniaApplication1.Services;
 using UIKit;
@@ -8,13 +9,17 @@ public class iOSToastService : IToastService
 {
     public Task ShowAsync(string title, string message, ToastType type = ToastType.Information, int durationMs = 3000)
     {
-        var fullMessage = string.IsNullOrEmpty(title) ? message : $"{title}: {message}";
-
         UIApplication.SharedApplication.InvokeOnMainThread(() =>
         {
             var alert = UIAlertController.Create(title, message, UIAlertControllerStyle.Alert);
 
-            var rootViewController = UIApplication.SharedApplication.KeyWindow?.RootViewController;
+            // iOS 13+ compatible: use ConnectedScenes instead of deprecated KeyWindow
+            var windowScene = UIApplication.SharedApplication.ConnectedScenes
+                .OfType<UIWindowScene>()
+                .FirstOrDefault();
+            var rootViewController = windowScene?.Windows
+                .FirstOrDefault(w => w.IsKeyWindow)?.RootViewController;
+
             rootViewController?.PresentViewController(alert, true, null);
 
             Task.Delay(durationMs).ContinueWith(_ =>
