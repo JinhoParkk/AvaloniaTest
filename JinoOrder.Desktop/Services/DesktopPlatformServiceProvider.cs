@@ -12,15 +12,40 @@ namespace JinoOrder.Desktop.Services;
 public class DesktopPlatformServiceProvider : IPlatformServiceProvider
 {
     private readonly Window? _mainWindow;
+    private readonly QASimulationOptions _simulationOptions;
 
-    public DesktopPlatformServiceProvider(Window? mainWindow = null)
+    public DesktopPlatformServiceProvider(
+        Window? mainWindow = null,
+        QASimulationOptions? simulationOptions = null)
     {
         _mainWindow = mainWindow;
+        _simulationOptions = simulationOptions ?? QASimulationOptions.None;
     }
+
+    /// <summary>
+    /// 시뮬레이션 옵션 반환 (윈도우 크기 설정용)
+    /// </summary>
+    public QASimulationOptions SimulationOptions => _simulationOptions;
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddSingleton<IPlatformInfo, DesktopPlatformInfo>();
+        // 시뮬레이션 모드에 따라 플랫폼 정보 등록
+        if (_simulationOptions.IsEnabled)
+        {
+            var realPlatformInfo = new DesktopPlatformInfo();
+            var simulatedInfo = new SimulatedPlatformInfo(_simulationOptions, realPlatformInfo);
+            services.AddSingleton<IPlatformInfo>(simulatedInfo);
+
+            // 시뮬레이션 정보 로깅
+            Console.WriteLine($"[QA Mode] Platform: {simulatedInfo.Platform}");
+            Console.WriteLine($"[QA Mode] OS: {simulatedInfo.OperatingSystem}");
+            Console.WriteLine($"[QA Mode] Resolution: {simulatedInfo.Resolution}");
+        }
+        else
+        {
+            services.AddSingleton<IPlatformInfo, DesktopPlatformInfo>();
+        }
+
         services.AddSingleton<IDialogService, DesktopDialogService>();
 
         // Desktop notifications

@@ -12,4 +12,9 @@ public interface IPlatformServiceProvider
     /// 플랫폼별 서비스를 IServiceCollection에 등록
     /// </summary>
     void ConfigureServices(IServiceCollection services);
+
+    /// <summary>
+    /// QA 시뮬레이션 옵션 (없으면 None 반환)
+    /// </summary>
+    QASimulationOptions SimulationOptions => QASimulationOptions.None;
 }
