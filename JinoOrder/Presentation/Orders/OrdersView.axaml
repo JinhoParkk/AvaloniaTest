@@ -2,12 +2,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="using:JinoOrder.Presentation.Shell"
+             xmlns:vm="using:JinoOrder.Presentation.Orders"
              xmlns:models="using:JinoOrder.Domain.Orders"
              xmlns:converters="using:JinoOrder.Presentation.Converters"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
              x:Class="JinoOrder.Presentation.Orders.OrdersView"
-             x:DataType="vm:JinoOrderMainViewModel">
+             x:DataType="vm:OrdersViewModel">
 
   <UserControl.Styles>
     <Style Selector="Border.order-card">
@@ -126,10 +126,10 @@
                   </StackPanel>
                   <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
                     <Button Classes="btn-outline" Content="거절"
-                            Command="{Binding $parent[ItemsControl].((vm:JinoOrderMainViewModel)DataContext).CancelOrderCommand}"
+                            Command="{Binding $parent[ItemsControl].((vm:OrdersViewModel)DataContext).CancelOrderCommand}"
                             CommandParameter="{Binding}"/>
                     <Button Classes="btn-primary" Content="접수하기"
-                            Command="{Binding $parent[ItemsControl].((vm:JinoOrderMainViewModel)DataContext).AcceptOrderCommand}"
+                            Command="{Binding $parent[ItemsControl].((vm:OrdersViewModel)DataContext).AcceptOrderCommand}"
                             CommandParameter="{Binding}"/>
                   </StackPanel>
                 </Grid>
@@ -166,11 +166,11 @@
 
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8">
                   <Button Classes="btn-success" Content="완료" HorizontalAlignment="Stretch"
-                          Command="{Binding $parent[ItemsControl].((vm:JinoOrderMainViewModel)DataContext).CompleteOrderCommand}"
+                          Command="{Binding $parent[ItemsControl].((vm:OrdersViewModel)DataContext).CompleteOrderCommand}"
                           CommandParameter="{Binding}"
                           IsVisible="{Binding Status, Converter={x:Static converters:EqualConverter.Instance}, ConverterParameter={x:Static models:OrderStatus.Preparing}}"/>
                   <Button Classes="btn-primary" Content="픽업완료" HorizontalAlignment="Stretch"
-                          Command="{Binding $parent[ItemsControl].((vm:JinoOrderMainViewModel)DataContext).MarkAsPickedUpCommand}"
+                          Command="{Binding $parent[ItemsControl].((vm:OrdersViewModel)DataContext).MarkAsPickedUpCommand}"
                           CommandParameter="{Binding}"
                           IsVisible="{Binding Status, Converter={x:Static converters:EqualConverter.Instance}, ConverterParameter={x:Static models:OrderStatus.Ready}}"/>
                 </StackPanel>

@@ -9,9 +9,6 @@
     d:DesignWidth="600"
     x:DataType="vm:SettingsViewModel"
     mc:Ignorable="d">
-    <Design.DataContext>
-        <vm:SettingsViewModel />
-    </Design.DataContext>
 
     <UserControl.Styles>
         <Style Selector="Border.settings-card">

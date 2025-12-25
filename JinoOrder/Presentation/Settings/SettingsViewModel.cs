@@ -25,12 +25,6 @@ public partial class SettingsViewModel : ViewModelBase
     [ObservableProperty] private decimal _autoAcceptPrepTime = 15;
     [ObservableProperty] private bool _showSaveMessage;
 
-    public SettingsViewModel()
-    {
-        _preferencesService = new PreferencesService();
-        LoadSettings();
-    }
-
     public SettingsViewModel(PreferencesService preferencesService, Action<AppSettings>? onSettingsSaved = null)
     {
         _preferencesService = preferencesService;

@@ -1,73 +1,35 @@
 using JinoOrder.Presentation.Common;
-using JinoOrder.Infrastructure.Storage;
-using JinoOrder.Application.Auth;
-using System;
-using System.Collections.ObjectModel;
+using JinoOrder.Application.Common;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using JinoOrder.Domain.Orders;
-using JinoOrder.Domain.Menu;
-using JinoOrder.Domain.Customers;
-using JinoOrder.Domain.Statistics;
-using JinoOrder.Domain.Settings;
-using JinoOrder.Application.Common;
-using JinoOrder.Infrastructure.Services;
-using JinoOrder.Application.Orders;
-using JinoOrder.Application.Menu;
-using JinoOrder.Application.Customers;
-using JinoOrder.Application.Statistics;
+using JinoOrder.Presentation.Orders;
+using JinoOrder.Presentation.Menu;
+using JinoOrder.Presentation.Customers;
+using JinoOrder.Presentation.Statistics;
 using JinoOrder.Presentation.Settings;
 
 namespace JinoOrder.Presentation.Shell;
 
 public partial class JinoOrderMainViewModel : ViewModelBase
 {
-    private readonly IOrderService _orderService;
-    private readonly IMenuService _menuService;
-    private readonly ICustomerService _customerService;
-    private readonly IStatisticsService _statisticsService;
     private readonly IPlatformInfo? _platformInfo;
-    private readonly PreferencesService _preferencesService;
 
-    // 매장 정보
-    [ObservableProperty] private string _storeName = "지노커피 강남점";
-    [ObservableProperty] private bool _isOpen = true;
-    [ObservableProperty] private bool _isPaused;
-    [ObservableProperty] private DateTime? _pausedUntil;
-    [ObservableProperty] private int _minPickupTime = 10;
-    [ObservableProperty] private int? _maxPickupTime = 20;
+    // 자식 ViewModels
+    public OrdersViewModel Orders { get; }
+    public MenuManagementViewModel Menu { get; }
+    public CustomersViewModel Customers { get; }
+    public StatisticsViewModel Statistics { get; }
+    public StoreStateViewModel StoreState { get; }
+    public SettingsViewModel Settings { get; }
 
-    // 네비게이션
+    // 네비게이션 상태
     [ObservableProperty] private string _selectedMenu = "orders";
     [ObservableProperty] private bool _isSidebarCollapsed;
     [ObservableProperty] private bool _isMoreMenuOpen;
 
-    // 주문 데이터
-    [ObservableProperty] private ObservableCollection<Order> _pendingOrders = new();
-    [ObservableProperty] private ObservableCollection<Order> _activeOrders = new();
-    [ObservableProperty] private Order? _selectedOrder;
-    [ObservableProperty] private int _pendingOrderCount;
-
-    // 메뉴 데이터
-    [ObservableProperty] private ObservableCollection<MenuCategory> _categories = new();
-    [ObservableProperty] private ObservableCollection<MenuItem> _menuItems = new();
-    [ObservableProperty] private MenuCategory? _selectedCategory;
-    [ObservableProperty] private MenuItem? _selectedMenuItem;
-
-    // 고객 데이터
-    [ObservableProperty] private ObservableCollection<Customer> _customers = new();
-    [ObservableProperty] private Customer? _selectedCustomer;
-
-    // 통계 데이터
-    [ObservableProperty] private DailySummary? _todaySummary;
-    [ObservableProperty] private ObservableCollection<PopularMenuItem> _popularMenuItems = new();
-
     // UI 상태
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private string? _errorMessage;
-
-    // 설정 ViewModel
-    public SettingsViewModel SettingsViewModel { get; private set; } = null!;
 
     // 플랫폼 정보
     public bool IsMobile => _platformInfo?.IsMobile ?? false;
@@ -82,187 +44,104 @@ public partial class JinoOrderMainViewModel : ViewModelBase
     public bool IsCustomersSelected => SelectedMenu == "customers";
     public bool IsStatsSelected => SelectedMenu == "stats";
     public bool IsSettingsSelected => SelectedMenu == "settings";
-    public bool HasPendingOrders => PendingOrderCount > 0;
 
-    // 모바일 더보기 메뉴 선택 상태 (고객, 통계, 설정 중 하나라도 선택되면 true)
+    // 모바일 더보기 메뉴 선택 상태
     public bool IsMoreSelected => IsCustomersSelected || IsStatsSelected || IsSettingsSelected;
 
-    // 상태 텍스트
-    public string StatusText => GetStatusText();
-    public string StatusColor => GetStatusColor();
-    public string PickupTimeText => MaxPickupTime.HasValue
-        ? $"{MinPickupTime}~{MaxPickupTime}분"
-        : $"{MinPickupTime}분";
+    // Orders에서 pending count 가져오기 (바인딩 호환성)
+    public int PendingOrderCount => Orders.PendingOrderCount;
+    public bool HasPendingOrders => Orders.HasPendingOrders;
 
-    public JinoOrderMainViewModel()
-    {
-        var mockService = new MockJinoOrderService();
-        _orderService = mockService;
-        _menuService = mockService;
-        _customerService = mockService;
-        _statisticsService = mockService;
-        _platformInfo = null;
-        _preferencesService = new PreferencesService();
-
-        // 설정 로드 및 ViewModel 생성
-        InitializeSettings();
-
-        // 이벤트 구독
-        _orderService.NewOrderReceived += OnNewOrderReceived;
-        _orderService.OrderStatusChanged += OnOrderStatusChanged;
-
-        // 초기 데이터 로드
-        _ = LoadInitialDataAsync();
-    }
+    // StoreState에서 가져오기 (바인딩 호환성)
+    public string StoreName => StoreState.StoreName;
+    public bool IsOpen => StoreState.IsOpen;
+    public bool IsPaused => StoreState.IsPaused;
+    public string StatusText => StoreState.StatusText;
+    public string StatusColor => StoreState.StatusColor;
+    public string PickupTimeText => StoreState.PickupTimeText;
+    public int MinPickupTime => StoreState.MinPickupTime;
 
     public JinoOrderMainViewModel(
-        IOrderService orderService,
-        IMenuService menuService,
-        ICustomerService customerService,
-        IStatisticsService statisticsService,
-        IPlatformInfo? platformInfo,
-        PreferencesService? preferencesService = null)
+        OrdersViewModel orders,
+        MenuManagementViewModel menu,
+        CustomersViewModel customers,
+        StatisticsViewModel statistics,
+        StoreStateViewModel storeState,
+        SettingsViewModel settings,
+        IPlatformInfo? platformInfo = null)
     {
-        _orderService = orderService;
-        _menuService = menuService;
-        _customerService = customerService;
-        _statisticsService = statisticsService;
+        Orders = orders;
+        Menu = menu;
+        Customers = customers;
+        Statistics = statistics;
+        StoreState = storeState;
+        Settings = settings;
         _platformInfo = platformInfo;
-        _preferencesService = preferencesService ?? new PreferencesService();
 
-        // 설정 로드 및 ViewModel 생성
-        InitializeSettings();
+        // Orders의 PickupTime을 StoreState에서 가져오도록 연결
+        // OrdersViewModel이 StoreState.MinPickupTime을 사용하도록 설정
 
-        // 이벤트 구독
-        _orderService.NewOrderReceived += OnNewOrderReceived;
-        _orderService.OrderStatusChanged += OnOrderStatusChanged;
-
-        // 초기 데이터 로드
-        _ = LoadInitialDataAsync();
-    }
-
-    private void InitializeSettings()
-    {
-        // 저장된 설정 불러오기
-        var settings = _preferencesService.LoadSettings();
-        ApplySettings(settings);
-
-        // SettingsViewModel 생성 (설정 저장 시 콜백)
-        SettingsViewModel = new SettingsViewModel(_preferencesService, OnSettingsSaved);
-    }
-
-    private void ApplySettings(AppSettings settings)
-    {
-        StoreName = settings.StoreName;
-        MinPickupTime = settings.MinPickupTime;
-        MaxPickupTime = settings.MaxPickupTime;
-        OnPropertyChanged(nameof(PickupTimeText));
-    }
-
-    private void OnSettingsSaved(AppSettings settings)
-    {
-        ApplySettings(settings);
-    }
-
-    private async Task LoadInitialDataAsync()
-    {
-        IsLoading = true;
-        try
+        // 설정 저장 시 StoreState 업데이트
+        Settings.PropertyChanged += (s, e) =>
         {
-            await Task.WhenAll(
-                LoadOrdersAsync(),
-                LoadCategoriesAsync(),
-                LoadMenuItemsAsync(),
-                LoadCustomersAsync(),
-                LoadTodaySummaryAsync()
-            );
-        }
-        catch (Exception ex)
-        {
-            ErrorMessage = $"데이터 로드 실패: {ex.Message}";
-        }
-        finally
-        {
-            IsLoading = false;
-        }
-    }
-
-    private async Task LoadOrdersAsync()
-    {
-        var pending = await _orderService.GetPendingOrdersAsync();
-        var active = await _orderService.GetActiveOrdersAsync();
-
-        PendingOrders = new ObservableCollection<Order>(pending);
-        ActiveOrders = new ObservableCollection<Order>(active);
-        PendingOrderCount = pending.Count;
-        OnPropertyChanged(nameof(HasPendingOrders));
-    }
-
-    private async Task LoadCategoriesAsync()
-    {
-        var categories = await _menuService.GetCategoriesAsync();
-        Categories = new ObservableCollection<MenuCategory>(categories);
-        if (categories.Count > 0)
-            SelectedCategory = categories[0];
-    }
-
-    private async Task LoadMenuItemsAsync()
-    {
-        var items = await _menuService.GetMenuItemsAsync();
-        MenuItems = new ObservableCollection<MenuItem>(items);
-    }
-
-    private async Task LoadCustomersAsync()
-    {
-        var customers = await _customerService.GetCustomersAsync();
-        Customers = new ObservableCollection<Customer>(customers);
-    }
-
-    private async Task LoadTodaySummaryAsync()
-    {
-        TodaySummary = await _statisticsService.GetDailySummaryAsync(DateTime.Today);
-        var popular = await _statisticsService.GetPopularMenuItemsAsync(
-            DateTime.Today.AddDays(-7), DateTime.Today, 5);
-        PopularMenuItems = new ObservableCollection<PopularMenuItem>(popular);
-    }
-
-    private void OnNewOrderReceived(object? sender, Order order)
-    {
-        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
-        {
-            PendingOrders.Insert(0, order);
-            ActiveOrders.Insert(0, order);
-            PendingOrderCount = PendingOrders.Count;
-            OnPropertyChanged(nameof(HasPendingOrders));
-            // TODO: 알림 표시, 사운드 재생
-        });
-    }
-
-    private void OnOrderStatusChanged(object? sender, Order order)
-    {
-        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
-        {
-            // 주문 리스트 업데이트
-            var pendingOrder = PendingOrders.FirstOrDefault(o => o.Id == order.Id);
-            if (pendingOrder != null && order.Status != OrderStatus.Pending)
+            if (e.PropertyName == nameof(SettingsViewModel.ShowSaveMessage) && Settings.ShowSaveMessage)
             {
-                PendingOrders.Remove(pendingOrder);
-                PendingOrderCount = PendingOrders.Count;
+                // 설정이 저장될 때 StoreState 리로드
+                StoreState.OnActivated();
+                NotifyStoreStateChanged();
+            }
+        };
+
+        // Orders의 PendingOrderCount 변경 시 알림
+        Orders.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName == nameof(OrdersViewModel.PendingOrderCount))
+            {
+                OnPropertyChanged(nameof(PendingOrderCount));
                 OnPropertyChanged(nameof(HasPendingOrders));
             }
+        };
 
-            var activeOrder = ActiveOrders.FirstOrDefault(o => o.Id == order.Id);
-            if (activeOrder != null)
-            {
-                var index = ActiveOrders.IndexOf(activeOrder);
-                ActiveOrders[index] = order;
+        // StoreState 변경 시 알림
+        StoreState.PropertyChanged += (s, e) =>
+        {
+            NotifyStoreStateChanged();
+        };
+    }
 
-                if (order.Status == OrderStatus.Completed || order.Status == OrderStatus.Cancelled)
-                {
-                    ActiveOrders.Remove(order);
-                }
-            }
-        });
+    private void NotifyStoreStateChanged()
+    {
+        OnPropertyChanged(nameof(StoreName));
+        OnPropertyChanged(nameof(IsOpen));
+        OnPropertyChanged(nameof(IsPaused));
+        OnPropertyChanged(nameof(StatusText));
+        OnPropertyChanged(nameof(StatusColor));
+        OnPropertyChanged(nameof(PickupTimeText));
+        OnPropertyChanged(nameof(MinPickupTime));
+    }
+
+    public override void OnActivated()
+    {
+        base.OnActivated();
+
+        // 모든 자식 ViewModel 활성화
+        Orders.OnActivated();
+        Menu.OnActivated();
+        Customers.OnActivated();
+        Statistics.OnActivated();
+        StoreState.OnActivated();
+    }
+
+    public override void OnDeactivated()
+    {
+        // 모든 자식 ViewModel 비활성화
+        Orders.OnDeactivated();
+        Menu.OnDeactivated();
+        Customers.OnDeactivated();
+        Statistics.OnDeactivated();
+        StoreState.OnDeactivated();
+
+        base.OnDeactivated();
     }
 
     #region 네비게이션 커맨드
@@ -312,157 +191,14 @@ public partial class JinoOrderMainViewModel : ViewModelBase
 
     #endregion
 
-    #region 주문 관련 커맨드
+    #region 호환성을 위한 래퍼 커맨드 (XAML 바인딩 호환)
+
+    // StoreState 커맨드 래핑
+    [RelayCommand]
+    private void ToggleOpen() => StoreState.ToggleOpenCommand.Execute(null);
 
     [RelayCommand]
-    private async Task AcceptOrder(Order order)
-    {
-        if (order == null) return;
-
-        var success = await _orderService.AcceptOrderAsync(order.Id, MinPickupTime);
-        if (success)
-        {
-            await LoadOrdersAsync();
-        }
-    }
-
-    [RelayCommand]
-    private async Task CompleteOrder(Order order)
-    {
-        if (order == null) return;
-
-        var success = await _orderService.CompleteOrderAsync(order.Id);
-        if (success)
-        {
-            await LoadOrdersAsync();
-            await LoadTodaySummaryAsync();
-        }
-    }
-
-    [RelayCommand]
-    private async Task CancelOrder(Order order)
-    {
-        if (order == null) return;
-
-        var success = await _orderService.CancelOrderAsync(order.Id, "가게 사정으로 취소");
-        if (success)
-        {
-            await LoadOrdersAsync();
-        }
-    }
-
-    [RelayCommand]
-    private async Task MarkAsPickedUp(Order order)
-    {
-        if (order == null) return;
-
-        var success = await _orderService.UpdateOrderStatusAsync(order.Id, OrderStatus.Completed);
-        if (success)
-        {
-            await LoadOrdersAsync();
-            await LoadTodaySummaryAsync();
-        }
-    }
-
-    [RelayCommand]
-    private void SelectOrder(Order order)
-    {
-        SelectedOrder = order;
-    }
-
-    #endregion
-
-    #region 메뉴 관련 커맨드
-
-    [RelayCommand]
-    private async Task SelectCategory(MenuCategory category)
-    {
-        SelectedCategory = category;
-        if (category != null)
-        {
-            var items = await _menuService.GetMenuItemsByCategoryAsync(category.Id);
-            MenuItems = new ObservableCollection<MenuItem>(items);
-        }
-    }
-
-    [RelayCommand]
-    private async Task ToggleSoldOut(MenuItem item)
-    {
-        if (item == null) return;
-
-        var success = await _menuService.ToggleMenuItemSoldOutAsync(item.Id, !item.IsSoldOut);
-        if (success)
-        {
-            item.IsSoldOut = !item.IsSoldOut;
-            await LoadMenuItemsAsync();
-        }
-    }
-
-    [RelayCommand]
-    private async Task ToggleAvailable(MenuItem item)
-    {
-        if (item == null) return;
-
-        var success = await _menuService.ToggleMenuItemAvailabilityAsync(item.Id, !item.IsAvailable);
-        if (success)
-        {
-            item.IsAvailable = !item.IsAvailable;
-            await LoadMenuItemsAsync();
-        }
-    }
-
-    #endregion
-
-    #region 매장 상태 관련
-
-    private string GetStatusText()
-    {
-        if (IsOpen) return "영업중";
-        if (IsPaused && PausedUntil.HasValue)
-            return $"일시정지 ({PausedUntil:HH:mm}까지)";
-        if (IsPaused) return "일시정지";
-        return "영업종료";
-    }
-
-    private string GetStatusColor()
-    {
-        if (IsOpen) return "#4CAF50";
-        if (IsPaused) return "#FF9800";
-        return "#F44336";
-    }
-
-    [RelayCommand]
-    private void ToggleOpen()
-    {
-        if (IsOpen)
-        {
-            IsOpen = false;
-            IsPaused = false;
-            PausedUntil = null;
-        }
-        else
-        {
-            IsOpen = true;
-            IsPaused = false;
-            PausedUntil = null;
-        }
-        NotifyStatusChanged();
-    }
-
-    [RelayCommand]
-    private void SetPause(int minutes)
-    {
-        IsOpen = false;
-        IsPaused = true;
-        PausedUntil = DateTime.Now.AddMinutes(minutes);
-        NotifyStatusChanged();
-    }
-
-    private void NotifyStatusChanged()
-    {
-        OnPropertyChanged(nameof(StatusText));
-        OnPropertyChanged(nameof(StatusColor));
-    }
+    private void SetPause(int minutes) => StoreState.SetPauseCommand.Execute(minutes);
 
     #endregion
 }

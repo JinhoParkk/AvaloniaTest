@@ -2,10 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="using:JinoOrder.Presentation.Shell"
+             xmlns:vm="using:JinoOrder.Presentation.Customers"
+             xmlns:models="using:JinoOrder.Domain.Customers"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
              x:Class="JinoOrder.Presentation.Customers.CustomersView"
-             x:DataType="vm:JinoOrderMainViewModel">
+             x:DataType="vm:CustomersViewModel">
 
   <UserControl.Styles>
     <Style Selector="Border.customer-card">
@@ -35,7 +36,7 @@
     <ScrollViewer Grid.Row="1">
       <ItemsControl ItemsSource="{Binding Customers}">
         <ItemsControl.ItemTemplate>
-          <DataTemplate>
+          <DataTemplate x:DataType="models:Customer">
             <Border Classes="customer-card">
               <Grid ColumnDefinitions="*,Auto">
                 <StackPanel Grid.Column="0">

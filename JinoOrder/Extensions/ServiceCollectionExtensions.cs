@@ -1,3 +1,4 @@
+using JinoOrder.Application.Common;
 using JinoOrder.Application.Customers;
 using JinoOrder.Application.Menu;
 using JinoOrder.Application.Orders;
@@ -5,8 +6,13 @@ using JinoOrder.Application.Statistics;
 using JinoOrder.Infrastructure.Services;
 using JinoOrder.Infrastructure.Storage;
 using JinoOrder.Presentation.Auth;
+using JinoOrder.Presentation.Customers;
 using JinoOrder.Presentation.Main;
+using JinoOrder.Presentation.Menu;
+using JinoOrder.Presentation.Orders;
+using JinoOrder.Presentation.Settings;
 using JinoOrder.Presentation.Shell;
+using JinoOrder.Presentation.Statistics;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JinoOrder.Extensions;
@@ -21,6 +27,9 @@ public static class ServiceCollectionExtensions
     /// </summary>
     public static IServiceCollection AddCoreServices(this IServiceCollection services)
     {
+        // ViewModelFactory (NavigationService에서 사용)
+        services.AddSingleton<IViewModelFactory, ViewModelFactory>();
+
         // 네비게이션 및 환경설정
         services.AddSingleton<NavigationService>();
         services.AddSingleton<PreferencesService>();
@@ -53,8 +62,38 @@ public static class ServiceCollectionExtensions
         services.AddTransient<LoginViewModel>();
         services.AddTransient<MainWindowViewModel>();
 
-        // 지노오더 ViewModels
-        services.AddTransient<JinoOrderMainViewModel>();
+        // 분리된 자식 ViewModels
+        services.AddTransient<OrdersViewModel>(sp =>
+        {
+            var orderService = sp.GetRequiredService<IOrderService>();
+            // StoreState에서 MinPickupTime을 가져오기 위한 콜백
+            // JinoOrderMainViewModel이 조합할 때 연결됨
+            return new OrdersViewModel(orderService);
+        });
+        services.AddTransient<MenuManagementViewModel>();
+        services.AddTransient<CustomersViewModel>();
+        services.AddTransient<StatisticsViewModel>();
+        services.AddTransient<StoreStateViewModel>();
+        services.AddTransient<SettingsViewModel>(sp =>
+        {
+            var preferencesService = sp.GetRequiredService<PreferencesService>();
+            return new SettingsViewModel(preferencesService);
+        });
+
+        // 지노오더 메인 ViewModel (자식 VM들을 조합)
+        services.AddTransient<JinoOrderMainViewModel>(sp =>
+        {
+            var orders = sp.GetRequiredService<OrdersViewModel>();
+            var menu = sp.GetRequiredService<MenuManagementViewModel>();
+            var customers = sp.GetRequiredService<CustomersViewModel>();
+            var statistics = sp.GetRequiredService<StatisticsViewModel>();
+            var storeState = sp.GetRequiredService<StoreStateViewModel>();
+            var settings = sp.GetRequiredService<SettingsViewModel>();
+            var platformInfo = sp.GetService<IPlatformInfo>();
+
+            return new JinoOrderMainViewModel(
+                orders, menu, customers, statistics, storeState, settings, platformInfo);
+        });
 
         return services;
     }
