@@ -1,5 +1,4 @@
 using JinoOrder.Presentation.Common;
-using JinoOrder.Presentation.Main;
 using JinoOrder.Presentation.Shell;
 using JinoOrder.Infrastructure.Storage;
 using JinoOrder.Application.Auth;
@@ -8,8 +7,8 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JinoOrder.Domain.Common;
-using JinoOrder.Application.Common;
 using JinoOrder.Infrastructure.Services;
+using Microsoft.Extensions.Logging;
 
 namespace JinoOrder.Presentation.Auth;
 
@@ -28,78 +27,79 @@ public partial class LoginViewModel : ViewModelBase
     [ObservableProperty]
     private bool _rememberMe = true;
 
-    [ObservableProperty]
-    private string _errorMessage = string.Empty;
-
-    [ObservableProperty]
-    private bool _isLoading;
-
     public string AppVersion { get; }
 
     public LoginViewModel(
         IAuthenticationService authService,
         PreferencesService preferencesService,
-        NavigationService navigationService)
+        NavigationService navigationService,
+        ILogger<LoginViewModel> logger)
     {
         _authService = authService;
         _preferencesService = preferencesService;
         _navigationService = navigationService;
+        Logger = logger;
 
         var version = Assembly.GetExecutingAssembly().GetName().Version;
         AppVersion = $"v{version?.Major}.{version?.Minor}.{version?.Build}";
+
+        Logger.LogDebug("LoginViewModel 초기화됨");
     }
 
     [RelayCommand]
     private async Task LoginAsync()
     {
-        ErrorMessage = string.Empty;
+        ClearError();
 
+        // 검증
         if (string.IsNullOrWhiteSpace(Username))
         {
-            ErrorMessage = "아이디를 입력해주세요.";
+            SetError(ValidationMessages.UsernameRequired);
             return;
         }
 
         if (string.IsNullOrWhiteSpace(Password))
         {
-            ErrorMessage = "비밀번호를 입력해주세요.";
+            SetError(ValidationMessages.PasswordRequired);
             return;
         }
 
-        IsLoading = true;
+        Logger.LogInformation("로그인 시도: Username={Username}", Username);
 
-        try
+        var result = await ExecuteAsync(async ct =>
         {
             var success = await _authService.LoginAsync(Username, Password);
 
             if (success)
             {
+                Logger.LogInformation("로그인 성공: Username={Username}", Username);
+
                 if (RememberMe && _authService.CurrentUser != null)
                 {
                     _preferencesService.SaveAutoLogin(_authService.CurrentUser);
+                    Logger.LogDebug("자동 로그인 정보 저장됨");
                 }
 
-                // 타입 기반 네비게이션 (DI에서 resolve)
                 _navigationService.NavigateTo<JinoOrderMainViewModel>();
             }
             else
             {
-                ErrorMessage = "아이디 또는 비밀번호가 올바르지 않습니다.";
+                Logger.LogWarning("로그인 실패 - 잘못된 인증 정보: Username={Username}", Username);
+                SetError(ValidationMessages.InvalidCredentials);
             }
-        }
-        catch
+        }, "로그인");
+
+        if (result.IsFailure && result.ErrorType != ErrorType.Validation)
         {
-            ErrorMessage = "로그인 중 오류가 발생했습니다. 다시 시도해주세요.";
-        }
-        finally
-        {
-            IsLoading = false;
+            Logger.LogError("로그인 중 오류 발생: Username={Username}, Error={Error}", Username, result.Error);
+            SetError(ValidationMessages.LoginError);
         }
     }
 
     [RelayCommand]
     private void FindPassword()
     {
+        Logger.LogDebug("비밀번호 찾기 요청됨");
         // 나중에 구현 예정
     }
 }

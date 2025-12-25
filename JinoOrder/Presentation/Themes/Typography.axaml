@@ -1,0 +1,44 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Typography Styles (Selector-based styles must be in Styles, not ResourceDictionary) -->
+
+    <Style Selector="TextBlock.heading1">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeXXLarge}" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{DynamicResource JinoTextPrimaryBrush}" />
+    </Style>
+
+    <Style Selector="TextBlock.heading2">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeXLarge}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource JinoTextPrimaryBrush}" />
+    </Style>
+
+    <Style Selector="TextBlock.heading3">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeLarge}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource JinoTextPrimaryBrush}" />
+    </Style>
+
+    <Style Selector="TextBlock.body">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
+        <Setter Property="Foreground" Value="{DynamicResource JinoTextPrimaryBrush}" />
+    </Style>
+
+    <Style Selector="TextBlock.bodySecondary">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
+        <Setter Property="Foreground" Value="{DynamicResource JinoTextSecondaryBrush}" />
+    </Style>
+
+    <Style Selector="TextBlock.caption">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeSmall}" />
+        <Setter Property="Foreground" Value="{DynamicResource JinoTextSecondaryBrush}" />
+    </Style>
+
+    <Style Selector="TextBlock.error">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeSmall}" />
+        <Setter Property="Foreground" Value="{DynamicResource JinoErrorBrush}" />
+    </Style>
+
+</Styles>

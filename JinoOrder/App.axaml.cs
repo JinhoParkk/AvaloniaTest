@@ -20,6 +20,11 @@ public partial class App : Avalonia.Application
     private IServiceProvider _services = null!;
 
     /// <summary>
+    /// 서비스 프로바이더 (정적 접근용)
+    /// </summary>
+    public static IServiceProvider? Services { get; private set; }
+
+    /// <summary>
     /// 플랫폼별 서비스 제공자 (Desktop/iOS/Android에서 설정)
     /// </summary>
     public static IPlatformServiceProvider? PlatformServices { get; set; }
@@ -98,6 +103,7 @@ public partial class App : Avalonia.Application
 
         // ServiceProvider 생성
         _services = services.BuildServiceProvider();
+        Services = _services;
     }
 
     /// <summary>

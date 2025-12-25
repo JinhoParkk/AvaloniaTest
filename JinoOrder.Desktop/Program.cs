@@ -3,7 +3,7 @@ using System.Linq;
 using Avalonia;
 using JinoOrder.Desktop.Configuration;
 using JinoOrder.Desktop.Services;
-using JinoOrder.Infrastructure.Services;
+using JinoOrder.Domain.Common;
 
 namespace JinoOrder.Desktop;
 
@@ -22,7 +22,7 @@ sealed class Program
 
         // 딥링크 인자 확인 (jinoorder:// 로 시작하는 인자)
         var deepLinkArg = args.FirstOrDefault(arg =>
-            arg.StartsWith($"{DeepLinkService.UriScheme}://", StringComparison.OrdinalIgnoreCase));
+            arg.StartsWith($"{AppConstants.DeepLinkScheme}://", StringComparison.OrdinalIgnoreCase));
 
         if (!string.IsNullOrEmpty(deepLinkArg))
         {

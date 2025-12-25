@@ -1,5 +1,6 @@
 using JinoOrder.Presentation.Common;
 using JinoOrder.Application.Common;
+using JinoOrder.Domain.Common;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JinoOrder.Presentation.Orders;
@@ -7,6 +8,7 @@ using JinoOrder.Presentation.Menu;
 using JinoOrder.Presentation.Customers;
 using JinoOrder.Presentation.Statistics;
 using JinoOrder.Presentation.Settings;
+using Microsoft.Extensions.Logging;
 
 namespace JinoOrder.Presentation.Shell;
 
@@ -23,13 +25,9 @@ public partial class JinoOrderMainViewModel : ViewModelBase
     public SettingsViewModel Settings { get; }
 
     // 네비게이션 상태
-    [ObservableProperty] private string _selectedMenu = "orders";
+    [ObservableProperty] private string _selectedMenu = Routes.Orders;
     [ObservableProperty] private bool _isSidebarCollapsed;
     [ObservableProperty] private bool _isMoreMenuOpen;
-
-    // UI 상태
-    [ObservableProperty] private bool _isLoading;
-    [ObservableProperty] private string? _errorMessage;
 
     // 플랫폼 정보
     public bool IsMobile => _platformInfo?.IsMobile ?? false;
@@ -38,12 +36,12 @@ public partial class JinoOrderMainViewModel : ViewModelBase
     public bool ShowBottomNav => IsMobile;
 
     // 메뉴 선택 상태
-    public bool IsOrdersSelected => SelectedMenu == "orders";
-    public bool IsHistorySelected => SelectedMenu == "history";
-    public bool IsMenuSelected => SelectedMenu == "menu";
-    public bool IsCustomersSelected => SelectedMenu == "customers";
-    public bool IsStatsSelected => SelectedMenu == "stats";
-    public bool IsSettingsSelected => SelectedMenu == "settings";
+    public bool IsOrdersSelected => SelectedMenu == Routes.Orders;
+    public bool IsHistorySelected => SelectedMenu == Routes.History;
+    public bool IsMenuSelected => SelectedMenu == Routes.Menu;
+    public bool IsCustomersSelected => SelectedMenu == Routes.Customers;
+    public bool IsStatsSelected => SelectedMenu == Routes.Statistics;
+    public bool IsSettingsSelected => SelectedMenu == Routes.Settings;
 
     // 모바일 더보기 메뉴 선택 상태
     public bool IsMoreSelected => IsCustomersSelected || IsStatsSelected || IsSettingsSelected;
@@ -68,7 +66,8 @@ public partial class JinoOrderMainViewModel : ViewModelBase
         StatisticsViewModel statistics,
         StoreStateViewModel storeState,
         SettingsViewModel settings,
-        IPlatformInfo? platformInfo = null)
+        IPlatformInfo? platformInfo,
+        ILogger<JinoOrderMainViewModel> logger)
     {
         Orders = orders;
         Menu = menu;
@@ -77,16 +76,19 @@ public partial class JinoOrderMainViewModel : ViewModelBase
         StoreState = storeState;
         Settings = settings;
         _platformInfo = platformInfo;
+        Logger = logger;
+
+        Logger.LogDebug("JinoOrderMainViewModel 초기화됨");
 
         // Orders의 PickupTime을 StoreState에서 가져오도록 연결
-        // OrdersViewModel이 StoreState.MinPickupTime을 사용하도록 설정
+        Orders.SetPickupTimeCallback(() => StoreState.MinPickupTime);
 
         // 설정 저장 시 StoreState 업데이트
         Settings.PropertyChanged += (s, e) =>
         {
             if (e.PropertyName == nameof(SettingsViewModel.ShowSaveMessage) && Settings.ShowSaveMessage)
             {
-                // 설정이 저장될 때 StoreState 리로드
+                Logger.LogDebug("설정 저장 감지 - StoreState 업데이트");
                 StoreState.OnActivated();
                 NotifyStoreStateChanged();
             }
@@ -124,6 +126,8 @@ public partial class JinoOrderMainViewModel : ViewModelBase
     {
         base.OnActivated();
 
+        Logger.LogDebug("JinoOrderMainViewModel 활성화됨");
+
         // 모든 자식 ViewModel 활성화
         Orders.OnActivated();
         Menu.OnActivated();
@@ -134,6 +138,8 @@ public partial class JinoOrderMainViewModel : ViewModelBase
 
     public override void OnDeactivated()
     {
+        Logger.LogDebug("JinoOrderMainViewModel 비활성화됨");
+
         // 모든 자식 ViewModel 비활성화
         Orders.OnDeactivated();
         Menu.OnDeactivated();
@@ -149,6 +155,13 @@ public partial class JinoOrderMainViewModel : ViewModelBase
     [RelayCommand]
     private void SelectMenu(string menu)
     {
+        if (!Routes.IsValidRoute(menu))
+        {
+            Logger.LogWarning("잘못된 메뉴 라우트: {Menu}", menu);
+            return;
+        }
+
+        Logger.LogDebug("메뉴 선택: {Menu}", menu);
         SelectedMenu = menu;
         NotifyMenuSelectionChanged();
     }

@@ -1,0 +1,91 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Spacing Tokens -->
+    <x:Double x:Key="SpacingXSmall">4</x:Double>
+    <x:Double x:Key="SpacingSmall">8</x:Double>
+    <x:Double x:Key="SpacingMedium">16</x:Double>
+    <x:Double x:Key="SpacingLarge">24</x:Double>
+    <x:Double x:Key="SpacingXLarge">32</x:Double>
+    <x:Double x:Key="SpacingXXLarge">48</x:Double>
+
+    <!-- Thickness (for Margin/Padding) -->
+    <Thickness x:Key="PaddingXSmall">4</Thickness>
+    <Thickness x:Key="PaddingSmall">8</Thickness>
+    <Thickness x:Key="PaddingMedium">16</Thickness>
+    <Thickness x:Key="PaddingLarge">24</Thickness>
+    <Thickness x:Key="PaddingXLarge">32</Thickness>
+
+    <!-- Horizontal/Vertical Padding -->
+    <Thickness x:Key="PaddingHorizontalSmall">8,0</Thickness>
+    <Thickness x:Key="PaddingHorizontalMedium">16,0</Thickness>
+    <Thickness x:Key="PaddingVerticalSmall">0,8</Thickness>
+    <Thickness x:Key="PaddingVerticalMedium">0,16</Thickness>
+
+    <!-- Corner Radius -->
+    <CornerRadius x:Key="RadiusXSmall">2</CornerRadius>
+    <CornerRadius x:Key="RadiusSmall">4</CornerRadius>
+    <CornerRadius x:Key="RadiusMedium">8</CornerRadius>
+    <CornerRadius x:Key="RadiusLarge">12</CornerRadius>
+    <CornerRadius x:Key="RadiusXLarge">16</CornerRadius>
+    <CornerRadius x:Key="RadiusRound">9999</CornerRadius>
+
+    <!-- Font Sizes -->
+    <x:Double x:Key="FontSizeXSmall">10</x:Double>
+    <x:Double x:Key="FontSizeSmall">12</x:Double>
+    <x:Double x:Key="FontSizeBody">14</x:Double>
+    <x:Double x:Key="FontSizeMedium">16</x:Double>
+    <x:Double x:Key="FontSizeLarge">18</x:Double>
+    <x:Double x:Key="FontSizeXLarge">24</x:Double>
+    <x:Double x:Key="FontSizeXXLarge">32</x:Double>
+    <x:Double x:Key="FontSizeHeading">48</x:Double>
+
+    <!-- Font Weights (as strings for FontWeight property) -->
+    <!-- Use directly: FontWeight="Light", "Normal", "Medium", "SemiBold", "Bold" -->
+
+    <!-- Icon Sizes -->
+    <x:Double x:Key="IconSizeSmall">16</x:Double>
+    <x:Double x:Key="IconSizeMedium">24</x:Double>
+    <x:Double x:Key="IconSizeLarge">32</x:Double>
+    <x:Double x:Key="IconSizeXLarge">48</x:Double>
+
+    <!-- Component Sizes -->
+    <x:Double x:Key="ButtonHeightSmall">28</x:Double>
+    <x:Double x:Key="ButtonHeightMedium">36</x:Double>
+    <x:Double x:Key="ButtonHeightLarge">44</x:Double>
+
+    <x:Double x:Key="InputHeight">36</x:Double>
+    <x:Double x:Key="InputHeightLarge">44</x:Double>
+
+    <!-- Sidebar -->
+    <x:Double x:Key="SidebarWidth">240</x:Double>
+    <x:Double x:Key="SidebarWidthCollapsed">64</x:Double>
+
+    <!-- Card -->
+    <x:Double x:Key="CardMinWidth">280</x:Double>
+    <x:Double x:Key="CardMaxWidth">400</x:Double>
+
+    <!-- Border -->
+    <x:Double x:Key="BorderThicknessDefault">1</x:Double>
+    <x:Double x:Key="BorderThicknessMedium">2</x:Double>
+    <Thickness x:Key="BorderThickness1">1</Thickness>
+    <Thickness x:Key="BorderThickness2">2</Thickness>
+
+    <!-- Elevation / Shadow (BoxShadow strings) -->
+    <!-- Use directly in Style: BoxShadow="0 2 4 0 #20000000" -->
+
+    <!-- Animation Durations -->
+    <!-- Use directly: Duration="0:0:0.2" -->
+
+    <!-- Z-Index -->
+    <x:Int32 x:Key="ZIndexDropdown">100</x:Int32>
+    <x:Int32 x:Key="ZIndexModal">200</x:Int32>
+    <x:Int32 x:Key="ZIndexToast">300</x:Int32>
+
+    <!-- Opacity -->
+    <x:Double x:Key="OpacityDisabled">0.38</x:Double>
+    <x:Double x:Key="OpacityHover">0.08</x:Double>
+    <x:Double x:Key="OpacityFocus">0.12</x:Double>
+    <x:Double x:Key="OpacityPressed">0.16</x:Double>
+
+</ResourceDictionary>
