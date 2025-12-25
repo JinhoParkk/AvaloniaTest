@@ -29,6 +29,11 @@ public partial class App : Avalonia.Application
     /// </summary>
     public static Window? MainWindow { get; private set; }
 
+    /// <summary>
+    /// 앱 시작 시 처리할 딥링크 URI (플랫폼에서 설정)
+    /// </summary>
+    public static string? PendingDeepLink { get; set; }
+
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -108,6 +113,41 @@ public partial class App : Avalonia.Application
 
         mainWindowViewModel.SetInitialViewModel(initialViewModel);
         setDataContext(mainWindowViewModel);
+
+        // 대기 중인 딥링크가 있으면 처리
+        if (!string.IsNullOrEmpty(PendingDeepLink))
+        {
+            HandleDeepLink(PendingDeepLink);
+            PendingDeepLink = null;
+        }
+    }
+
+    /// <summary>
+    /// 딥링크 처리 (외부에서 호출 가능)
+    /// </summary>
+    /// <param name="uri">딥링크 URI</param>
+    /// <returns>처리 성공 여부</returns>
+    public static bool HandleDeepLink(string uri)
+    {
+        if (string.IsNullOrEmpty(uri) || Services == null)
+            return false;
+
+        var deepLinkService = Services.GetService<IDeepLinkService>();
+        return deepLinkService?.Handle(uri) ?? false;
+    }
+
+    /// <summary>
+    /// 딥링크 처리 (외부에서 호출 가능)
+    /// </summary>
+    /// <param name="uri">딥링크 URI</param>
+    /// <returns>처리 성공 여부</returns>
+    public static bool HandleDeepLink(Uri uri)
+    {
+        if (uri == null || Services == null)
+            return false;
+
+        var deepLinkService = Services.GetService<IDeepLinkService>();
+        return deepLinkService?.Handle(uri) ?? false;
     }
 
     private void DisableAvaloniaDataAnnotationValidation()
