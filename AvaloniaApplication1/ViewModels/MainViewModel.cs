@@ -28,8 +28,8 @@ public partial class MainViewModel : ViewModelBase
     public string StatusColor => GetStatusColor();
 
     // 플랫폼별 UI 표시 여부
-    public bool ShowWindowControls => _platformInfo?.SupportsWindowControls ?? true;
-    public bool IsMobilePlatform => _platformInfo?.IsMobile ?? false;
+    public bool IsMobile => _platformInfo?.IsMobile ?? false;
+    public bool ShowWindowControls => !IsMobile;
 
     // 윈도우 컨트롤 이벤트
     public event Action? MinimizeRequested;
