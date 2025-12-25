@@ -1,0 +1,104 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="using:FluentAvalonia.UI.Controls"
+             xmlns:vm="using:JinoOrder.Presentation.Shell"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="JinoOrder.Presentation.Statistics.StatsPage"
+             x:DataType="vm:JinoOrderMainViewModel">
+
+  <ScrollViewer Padding="24">
+    <StackPanel Spacing="24">
+      <!-- 오늘 요약 섹션 -->
+      <TextBlock Text="오늘 요약" FontSize="24" FontWeight="SemiBold"/>
+
+      <!-- 요약 카드들 -->
+      <Grid ColumnDefinitions="*,*,*,*">
+        <Border Grid.Column="0" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1" CornerRadius="8" Padding="20" Margin="0,0,8,0">
+          <StackPanel>
+            <TextBlock Text="총 매출" FontSize="13" Opacity="0.6"/>
+            <TextBlock Text="{Binding TodaySummary.FormattedTotalSales, FallbackValue=0원}"
+                      FontSize="24" FontWeight="Bold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+          </StackPanel>
+        </Border>
+        <Border Grid.Column="1" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1" CornerRadius="8" Padding="20" Margin="4,0">
+          <StackPanel>
+            <TextBlock Text="총 주문" FontSize="13" Opacity="0.6"/>
+            <TextBlock Text="{Binding TodaySummary.TotalOrders, FallbackValue=0, StringFormat={}{0}건}"
+                      FontSize="24" FontWeight="Bold"/>
+          </StackPanel>
+        </Border>
+        <Border Grid.Column="2" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1" CornerRadius="8" Padding="20" Margin="4,0">
+          <StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <TextBlock Text="완료" FontSize="13" Opacity="0.6"/>
+              <ui:InfoBadge Classes="Success"/>
+            </StackPanel>
+            <TextBlock Text="{Binding TodaySummary.CompletedOrders, FallbackValue=0}"
+                      FontSize="24" FontWeight="Bold" Foreground="#107C10"/>
+          </StackPanel>
+        </Border>
+        <Border Grid.Column="3" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1" CornerRadius="8" Padding="20" Margin="8,0,0,0">
+          <StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <TextBlock Text="취소" FontSize="13" Opacity="0.6"/>
+              <ui:InfoBadge Classes="Critical"/>
+            </StackPanel>
+            <TextBlock Text="{Binding TodaySummary.CancelledOrders, FallbackValue=0}"
+                      FontSize="24" FontWeight="Bold" Foreground="#E81123"/>
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <!-- 평균 주문금액 -->
+      <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+              BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+              BorderThickness="1" CornerRadius="8" Padding="20">
+        <Grid ColumnDefinitions="*,Auto">
+          <StackPanel Grid.Column="0">
+            <TextBlock Text="평균 주문금액" FontSize="14" Opacity="0.6"/>
+            <TextBlock Text="{Binding TodaySummary.FormattedAverageOrderAmount, FallbackValue=0원}"
+                      FontSize="28" FontWeight="SemiBold"/>
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <!-- 인기 메뉴 TOP 5 -->
+      <TextBlock Text="인기 메뉴 TOP 5" FontSize="20" FontWeight="SemiBold" Margin="0,8,0,0"/>
+
+      <ItemsControl ItemsSource="{Binding PopularMenuItems}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,8">
+              <Grid ColumnDefinitions="Auto,*,Auto">
+                <Border Grid.Column="0" Width="32" Height="32" CornerRadius="16"
+                       Background="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,16,0">
+                  <TextBlock Text="{Binding Rank}" Foreground="White"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            FontWeight="Bold" FontSize="14"/>
+                </Border>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                  <TextBlock Text="{Binding MenuName}" FontSize="16" FontWeight="Medium"/>
+                  <TextBlock Text="{Binding OrderCount, StringFormat={}{0}잔}" FontSize="13" Opacity="0.6"/>
+                </StackPanel>
+                <TextBlock Grid.Column="2" Text="{Binding FormattedTotalSales}"
+                          FontSize="16" FontWeight="Medium" VerticalAlignment="Center"/>
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>
