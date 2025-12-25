@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using Avalonia;
 using JinoOrder.Desktop.Configuration;
 using JinoOrder.Desktop.Services;
+using JinoOrder.Infrastructure.Services;
 
 namespace JinoOrder.Desktop;
 
@@ -17,6 +19,15 @@ sealed class Program
         App.PlatformServices = new DesktopPlatformServiceProvider(
             simulationOptions: simulationOptions
         );
+
+        // 딥링크 인자 확인 (jinoorder:// 로 시작하는 인자)
+        var deepLinkArg = args.FirstOrDefault(arg =>
+            arg.StartsWith($"{DeepLinkService.UriScheme}://", StringComparison.OrdinalIgnoreCase));
+
+        if (!string.IsNullOrEmpty(deepLinkArg))
+        {
+            App.PendingDeepLink = deepLinkArg;
+        }
 
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
     }

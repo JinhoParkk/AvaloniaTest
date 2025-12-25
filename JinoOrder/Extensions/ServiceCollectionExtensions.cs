@@ -34,6 +34,10 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<NavigationService>();
         services.AddSingleton<PreferencesService>();
 
+        // 딥링크 서비스
+        services.AddSingleton<DeepLinkService>();
+        services.AddSingleton<IDeepLinkService>(sp => sp.GetRequiredService<DeepLinkService>());
+
         return services;
     }
 
