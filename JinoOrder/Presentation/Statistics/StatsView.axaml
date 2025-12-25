@@ -1,0 +1,82 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:JinoOrder.Presentation.Shell"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="JinoOrder.Presentation.Statistics.StatsView"
+             x:DataType="vm:JinoOrderMainViewModel">
+
+  <UserControl.Styles>
+    <Style Selector="Border.stat-card">
+      <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundAltHighBrush}"/>
+      <Setter Property="CornerRadius" Value="12"/>
+      <Setter Property="Padding" Value="20"/>
+      <Setter Property="BoxShadow" Value="0 2 8 0 #10000000"/>
+    </Style>
+
+    <Style Selector="Border.menu-card">
+      <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundAltHighBrush}"/>
+      <Setter Property="CornerRadius" Value="12"/>
+      <Setter Property="Padding" Value="16"/>
+      <Setter Property="BoxShadow" Value="0 2 4 0 #10000000"/>
+    </Style>
+  </UserControl.Styles>
+
+  <Grid RowDefinitions="Auto,*" Margin="24">
+    <TextBlock Grid.Row="0" Text="매출 통계" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
+
+    <Grid Grid.Row="1" ColumnDefinitions="*,360">
+      <StackPanel Grid.Column="0" Margin="0,0,24,0">
+        <!-- 오늘 매출 카드 -->
+        <Border Classes="stat-card" Margin="0,0,0,16">
+          <Grid ColumnDefinitions="*,*,*">
+            <StackPanel Grid.Column="0">
+              <TextBlock Text="오늘 매출" FontSize="14" Opacity="0.6" Margin="0,0,0,8"/>
+              <TextBlock Text="{Binding TodaySummary.FormattedTotalSales, FallbackValue=0원}"
+                        FontSize="32" FontWeight="Bold" Foreground="#0078D4"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+              <TextBlock Text="총 주문" FontSize="14" Opacity="0.6" Margin="0,0,0,8"/>
+              <TextBlock Text="{Binding TodaySummary.TotalOrders, FallbackValue=0, StringFormat={}{0}건}"
+                        FontSize="28" FontWeight="Bold"/>
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+              <TextBlock Text="평균 금액" FontSize="14" Opacity="0.6" Margin="0,0,0,8"/>
+              <TextBlock Text="{Binding TodaySummary.FormattedAverageOrderAmount, FallbackValue=0원}"
+                        FontSize="28" FontWeight="Bold"/>
+            </StackPanel>
+          </Grid>
+        </Border>
+      </StackPanel>
+
+      <!-- 인기 메뉴 -->
+      <StackPanel Grid.Column="1">
+        <TextBlock Text="인기 메뉴 TOP 5" FontSize="18" FontWeight="Bold" Margin="0,0,0,16"/>
+
+        <ItemsControl ItemsSource="{Binding PopularMenuItems}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Border Classes="menu-card" Margin="0,0,0,8">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                  <Border Grid.Column="0" Width="28" Height="28" CornerRadius="14"
+                         Background="#0078D4" Margin="0,0,12,0">
+                    <TextBlock Text="{Binding Rank}" Foreground="White"
+                              HorizontalAlignment="Center" VerticalAlignment="Center"
+                              FontWeight="Bold" FontSize="13"/>
+                  </Border>
+                  <StackPanel Grid.Column="1">
+                    <TextBlock Text="{Binding MenuName}" FontSize="15" FontWeight="Medium"/>
+                    <TextBlock Text="{Binding OrderCount, StringFormat={}{0}잔}" FontSize="12" Opacity="0.6"/>
+                  </StackPanel>
+                  <TextBlock Grid.Column="2" Text="{Binding FormattedTotalSales}"
+                            FontSize="14" FontWeight="Medium" VerticalAlignment="Center"/>
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </Grid>
+  </Grid>
+</UserControl>

@@ -1,0 +1,202 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:JinoOrder.Presentation.Auth"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="JinoOrder.Presentation.Auth.LoginView"
+             x:DataType="vm:LoginViewModel">
+  <Design.DataContext>
+    <vm:LoginViewModel />
+  </Design.DataContext>
+
+  <UserControl.Styles>
+    <!-- 카드 스타일 -->
+    <Style Selector="Border.card">
+      <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundAltHighBrush}"/>
+      <Setter Property="CornerRadius" Value="16"/>
+      <Setter Property="BoxShadow" Value="0 8 32 0 #20000000"/>
+      <Setter Property="Padding" Value="40"/>
+    </Style>
+
+    <!-- 입력 필드 스타일 -->
+    <Style Selector="TextBox.input-field">
+      <Setter Property="CornerRadius" Value="8"/>
+      <Setter Property="Padding" Value="12"/>
+      <Setter Property="FontSize" Value="14"/>
+      <Setter Property="MinHeight" Value="44"/>
+    </Style>
+
+    <!-- 기본 버튼 스타일 -->
+    <Style Selector="Button.primary-btn">
+      <Setter Property="Background" Value="#0078D4"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="CornerRadius" Value="8"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="FontSize" Value="15"/>
+      <Setter Property="Padding" Value="16,12"/>
+    </Style>
+    <Style Selector="Button.primary-btn:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#106EBE"/>
+    </Style>
+    <Style Selector="Button.primary-btn:pressed /template/ ContentPresenter">
+      <Setter Property="Background" Value="#005A9E"/>
+    </Style>
+
+    <!-- 링크 버튼 스타일 -->
+    <Style Selector="Button.link-btn">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Foreground" Value="#0078D4"/>
+      <Setter Property="FontSize" Value="13"/>
+      <Setter Property="Padding" Value="4"/>
+      <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    <Style Selector="Button.link-btn:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="Foreground" Value="#106EBE"/>
+    </Style>
+
+    <!-- 라벨 스타일 -->
+    <Style Selector="TextBlock.field-label">
+      <Setter Property="FontSize" Value="13"/>
+      <Setter Property="FontWeight" Value="Medium"/>
+      <Setter Property="Margin" Value="0,0,0,6"/>
+      <Setter Property="Opacity" Value="0.9"/>
+    </Style>
+
+    <!-- 체크박스 스타일 -->
+    <Style Selector="CheckBox.remember-check">
+      <Setter Property="FontSize" Value="13"/>
+    </Style>
+  </UserControl.Styles>
+
+  <!-- 배경 그라데이션 -->
+  <Grid>
+    <Grid.Background>
+      <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Color="#F0F4F8" Offset="0"/>
+        <GradientStop Color="#E8EEF4" Offset="1"/>
+      </LinearGradientBrush>
+    </Grid.Background>
+
+    <!-- 다크모드 대응 배경 -->
+    <Border IsVisible="{Binding $parent[UserControl].ActualThemeVariant, Converter={x:Static ObjectConverters.IsNull}}">
+      <Border.Background>
+        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+          <GradientStop Color="#1A1A2E" Offset="0"/>
+          <GradientStop Color="#16213E" Offset="1"/>
+        </LinearGradientBrush>
+      </Border.Background>
+    </Border>
+
+    <!-- 메인 컨텐츠 영역 -->
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+      <Grid VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Margin="20">
+
+        <!-- 로그인 카드 -->
+        <Border Classes="card"
+                MinWidth="340"
+                MaxWidth="420">
+          <StackPanel Spacing="8">
+
+            <!-- 로고/타이틀 영역 -->
+            <StackPanel HorizontalAlignment="Center" Margin="0,0,0,24">
+              <!-- 앱 아이콘 (원형 배경) -->
+              <Border Width="72" Height="72"
+                      CornerRadius="36"
+                      Background="#0078D4"
+                      HorizontalAlignment="Center"
+                      Margin="0,0,0,16">
+                <TextBlock Text="P"
+                           FontSize="32"
+                           FontWeight="Bold"
+                           Foreground="White"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+              </Border>
+
+              <TextBlock Text="패스오더 점주용"
+                         FontSize="24"
+                         FontWeight="Bold"
+                         HorizontalAlignment="Center"/>
+
+              <TextBlock Text="사장님, 환영합니다"
+                         FontSize="14"
+                         Opacity="0.6"
+                         HorizontalAlignment="Center"
+                         Margin="0,6,0,0"/>
+            </StackPanel>
+
+            <!-- 아이디 입력 -->
+            <StackPanel Margin="0,0,0,8">
+              <TextBlock Text="아이디" Classes="field-label"/>
+              <TextBox Text="{Binding Username}"
+                       Classes="input-field"
+                       Watermark="아이디를 입력하세요"/>
+            </StackPanel>
+
+            <!-- 비밀번호 입력 -->
+            <StackPanel Margin="0,0,0,8">
+              <TextBlock Text="비밀번호" Classes="field-label"/>
+              <TextBox Text="{Binding Password}"
+                       Classes="input-field"
+                       PasswordChar="•"
+                       Watermark="비밀번호를 입력하세요"/>
+            </StackPanel>
+
+            <!-- 자동 로그인 & 비밀번호 찾기 -->
+            <Grid Margin="0,4,0,16">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+
+              <CheckBox Grid.Column="0"
+                        IsChecked="{Binding RememberMe}"
+                        Content="자동 로그인"
+                        Classes="remember-check"/>
+
+              <Button Grid.Column="1"
+                      Content="비밀번호 찾기"
+                      Command="{Binding FindPasswordCommand}"
+                      Classes="link-btn"/>
+            </Grid>
+
+            <!-- 에러 메시지 -->
+            <Border Background="#FFF0F0"
+                    CornerRadius="8"
+                    Padding="12"
+                    Margin="0,0,0,8"
+                    IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+              <TextBlock Text="{Binding ErrorMessage}"
+                         Foreground="#D32F2F"
+                         FontSize="13"
+                         TextWrapping="Wrap"/>
+            </Border>
+
+            <!-- 로그인 버튼 -->
+            <Button Content="로그인"
+                    Command="{Binding LoginCommand}"
+                    Classes="primary-btn"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Margin="0,8,0,0"/>
+
+          </StackPanel>
+        </Border>
+      </Grid>
+    </ScrollViewer>
+
+    <!-- 버전 정보 (하단 중앙) -->
+    <TextBlock Text="{Binding AppVersion}"
+               FontSize="11"
+               Opacity="0.4"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Bottom"
+               Margin="0,0,0,16"/>
+  </Grid>
+</UserControl>
