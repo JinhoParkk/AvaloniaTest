@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:JinoOrder.Presentation.Shell"
              xmlns:models="using:JinoOrder.Domain.Orders"
+             xmlns:converters="using:JinoOrder.Presentation.Converters"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
              x:Class="JinoOrder.Presentation.Orders.OrdersView"
              x:DataType="vm:JinoOrderMainViewModel">
@@ -167,11 +168,11 @@
                   <Button Classes="btn-success" Content="완료" HorizontalAlignment="Stretch"
                           Command="{Binding $parent[ItemsControl].((vm:JinoOrderMainViewModel)DataContext).CompleteOrderCommand}"
                           CommandParameter="{Binding}"
-                          IsVisible="{Binding Status, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static models:OrderStatus.Preparing}}"/>
+                          IsVisible="{Binding Status, Converter={x:Static converters:EqualConverter.Instance}, ConverterParameter={x:Static models:OrderStatus.Preparing}}"/>
                   <Button Classes="btn-primary" Content="픽업완료" HorizontalAlignment="Stretch"
                           Command="{Binding $parent[ItemsControl].((vm:JinoOrderMainViewModel)DataContext).MarkAsPickedUpCommand}"
                           CommandParameter="{Binding}"
-                          IsVisible="{Binding Status, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static models:OrderStatus.Ready}}"/>
+                          IsVisible="{Binding Status, Converter={x:Static converters:EqualConverter.Instance}, ConverterParameter={x:Static models:OrderStatus.Ready}}"/>
                 </StackPanel>
               </Grid>
             </Border>
