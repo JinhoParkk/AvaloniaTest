@@ -32,10 +32,6 @@ public static class RefitServiceExtensions
         configureOptions?.Invoke(options);
         services.AddSingleton(options);
 
-        // AuthApiOptions 설정
-        var authOptions = new AuthApiOptions();
-        services.AddSingleton(authOptions);
-
         // TokenStorage (싱글톤 - 앱 전체에서 하나의 토큰 상태 유지)
         services.AddSingleton<ITokenStorage, InMemoryTokenStorage>();
 
@@ -90,25 +86,6 @@ public static class RefitServiceExtensions
 
         // AuthenticationService
         services.AddSingleton<IAuthenticationService, AuthenticationService>();
-
-        // 기존 IApiClient도 유지 (점진적 마이그레이션 지원)
-        services.AddHttpClient(ApiClientOptions.HttpClientName, client =>
-        {
-            if (!string.IsNullOrEmpty(options.BaseUrl))
-            {
-                client.BaseAddress = new Uri(options.BaseUrl);
-            }
-            client.Timeout = options.Timeout;
-        });
-
-        services.AddTransient<IApiClient>(sp =>
-        {
-            var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
-            var httpClient = httpClientFactory.CreateClient(ApiClientOptions.HttpClientName);
-            var tokenStorage = sp.GetRequiredService<ITokenStorage>();
-            var refreshService = sp.GetRequiredService<ITokenRefreshService>();
-            return new ApiClient(httpClient, tokenStorage, refreshService);
-        });
 
         return services;
     }
