@@ -5,6 +5,7 @@ using FluentAssertions;
 using Moq;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace JinoOrder.Tests.Services;
 
@@ -14,15 +15,17 @@ namespace JinoOrder.Tests.Services;
 public class DeepLinkServiceTests
 {
     private readonly Mock<NavigationService> _mockNavigationService;
+    private readonly Mock<ILogger<DeepLinkService>> _mockLogger;
     private readonly IServiceProvider _serviceProvider;
     private readonly DeepLinkService _deepLinkService;
 
     public DeepLinkServiceTests()
     {
         _mockNavigationService = new Mock<NavigationService>();
+        _mockLogger = new Mock<ILogger<DeepLinkService>>();
         var services = new ServiceCollection();
         _serviceProvider = services.BuildServiceProvider();
-        _deepLinkService = new DeepLinkService(_mockNavigationService.Object, _serviceProvider);
+        _deepLinkService = new DeepLinkService(_mockNavigationService.Object, _serviceProvider, _mockLogger.Object);
     }
 
     #region Scheme Tests

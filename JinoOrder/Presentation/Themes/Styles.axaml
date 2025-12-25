@@ -1,0 +1,139 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Common Control Themes (ControlTheme can be in ResourceDictionary) -->
+
+    <!-- Primary Button Theme -->
+    <ControlTheme x:Key="JinoPrimaryButton" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource JinoPrimaryBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource JinoTextOnPrimaryBrush}" />
+        <Setter Property="Padding" Value="{StaticResource PaddingMedium}" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
+        <Setter Property="MinHeight" Value="{StaticResource ButtonHeightMedium}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <ContentPresenter Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{DynamicResource JinoPrimaryHoverBrush}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{StaticResource OpacityDisabled}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- Success Button Theme -->
+    <ControlTheme x:Key="JinoSuccessButton" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource JinoSuccessBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource JinoTextOnPrimaryBrush}" />
+        <Setter Property="Padding" Value="{StaticResource PaddingMedium}" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
+        <Setter Property="MinHeight" Value="{StaticResource ButtonHeightMedium}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <ContentPresenter Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{DynamicResource JinoSuccessHoverBrush}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{StaticResource OpacityDisabled}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- Danger/Error Button Theme -->
+    <ControlTheme x:Key="JinoDangerButton" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource JinoErrorBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource JinoTextOnPrimaryBrush}" />
+        <Setter Property="Padding" Value="{StaticResource PaddingMedium}" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
+        <Setter Property="MinHeight" Value="{StaticResource ButtonHeightMedium}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <ContentPresenter Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{DynamicResource JinoErrorHoverBrush}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{StaticResource OpacityDisabled}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- Card Theme -->
+    <ControlTheme x:Key="JinoCard" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource JinoCardBackgroundBrush}" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+        <Setter Property="Padding" Value="{StaticResource PaddingMedium}" />
+        <Setter Property="BoxShadow" Value="0 2 4 0 #20000000" />
+    </ControlTheme>
+
+    <!-- Input TextBox Theme -->
+    <ControlTheme x:Key="JinoTextBox" TargetType="TextBox">
+        <Setter Property="Background" Value="{DynamicResource JinoCardBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource JinoTextPrimaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource JinoTextTertiaryBrush}" />
+        <Setter Property="BorderThickness" Value="{StaticResource BorderThickness1}" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="MinHeight" Value="{StaticResource InputHeight}" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Style Selector="^:focus">
+            <Setter Property="BorderBrush" Value="{DynamicResource JinoPrimaryBrush}" />
+            <Setter Property="BorderThickness" Value="{StaticResource BorderThickness2}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{StaticResource OpacityDisabled}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- Badge Theme -->
+    <ControlTheme x:Key="JinoBadge" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource JinoPrimaryBrush}" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusRound}" />
+        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="MinWidth" Value="20" />
+        <Setter Property="MinHeight" Value="20" />
+    </ControlTheme>
+
+</ResourceDictionary>

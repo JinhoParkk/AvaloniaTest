@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="100"
+             x:Class="JinoOrder.Presentation.Common.Controls.ErrorDisplay"
+             x:Name="Root">
+
+    <UserControl.Styles>
+        <Style Selector="UserControl#Root:not(.hasError)">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="UserControl#Root.hasError">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </UserControl.Styles>
+
+    <Border Background="{DynamicResource JinoWarningLightBrush}"
+            BorderBrush="{DynamicResource JinoErrorBrush}"
+            BorderThickness="0,0,0,2"
+            CornerRadius="{StaticResource RadiusMedium}"
+            Padding="{StaticResource PaddingMedium}"
+            Margin="0,0,0,16">
+
+        <Grid ColumnDefinitions="Auto,*,Auto">
+            <!-- Error Icon -->
+            <Border Grid.Column="0"
+                    Width="24" Height="24"
+                    CornerRadius="12"
+                    Background="{DynamicResource JinoErrorBrush}"
+                    Margin="0,0,12,0"
+                    VerticalAlignment="Center">
+                <TextBlock Text="!"
+                           Foreground="{DynamicResource JinoTextOnPrimaryBrush}"
+                           FontWeight="Bold"
+                           FontSize="{StaticResource FontSizeMedium}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+            </Border>
+
+            <!-- Error Message -->
+            <TextBlock Grid.Column="1"
+                       Text="{Binding #Root.ErrorMessage}"
+                       Foreground="{DynamicResource JinoTextPrimaryBrush}"
+                       FontSize="{StaticResource FontSizeBody}"
+                       VerticalAlignment="Center"
+                       TextWrapping="Wrap" />
+
+            <!-- Dismiss Button -->
+            <Button Grid.Column="2"
+                    Content="X"
+                    Command="{Binding #Root.DismissCommand}"
+                    Background="Transparent"
+                    Foreground="{DynamicResource JinoTextSecondaryBrush}"
+                    BorderThickness="0"
+                    Padding="8"
+                    VerticalAlignment="Center"
+                    Cursor="Hand"
+                    IsVisible="{Binding #Root.CanDismiss}" />
+        </Grid>
+    </Border>
+</UserControl>

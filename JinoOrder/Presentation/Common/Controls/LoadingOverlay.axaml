@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
+             x:Class="JinoOrder.Presentation.Common.Controls.LoadingOverlay"
+             x:Name="Root">
+
+    <UserControl.Styles>
+        <Style Selector="UserControl#Root:not(.loading)">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="UserControl#Root.loading">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </UserControl.Styles>
+
+    <Border Background="{DynamicResource JinoOverlayBackgroundBrush}">
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Spacing="16">
+
+            <!-- Spinner -->
+            <Border Width="48" Height="48"
+                    CornerRadius="24"
+                    Background="{DynamicResource JinoPrimaryBrush}"
+                    HorizontalAlignment="Center">
+                <Border.RenderTransform>
+                    <RotateTransform />
+                </Border.RenderTransform>
+                <Border.Styles>
+                    <Style Selector="Border">
+                        <Style.Animations>
+                            <Animation Duration="0:0:1" IterationCount="Infinite">
+                                <KeyFrame Cue="0%">
+                                    <Setter Property="RenderTransform" Value="rotate(0deg)" />
+                                </KeyFrame>
+                                <KeyFrame Cue="100%">
+                                    <Setter Property="RenderTransform" Value="rotate(360deg)" />
+                                </KeyFrame>
+                            </Animation>
+                        </Style.Animations>
+                    </Style>
+                </Border.Styles>
+                <Ellipse Width="40" Height="40"
+                         Stroke="{DynamicResource JinoCardBackgroundBrush}"
+                         StrokeThickness="4"
+                         StrokeDashArray="2,3" />
+            </Border>
+
+            <!-- Loading Text -->
+            <TextBlock Text="{Binding #Root.Message, FallbackValue=로딩 중...}"
+                       Foreground="{DynamicResource JinoTextOnDarkBrush}"
+                       FontSize="{StaticResource FontSizeMedium}"
+                       HorizontalAlignment="Center" />
+        </StackPanel>
+    </Border>
+</UserControl>

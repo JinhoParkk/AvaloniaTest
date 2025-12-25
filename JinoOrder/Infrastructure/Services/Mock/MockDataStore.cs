@@ -1,351 +1,81 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Timers;
-using JinoOrder.Application.Customers;
-using JinoOrder.Application.Menu;
-using JinoOrder.Application.Orders;
-using JinoOrder.Application.Statistics;
 using JinoOrder.Domain.Customers;
 using JinoOrder.Domain.Menu;
 using JinoOrder.Domain.Orders;
-using JinoOrder.Domain.Statistics;
+using Microsoft.Extensions.Logging;
 using Timer = System.Timers.Timer;
 
-namespace JinoOrder.Infrastructure.Services;
+namespace JinoOrder.Infrastructure.Services.Mock;
 
 /// <summary>
-/// Mock 지노오더 서비스 (API 없이 동작하는 더미 데이터)
+/// Mock 데이터 중앙 저장소 (서비스 간 공유)
 /// </summary>
-public class MockJinoOrderService : IOrderService, IMenuService, ICustomerService, IStatisticsService, IDisposable
+public class MockDataStore : IDisposable
 {
-    private readonly List<MenuCategory> _categories;
-    private readonly List<MenuItem> _menuItems;
-    private readonly List<Order> _orders;
-    private readonly List<Customer> _customers;
-    private readonly List<PointHistory> _pointHistories;
-    private readonly Timer _newOrderTimer;
+    private readonly ILogger<MockDataStore> _logger;
     private readonly Random _random = new();
+    private readonly Timer _newOrderTimer;
     private int _nextOrderId = 1000;
+
+    public List<MenuCategory> Categories { get; }
+    public List<MenuItem> MenuItems { get; }
+    public List<Order> Orders { get; }
+    public List<Customer> Customers { get; }
+    public List<PointHistory> PointHistories { get; }
 
     public event EventHandler<Order>? NewOrderReceived;
     public event EventHandler<Order>? OrderStatusChanged;
 
-    public MockJinoOrderService()
+    public MockDataStore(ILogger<MockDataStore> logger)
     {
-        _categories = GenerateCategories();
-        _menuItems = GenerateMenuItems();
-        _customers = GenerateCustomers();
-        _orders = GenerateOrders();
-        _pointHistories = GeneratePointHistories();
+        _logger = logger;
+
+        _logger.LogInformation("MockDataStore 초기화 중...");
+
+        Categories = GenerateCategories();
+        MenuItems = GenerateMenuItems();
+        Customers = GenerateCustomers();
+        Orders = GenerateOrders();
+        PointHistories = GeneratePointHistories();
 
         // 데모용: 30초마다 새 주문 생성
-        _newOrderTimer = new Timer(30000);
+        _newOrderTimer = new Timer(Domain.Common.TimingConstants.NewOrderTimerIntervalMs);
         _newOrderTimer.Elapsed += OnNewOrderTimerElapsed;
+
+        _logger.LogInformation("MockDataStore 초기화 완료. 카테고리: {CategoryCount}, 메뉴: {MenuCount}, 고객: {CustomerCount}, 주문: {OrderCount}",
+            Categories.Count, MenuItems.Count, Customers.Count, Orders.Count);
     }
 
     public void StartSimulation()
     {
+        _logger.LogInformation("주문 시뮬레이션 시작");
         _newOrderTimer.Start();
     }
 
     public void StopSimulation()
     {
+        _logger.LogInformation("주문 시뮬레이션 중지");
         _newOrderTimer.Stop();
     }
+
+    public void RaiseOrderStatusChanged(Order order)
+    {
+        _logger.LogDebug("주문 상태 변경 이벤트 발생: OrderId={OrderId}, Status={Status}", order.Id, order.Status);
+        OrderStatusChanged?.Invoke(this, order);
+    }
+
+    public int GetNextOrderId() => _nextOrderId++;
 
     private void OnNewOrderTimerElapsed(object? sender, ElapsedEventArgs e)
     {
         var newOrder = GenerateRandomOrder();
-        _orders.Insert(0, newOrder);
+        Orders.Insert(0, newOrder);
+        _logger.LogInformation("새 주문 생성됨: OrderId={OrderId}, Customer={CustomerName}", newOrder.Id, newOrder.CustomerName);
         NewOrderReceived?.Invoke(this, newOrder);
     }
-
-    #region 주문 관련
-
-    public Task<List<Order>> GetPendingOrdersAsync()
-    {
-        var pending = _orders
-            .Where(o => o.Status == OrderStatus.Pending)
-            .OrderByDescending(o => o.OrderedAt)
-            .ToList();
-        return Task.FromResult(pending);
-    }
-
-    public Task<List<Order>> GetActiveOrdersAsync()
-    {
-        var active = _orders
-            .Where(o => o.Status != OrderStatus.Completed && o.Status != OrderStatus.Cancelled)
-            .OrderByDescending(o => o.OrderedAt)
-            .ToList();
-        return Task.FromResult(active);
-    }
-
-    public Task<List<Order>> GetOrdersByDateAsync(DateTime date)
-    {
-        var orders = _orders
-            .Where(o => o.OrderedAt.Date == date.Date)
-            .OrderByDescending(o => o.OrderedAt)
-            .ToList();
-        return Task.FromResult(orders);
-    }
-
-    public Task<Order?> GetOrderByIdAsync(int orderId)
-    {
-        var order = _orders.FirstOrDefault(o => o.Id == orderId);
-        return Task.FromResult(order);
-    }
-
-    public Task<bool> AcceptOrderAsync(int orderId, int estimatedMinutes)
-    {
-        var order = _orders.FirstOrDefault(o => o.Id == orderId);
-        if (order == null) return Task.FromResult(false);
-
-        order.Status = OrderStatus.Accepted;
-        order.AcceptedAt = DateTime.Now;
-        order.EstimatedMinutes = estimatedMinutes;
-        order.EstimatedPickupTime = DateTime.Now.AddMinutes(estimatedMinutes);
-
-        OrderStatusChanged?.Invoke(this, order);
-        return Task.FromResult(true);
-    }
-
-    public Task<bool> CompleteOrderAsync(int orderId)
-    {
-        var order = _orders.FirstOrDefault(o => o.Id == orderId);
-        if (order == null) return Task.FromResult(false);
-
-        order.Status = OrderStatus.Ready;
-        order.CompletedAt = DateTime.Now;
-
-        OrderStatusChanged?.Invoke(this, order);
-        return Task.FromResult(true);
-    }
-
-    public Task<bool> CancelOrderAsync(int orderId, string reason)
-    {
-        var order = _orders.FirstOrDefault(o => o.Id == orderId);
-        if (order == null) return Task.FromResult(false);
-
-        order.Status = OrderStatus.Cancelled;
-        order.Memo = reason;
-
-        OrderStatusChanged?.Invoke(this, order);
-        return Task.FromResult(true);
-    }
-
-    public Task<bool> UpdateOrderStatusAsync(int orderId, OrderStatus status)
-    {
-        var order = _orders.FirstOrDefault(o => o.Id == orderId);
-        if (order == null) return Task.FromResult(false);
-
-        order.Status = status;
-        if (status == OrderStatus.Completed)
-            order.CompletedAt = DateTime.Now;
-
-        OrderStatusChanged?.Invoke(this, order);
-        return Task.FromResult(true);
-    }
-
-    #endregion
-
-    #region 메뉴 관련
-
-    public Task<List<MenuCategory>> GetCategoriesAsync()
-    {
-        return Task.FromResult(_categories.ToList());
-    }
-
-    public Task<List<MenuItem>> GetMenuItemsAsync()
-    {
-        return Task.FromResult(_menuItems.ToList());
-    }
-
-    public Task<List<MenuItem>> GetMenuItemsByCategoryAsync(int categoryId)
-    {
-        var items = _menuItems.Where(m => m.CategoryId == categoryId).ToList();
-        return Task.FromResult(items);
-    }
-
-    public Task<MenuItem?> GetMenuItemByIdAsync(int menuItemId)
-    {
-        var item = _menuItems.FirstOrDefault(m => m.Id == menuItemId);
-        return Task.FromResult(item);
-    }
-
-    public Task<bool> UpdateMenuItemAsync(MenuItem item)
-    {
-        var existing = _menuItems.FirstOrDefault(m => m.Id == item.Id);
-        if (existing == null) return Task.FromResult(false);
-
-        var index = _menuItems.IndexOf(existing);
-        _menuItems[index] = item;
-        return Task.FromResult(true);
-    }
-
-    public Task<bool> ToggleMenuItemAvailabilityAsync(int menuItemId, bool isAvailable)
-    {
-        var item = _menuItems.FirstOrDefault(m => m.Id == menuItemId);
-        if (item == null) return Task.FromResult(false);
-
-        item.IsAvailable = isAvailable;
-        return Task.FromResult(true);
-    }
-
-    public Task<bool> ToggleMenuItemSoldOutAsync(int menuItemId, bool isSoldOut)
-    {
-        var item = _menuItems.FirstOrDefault(m => m.Id == menuItemId);
-        if (item == null) return Task.FromResult(false);
-
-        item.IsSoldOut = isSoldOut;
-        return Task.FromResult(true);
-    }
-
-    #endregion
-
-    #region 고객 관련
-
-    public Task<List<Customer>> GetCustomersAsync()
-    {
-        return Task.FromResult(_customers.OrderByDescending(c => c.LastVisitAt).ToList());
-    }
-
-    public Task<Customer?> GetCustomerByIdAsync(int customerId)
-    {
-        var customer = _customers.FirstOrDefault(c => c.Id == customerId);
-        return Task.FromResult(customer);
-    }
-
-    public Task<Customer?> GetCustomerByPhoneAsync(string phone)
-    {
-        var customer = _customers.FirstOrDefault(c => c.Phone == phone);
-        return Task.FromResult(customer);
-    }
-
-    public Task<bool> AddPointsAsync(int customerId, decimal points, string description, int? orderId = null)
-    {
-        var customer = _customers.FirstOrDefault(c => c.Id == customerId);
-        if (customer == null) return Task.FromResult(false);
-
-        customer.Points += points;
-        _pointHistories.Add(new PointHistory
-        {
-            Id = _pointHistories.Count + 1,
-            CustomerId = customerId,
-            Amount = points,
-            Description = description,
-            CreatedAt = DateTime.Now,
-            OrderId = orderId
-        });
-
-        return Task.FromResult(true);
-    }
-
-    public Task<bool> UsePointsAsync(int customerId, decimal points, string description, int? orderId = null)
-    {
-        var customer = _customers.FirstOrDefault(c => c.Id == customerId);
-        if (customer == null || customer.Points < points) return Task.FromResult(false);
-
-        customer.Points -= points;
-        _pointHistories.Add(new PointHistory
-        {
-            Id = _pointHistories.Count + 1,
-            CustomerId = customerId,
-            Amount = -points,
-            Description = description,
-            CreatedAt = DateTime.Now,
-            OrderId = orderId
-        });
-
-        return Task.FromResult(true);
-    }
-
-    public Task<List<PointHistory>> GetPointHistoryAsync(int customerId)
-    {
-        var history = _pointHistories
-            .Where(p => p.CustomerId == customerId)
-            .OrderByDescending(p => p.CreatedAt)
-            .ToList();
-        return Task.FromResult(history);
-    }
-
-    #endregion
-
-    #region 통계 관련
-
-    public Task<DailySummary> GetDailySummaryAsync(DateTime date)
-    {
-        var dayOrders = _orders.Where(o => o.OrderedAt.Date == date.Date).ToList();
-        var completed = dayOrders.Where(o => o.Status == OrderStatus.Completed || o.Status == OrderStatus.Ready).ToList();
-        var cancelled = dayOrders.Where(o => o.Status == OrderStatus.Cancelled).ToList();
-
-        var summary = new DailySummary
-        {
-            Date = date,
-            TotalOrders = dayOrders.Count,
-            CompletedOrders = completed.Count,
-            CancelledOrders = cancelled.Count,
-            TotalSales = completed.Sum(o => o.FinalAmount),
-            AverageOrderAmount = completed.Count > 0 ? completed.Average(o => o.FinalAmount) : 0
-        };
-
-        return Task.FromResult(summary);
-    }
-
-    public Task<List<DailySummary>> GetWeeklySummaryAsync(DateTime startDate)
-    {
-        var summaries = new List<DailySummary>();
-        for (int i = 0; i < 7; i++)
-        {
-            var date = startDate.AddDays(i);
-            var summary = GetDailySummaryAsync(date).Result;
-            summaries.Add(summary);
-        }
-        return Task.FromResult(summaries);
-    }
-
-    public Task<List<PopularMenuItem>> GetPopularMenuItemsAsync(DateTime startDate, DateTime endDate, int limit = 10)
-    {
-        var orderItems = _orders
-            .Where(o => o.OrderedAt >= startDate && o.OrderedAt <= endDate
-                       && (o.Status == OrderStatus.Completed || o.Status == OrderStatus.Ready))
-            .SelectMany(o => o.Items)
-            .GroupBy(i => i.MenuItemId)
-            .Select(g => new PopularMenuItem
-            {
-                MenuItemId = g.Key,
-                MenuName = g.First().MenuName,
-                OrderCount = g.Sum(i => i.Quantity),
-                TotalSales = g.Sum(i => i.TotalPrice)
-            })
-            .OrderByDescending(p => p.OrderCount)
-            .Take(limit)
-            .ToList();
-
-        for (int i = 0; i < orderItems.Count; i++)
-        {
-            orderItems[i].Rank = i + 1;
-        }
-
-        return Task.FromResult(orderItems);
-    }
-
-    public Task<List<HourlyStats>> GetHourlyStatsAsync(DateTime date)
-    {
-        var stats = _orders
-            .Where(o => o.OrderedAt.Date == date.Date
-                       && (o.Status == OrderStatus.Completed || o.Status == OrderStatus.Ready))
-            .GroupBy(o => o.OrderedAt.Hour)
-            .Select(g => new HourlyStats
-            {
-                Hour = g.Key,
-                OrderCount = g.Count(),
-                Sales = g.Sum(o => o.FinalAmount)
-            })
-            .OrderBy(s => s.Hour)
-            .ToList();
-
-        return Task.FromResult(stats);
-    }
-
-    #endregion
 
     #region 데이터 생성
 
@@ -518,7 +248,7 @@ public class MockJinoOrderService : IOrderService, IMenuService, ICustomerServic
                 Id = _nextOrderId++,
                 OrderNumber = $"P{100 + i:000}",
                 CustomerId = _random.Next(1, 6),
-                CustomerName = _customers[_random.Next(0, 5)].Name,
+                CustomerName = Customers[_random.Next(0, 5)].Name,
                 Status = OrderStatus.Completed,
                 OrderedAt = orderTime,
                 AcceptedAt = orderTime.AddMinutes(2),
@@ -529,7 +259,7 @@ public class MockJinoOrderService : IOrderService, IMenuService, ICustomerServic
                     {
                         Id = 100 + i,
                         MenuItemId = _random.Next(1, 20),
-                        MenuName = _menuItems[_random.Next(0, _menuItems.Count)].Name,
+                        MenuName = MenuItems[_random.Next(0, MenuItems.Count)].Name,
                         UnitPrice = _random.Next(4, 7) * 1000,
                         Quantity = _random.Next(1, 3)
                     }
@@ -542,8 +272,8 @@ public class MockJinoOrderService : IOrderService, IMenuService, ICustomerServic
 
     private Order GenerateRandomOrder()
     {
-        var customer = _customers[_random.Next(0, _customers.Count)];
-        var menuItem = _menuItems[_random.Next(0, _menuItems.Count)];
+        var customer = Customers[_random.Next(0, Customers.Count)];
+        var menuItem = MenuItems[_random.Next(0, MenuItems.Count)];
 
         return new Order
         {
@@ -574,7 +304,7 @@ public class MockJinoOrderService : IOrderService, IMenuService, ICustomerServic
         var histories = new List<PointHistory>();
         var id = 1;
 
-        foreach (var customer in _customers)
+        foreach (var customer in Customers)
         {
             for (int i = 0; i < 5; i++)
             {
@@ -596,6 +326,7 @@ public class MockJinoOrderService : IOrderService, IMenuService, ICustomerServic
 
     public void Dispose()
     {
+        _logger.LogInformation("MockDataStore 종료");
         _newOrderTimer.Dispose();
     }
 }
