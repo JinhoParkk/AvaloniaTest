@@ -65,7 +65,6 @@ public partial class JinoOrderMainViewModel : ViewModelBase
     // 플랫폼 정보
     public bool IsMobile => _platformInfo?.IsMobile ?? false;
     public bool IsDesktop => !IsMobile;
-    public bool ShowWindowControls => !IsMobile;
     public bool ShowSidebar => !IsMobile;
     public bool ShowBottomNav => IsMobile;
 
@@ -84,11 +83,6 @@ public partial class JinoOrderMainViewModel : ViewModelBase
     public string PickupTimeText => MaxPickupTime.HasValue
         ? $"{MinPickupTime}~{MaxPickupTime}분"
         : $"{MinPickupTime}분";
-
-    // 윈도우 컨트롤 이벤트
-    public event Action? MinimizeRequested;
-    public event Action? MaximizeRequested;
-    public event Action? CloseRequested;
 
     public JinoOrderMainViewModel()
     {
@@ -407,19 +401,6 @@ public partial class JinoOrderMainViewModel : ViewModelBase
         OnPropertyChanged(nameof(StatusText));
         OnPropertyChanged(nameof(StatusColor));
     }
-
-    #endregion
-
-    #region 윈도우 컨트롤
-
-    [RelayCommand]
-    private void MinimizeWindow() => MinimizeRequested?.Invoke();
-
-    [RelayCommand]
-    private void MaximizeWindow() => MaximizeRequested?.Invoke();
-
-    [RelayCommand]
-    private void CloseWindow() => CloseRequested?.Invoke();
 
     #endregion
 }

@@ -8,18 +8,8 @@ public partial class JinoOrderMainView : UserControl
     public JinoOrderMainView()
     {
         InitializeComponent();
-        DataContextChanged += OnDataContextChanged;
     }
-
-    private void OnDataContextChanged(object? sender, EventArgs e)
-    {
-        if (DataContext is JinoOrderMainViewModel viewModel)
-        {
-            viewModel.MinimizeRequested += OnMinimizeRequested;
-            viewModel.MaximizeRequested += OnMaximizeRequested;
-            viewModel.CloseRequested += OnCloseRequested;
-        }
-    }
+    
 
     private void OnMinimizeRequested()
     {
