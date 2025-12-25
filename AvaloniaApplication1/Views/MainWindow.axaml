@@ -9,7 +9,5 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="패스오더 점주용">
-  <Viewbox x:Name="RootViewbox" Stretch="Uniform">
-    <ContentControl x:Name="RootContent" Content="{Binding CurrentViewModel}" />
-  </Viewbox>
+  <ContentControl Content="{Binding CurrentViewModel}" />
 </Window>
