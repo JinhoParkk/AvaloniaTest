@@ -30,6 +30,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<LoginViewModel>();
         services.AddTransient<MainViewModel>();
         services.AddTransient<MainWindowViewModel>();
+        services.AddTransient<PlaygroundViewModel>();
 
         return services;
     }
