@@ -42,6 +42,7 @@
             <!-- Background Colors -->
             <Color x:Key="JinoCardBackground">#FFFFFF</Color>
             <Color x:Key="JinoSurfaceBackground">#F5F5F5</Color>
+            <Color x:Key="JinoOverlayBackground">#80000000</Color>
 
             <!-- Badge Colors -->
             <Color x:Key="JinoBadgeSoldOut">#FF6B6B</Color>
@@ -93,6 +94,7 @@
             <!-- Background Colors -->
             <Color x:Key="JinoCardBackground">#2D2D2D</Color>
             <Color x:Key="JinoSurfaceBackground">#1E1E1E</Color>
+            <Color x:Key="JinoOverlayBackground">#80000000</Color>
 
             <!-- Badge Colors -->
             <Color x:Key="JinoBadgeSoldOut">#FF6B6B</Color>
@@ -132,6 +134,7 @@
 
     <SolidColorBrush x:Key="JinoCardBackgroundBrush" Color="{DynamicResource JinoCardBackground}" />
     <SolidColorBrush x:Key="JinoSurfaceBackgroundBrush" Color="{DynamicResource JinoSurfaceBackground}" />
+    <SolidColorBrush x:Key="JinoOverlayBackgroundBrush" Color="{DynamicResource JinoOverlayBackground}" />
 
     <SolidColorBrush x:Key="JinoBadgeSoldOutBrush" Color="{DynamicResource JinoBadgeSoldOut}" />
     <SolidColorBrush x:Key="JinoBadgeNewBrush" Color="{DynamicResource JinoBadgeNew}" />
