@@ -43,7 +43,6 @@ public static class ServiceCollectionExtensions
         services.AddTransient<LoginViewModel>();
         services.AddTransient<MainViewModel>();
         services.AddTransient<MainWindowViewModel>();
-        services.AddTransient<PlaygroundViewModel>();
 
         // 지노오더 ViewModels
         services.AddTransient<JinoOrderMainViewModel>();
