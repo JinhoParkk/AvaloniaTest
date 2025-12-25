@@ -18,8 +18,8 @@
     </Style>
 
     <Style Selector="Button.btn-primary">
-      <Setter Property="Background" Value="#0078D4"/>
-      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="Background" Value="{DynamicResource JinoPrimaryBrush}"/>
+      <Setter Property="Foreground" Value="{DynamicResource JinoTextOnPrimaryBrush}"/>
       <Setter Property="MinHeight" Value="44"/>
       <Setter Property="Padding" Value="20,12"/>
       <Setter Property="CornerRadius" Value="8"/>
@@ -28,12 +28,12 @@
       <Setter Property="Cursor" Value="Hand"/>
     </Style>
     <Style Selector="Button.btn-primary:pointerover /template/ ContentPresenter">
-      <Setter Property="Background" Value="#1084D8"/>
+      <Setter Property="Background" Value="{DynamicResource JinoPrimaryHoverBrush}"/>
     </Style>
 
     <Style Selector="Button.btn-success">
-      <Setter Property="Background" Value="#107C10"/>
-      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="Background" Value="{DynamicResource JinoSuccessBrush}"/>
+      <Setter Property="Foreground" Value="{DynamicResource JinoTextOnPrimaryBrush}"/>
       <Setter Property="MinHeight" Value="44"/>
       <Setter Property="Padding" Value="20,12"/>
       <Setter Property="CornerRadius" Value="8"/>
@@ -42,7 +42,7 @@
       <Setter Property="Cursor" Value="Hand"/>
     </Style>
     <Style Selector="Button.btn-success:pointerover /template/ ContentPresenter">
-      <Setter Property="Background" Value="#128812"/>
+      <Setter Property="Background" Value="{DynamicResource JinoSuccessHoverBrush}"/>
     </Style>
 
     <Style Selector="Button.btn-outline">
@@ -68,9 +68,9 @@
       <Border Classes="order-card" IsVisible="{Binding !PendingOrders.Count}">
         <StackPanel HorizontalAlignment="Center" Spacing="8" Margin="40">
           <PathIcon Data="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"
-                   Width="48" Height="48" Opacity="0.3"/>
-          <TextBlock Text="새로운 주문이 없습니다" FontSize="16" Opacity="0.6" HorizontalAlignment="Center"/>
-          <TextBlock Text="주문이 들어오면 여기에 표시됩니다" FontSize="13" Opacity="0.4" HorizontalAlignment="Center"/>
+                   Width="48" Height="48" Foreground="{DynamicResource JinoTextTertiaryBrush}"/>
+          <TextBlock Text="새로운 주문이 없습니다" FontSize="16" Foreground="{DynamicResource JinoTextSecondaryBrush}" HorizontalAlignment="Center"/>
+          <TextBlock Text="주문이 들어오면 여기에 표시됩니다" FontSize="13" Foreground="{DynamicResource JinoTextTertiaryBrush}" HorizontalAlignment="Center"/>
         </StackPanel>
       </Border>
 
@@ -84,17 +84,17 @@
                 <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
                   <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12">
                     <TextBlock Text="{Binding OrderNumber}" FontSize="20" FontWeight="Bold"/>
-                    <Border Background="#FF8C00" CornerRadius="12" Padding="10,4">
-                      <TextBlock Text="{Binding StatusText}" Foreground="White" FontSize="12"/>
+                    <Border Background="{DynamicResource JinoWarningBrush}" CornerRadius="12" Padding="10,4">
+                      <TextBlock Text="{Binding StatusText}" Foreground="{DynamicResource JinoTextOnPrimaryBrush}" FontSize="12"/>
                     </Border>
                   </StackPanel>
-                  <TextBlock Grid.Column="1" Text="{Binding WaitingTimeText}" FontSize="13" Opacity="0.6"/>
+                  <TextBlock Grid.Column="1" Text="{Binding WaitingTimeText}" FontSize="13" Foreground="{DynamicResource JinoTextSecondaryBrush}"/>
                 </Grid>
 
                 <!-- 고객 정보 -->
                 <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8" Margin="0,0,0,12">
                   <PathIcon Data="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
-                           Width="16" Height="16" Opacity="0.5"/>
+                           Width="16" Height="16" Foreground="{DynamicResource JinoTextTertiaryBrush}"/>
                   <TextBlock Text="{Binding CustomerName}" FontSize="14"/>
                 </StackPanel>
 
@@ -106,9 +106,9 @@
                         <StackPanel Grid.Column="0">
                           <StackPanel Orientation="Horizontal" Spacing="8">
                             <TextBlock Text="{Binding MenuName}" FontSize="15" FontWeight="Medium"/>
-                            <TextBlock Text="{Binding Quantity, StringFormat=x{0}}" FontSize="14" Opacity="0.7"/>
+                            <TextBlock Text="{Binding Quantity, StringFormat=x{0}}" FontSize="14" Foreground="{DynamicResource JinoTextSecondaryBrush}"/>
                           </StackPanel>
-                          <TextBlock Text="{Binding OptionsSummary}" FontSize="12" Opacity="0.5"
+                          <TextBlock Text="{Binding OptionsSummary}" FontSize="12" Foreground="{DynamicResource JinoTextTertiaryBrush}"
                                     IsVisible="{Binding OptionsSummary, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
                         </StackPanel>
                         <TextBlock Grid.Column="1" Text="{Binding FormattedTotalPrice}" FontSize="14"/>
@@ -120,7 +120,7 @@
                 <!-- 총 금액 및 버튼 -->
                 <Grid Grid.Row="3" ColumnDefinitions="*,Auto">
                   <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                    <TextBlock Text="총" FontSize="14" Opacity="0.7"/>
+                    <TextBlock Text="총" FontSize="14" Foreground="{DynamicResource JinoTextSecondaryBrush}"/>
                     <TextBlock Text="{Binding FormattedTotalAmount}" FontSize="18" FontWeight="Bold"/>
                   </StackPanel>
                   <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
@@ -157,11 +157,11 @@
                     <Border.Background>
                       <SolidColorBrush Color="{Binding StatusColor}"/>
                     </Border.Background>
-                    <TextBlock Text="{Binding StatusText}" Foreground="White" FontSize="11"/>
+                    <TextBlock Text="{Binding StatusText}" Foreground="{DynamicResource JinoTextOnPrimaryBrush}" FontSize="11"/>
                   </Border>
                 </Grid>
 
-                <TextBlock Grid.Row="1" Text="{Binding CustomerName}" FontSize="13" Opacity="0.7" Margin="0,0,0,8"/>
+                <TextBlock Grid.Row="1" Text="{Binding CustomerName}" FontSize="13" Foreground="{DynamicResource JinoTextSecondaryBrush}" Margin="0,0,0,8"/>
 
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8">
                   <Button Classes="btn-success" Content="완료" HorizontalAlignment="Stretch"
