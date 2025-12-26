@@ -3,7 +3,13 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>net6.0-ios16.0</TargetFramework>
         <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
+        <ApplicationId>JinhoTest.JinoOrder</ApplicationId>
         <Nullable>enable</Nullable>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <CodesignKey>Apple Development: smash4728@icloud.com (PFMC3H29Q3)</CodesignKey>
+        <IOSDebugOverWiFi>true</IOSDebugOverWiFi>
+        <CodesignProvision>iOS Team Provisioning Profile: JinhoTest.JinoOrder</CodesignProvision>
     </PropertyGroup>
 
     <ItemGroup>
